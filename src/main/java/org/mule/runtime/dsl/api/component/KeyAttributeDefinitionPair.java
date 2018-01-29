@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
  *
  * @since 4.0
  */
-public class KeyAttributeDefinitionPair {
+public final class KeyAttributeDefinitionPair {
 
   private String key;
   private AttributeDefinition attributeDefinition;
