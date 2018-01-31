@@ -42,4 +42,5 @@ public class CommonTypeConverters {
     };
   }
 
+  private CommonTypeConverters() {}
 }

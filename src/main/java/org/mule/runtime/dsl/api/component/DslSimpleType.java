@@ -36,4 +36,5 @@ public class DslSimpleType {
     return simpleTypes.contains(type) || type.isEnum();
   }
 
+  private DslSimpleType() {}
 }

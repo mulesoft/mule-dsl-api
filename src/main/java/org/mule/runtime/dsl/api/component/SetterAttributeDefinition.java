@@ -13,7 +13,7 @@ package org.mule.runtime.dsl.api.component;
  *
  * @since 4.0
  */
-public class SetterAttributeDefinition {
+public final class SetterAttributeDefinition {
 
   private String attributeName;
   private AttributeDefinition attributeDefinition;

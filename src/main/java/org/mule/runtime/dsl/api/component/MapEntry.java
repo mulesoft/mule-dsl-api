@@ -16,7 +16,7 @@ package org.mule.runtime.dsl.api.component;
  * @param <KeyType> the key type
  * @param <ValueType> the value type
  */
-public class MapEntry<KeyType, ValueType> {
+public final class MapEntry<KeyType, ValueType> {
 
   private KeyType key;
   private ValueType value;

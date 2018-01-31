@@ -1,0 +1,101 @@
+{
+  "1.1.1": {
+    "revapi": {
+      "ignore": [
+        {
+          "code": "java.annotation.added",
+          "old": "interface org.mule.runtime.dsl.api.component.AttributeDefinitionVisitor",
+          "new": "interface org.mule.runtime.dsl.api.component.AttributeDefinitionVisitor",
+          "annotationType": "org.mule.api.annotation.NoImplement",
+          "justification": "This interface is not meant to be implemented by the user"
+        },
+        {
+          "code": "java.method.visibilityReduced",
+          "old": "method void org.mule.runtime.dsl.api.component.CommonTypeConverters::<init>()",
+          "new": "method void org.mule.runtime.dsl.api.component.CommonTypeConverters::<init>()",
+          "oldVisibility": "public",
+          "newVisibility": "private",
+          "package": "org.mule.runtime.dsl.api.component",
+          "classSimpleName": "CommonTypeConverters",
+          "methodName": "<init>",
+          "elementKind": "constructor",
+          "justification": "Utility class not meant to be instantiated by the user"
+        },
+        {
+          "code": "java.method.visibilityReduced",
+          "old": "method void org.mule.runtime.dsl.api.component.DslSimpleType::<init>()",
+          "new": "method void org.mule.runtime.dsl.api.component.DslSimpleType::<init>()",
+          "oldVisibility": "public",
+          "newVisibility": "private",
+          "package": "org.mule.runtime.dsl.api.component",
+          "classSimpleName": "DslSimpleType",
+          "methodName": "<init>",
+          "elementKind": "constructor",
+          "justification": "Utility class not meant to be instantiated by the user"
+        },
+        {
+          "code": "java.class.nowFinal",
+          "old": "class org.mule.runtime.dsl.api.component.KeyAttributeDefinitionPair",
+          "new": "class org.mule.runtime.dsl.api.component.KeyAttributeDefinitionPair",
+          "oldModifiers": "public",
+          "newModifiers": "public final",
+          "package": "org.mule.runtime.dsl.api.component",
+          "classSimpleName": "KeyAttributeDefinitionPair",
+          "elementKind": "class",
+          "justification": "This class is not meant to be extended by the user"
+        },
+        {
+          "code": "java.class.nowFinal",
+          "old": "class org.mule.runtime.dsl.api.component.MapEntry<KeyType extends java.lang.Object, ValueType extends java.lang.Object>",
+          "new": "class org.mule.runtime.dsl.api.component.MapEntry<KeyType extends java.lang.Object, ValueType extends java.lang.Object>",
+          "oldModifiers": "public",
+          "newModifiers": "public final",
+          "package": "org.mule.runtime.dsl.api.component",
+          "classSimpleName": "MapEntry",
+          "elementKind": "class",
+          "justification": "This class is not meant to be extended by the user"
+        },
+        {
+          "code": "java.annotation.added",
+          "old": "interface org.mule.runtime.dsl.api.component.ObjectTypeProvider",
+          "new": "interface org.mule.runtime.dsl.api.component.ObjectTypeProvider",
+          "annotationType": "org.mule.api.annotation.NoImplement",
+          "justification": "This interface is not meant to be implemented by the user"
+        },
+        {
+          "code": "java.class.nowFinal",
+          "old": "class org.mule.runtime.dsl.api.component.SetterAttributeDefinition",
+          "new": "class org.mule.runtime.dsl.api.component.SetterAttributeDefinition",
+          "oldModifiers": "public",
+          "newModifiers": "public final",
+          "package": "org.mule.runtime.dsl.api.component",
+          "classSimpleName": "SetterAttributeDefinition",
+          "elementKind": "class",
+          "justification": "This class is not meant to be extended by the user"
+        },
+        {
+          "code": "java.annotation.added",
+          "old": "interface org.mule.runtime.dsl.api.component.TypeDefinitionVisitor",
+          "new": "interface org.mule.runtime.dsl.api.component.TypeDefinitionVisitor",
+          "annotationType": "org.mule.api.annotation.NoImplement",
+          "justification": "This interface is not meant to be implemented by the user"
+        },
+        {
+          "code": "java.class.removed",
+          "old": "class org.mule.runtime.dsl.api.component.config.ArtifactConfiguration",
+          "package": "org.mule.runtime.dsl.api.component.config",
+          "classSimpleName": "ArtifactConfiguration",
+          "elementKind": "class",
+          "justification": "Class not used anymore. See MULE-11496"
+        },
+        {
+          "code": "java.annotation.added",
+          "old": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation",
+          "new": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation",
+          "annotationType": "org.mule.api.annotation.NoExtend",
+          "justification": "This class is not meant to be extended by the user"
+        }
+      ]
+    }
+  }
+}

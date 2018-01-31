@@ -13,6 +13,7 @@ import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.mule.runtime.api.component.TypedComponentIdentifier.ComponentType.UNKNOWN;
 
+import org.mule.api.annotation.NoExtend;
 import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.component.TypedComponentIdentifier;
 import org.mule.runtime.api.component.location.ComponentLocation;
@@ -51,6 +52,7 @@ import java.util.Optional;
  *
  * @since 4.0
  */
+@NoExtend
 public class DefaultComponentLocation implements ComponentLocation, Serializable {
 
   private static final long serialVersionUID = 4958158607813720623L;
