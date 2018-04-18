@@ -97,5 +97,17 @@
         }
       ]
     }
+  },
+  "1.1.2": {
+    "revapi": {
+      "ignore": [
+        {
+          "code": "java.method.added",
+          "new": "method org.mule.runtime.dsl.api.component.AttributeDefinition.Builder org.mule.runtime.dsl.api.component.AttributeDefinition.Builder::fromSoftReferenceSimpleParameter(java.lang.String)",
+          "methodName": "fromSoftReferenceSimpleParameter",
+          "justification": "New method should be used internally to create an enriched AttributeDefinition supporting soft references"
+        }
+      ]
+    }
   }
 }

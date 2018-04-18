@@ -32,6 +32,7 @@ public class AttributeDefinition {
   private Class<?> childObjectType;
   private boolean undefinedComplexParametersHolder;
   private String referenceSimpleParameter;
+  private String softReferenceSimpleParameter;
   private boolean collection;
   private boolean map;
   private Class<?> mapKeyType;
@@ -58,6 +59,8 @@ public class AttributeDefinition {
       visitor.onUndefinedComplexParameters();
     } else if (referenceSimpleParameter != null) {
       visitor.onReferenceSimpleParameter(referenceSimpleParameter);
+    } else if (softReferenceSimpleParameter != null) {
+      visitor.onSoftReferenceSimpleParameter(softReferenceSimpleParameter);
     } else if (referenceFixedParameter != null) {
       visitor.onReferenceFixedParameter(referenceFixedParameter);
     } else if (childObjectType != null && collection) {
@@ -231,6 +234,12 @@ public class AttributeDefinition {
     public static Builder fromSimpleReferenceParameter(String referenceSimpleParameter) {
       Builder builder = new Builder();
       builder.attributeDefinition.referenceSimpleParameter = referenceSimpleParameter;
+      return builder;
+    }
+
+    public static Builder fromSoftReferenceSimpleParameter(String softReferenceParameter) {
+      Builder builder = new Builder();
+      builder.attributeDefinition.softReferenceSimpleParameter = softReferenceParameter;
       return builder;
     }
 
