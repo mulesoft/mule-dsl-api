@@ -37,6 +37,14 @@ public interface AttributeDefinitionVisitor {
   void onReferenceSimpleParameter(String reference);
 
   /**
+   * Called when the attribute must reference another object defined in the configuration,
+   * but the value injected in the attribute holder is the reference as String.
+   *
+   * @param softReference the identifier of an object declared in the configuration.
+   */
+  void onSoftReferenceSimpleParameter(String softReference);
+
+  /**
    * Called when the attribute must be configured from another fixed object, from which we have a reference
    *
    * @param reference the identifier of an object.
@@ -50,6 +58,7 @@ public interface AttributeDefinitionVisitor {
    * @param value the fixed value
    */
   void onFixedValue(Object value);
+
 
   /**
    * Called when the attribute is configured from a simple configuration attribute.
