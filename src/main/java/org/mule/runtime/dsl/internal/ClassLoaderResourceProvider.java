@@ -17,8 +17,7 @@ import org.mule.runtime.dsl.api.ResourceProvider;
 /**
  * Resource provider implementation that delegates to an actual class loader.
  */
-public class ClassLoaderResourceProvider implements ResourceProvider
-{
+public class ClassLoaderResourceProvider implements ResourceProvider {
 
   private ClassLoader classLoader;
 
