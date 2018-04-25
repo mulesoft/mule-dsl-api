@@ -13,6 +13,12 @@ import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.mule.runtime.api.component.TypedComponentIdentifier.ComponentType.UNKNOWN;
 
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.mule.api.annotation.NoExtend;
 import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.component.TypedComponentIdentifier;
@@ -20,12 +26,6 @@ import org.mule.runtime.api.component.location.ComponentLocation;
 import org.mule.runtime.api.component.location.LocationPart;
 
 import com.google.common.collect.ImmutableList;
-
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A component location describes where the component is defined in the configuration of the artifact.
@@ -315,10 +315,10 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
   @Override
   public String toString() {
-    return "DefaultComponentLocation{" +
-        "name='" + name + '\'' +
-        ", parts=" + parts +
-        ", location='" + getLocation() + '\'' +
-        '}';
+    return "{\"DefaultComponentLocation\":{"
+        + "\"name\":\"" + name + "\""
+        + ", \"parts\":" + parts
+        + ", \"location\":\"" + location + "\""
+        + "}}";
   }
 }
