@@ -167,7 +167,7 @@ public class ExtensionsHelper {
     Optional<Map.Entry<ExtensionModel, DslSyntaxResolver>> entry = findExtensionEntry(parameterIdentifier);
 
     if (!entry.isPresent()) {
-      return null;
+      return empty(); // TODO what should we do?
     }
 
     DslSyntaxResolver dsl = entry.get().getValue();

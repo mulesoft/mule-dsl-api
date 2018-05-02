@@ -101,7 +101,7 @@ public class XmlArtifactParser {
 
         List<ComponentDefinition> globalDefinitions = recursivelyResolveConfigFiles(initialConfigFiles, emptyList(), emptyList());
         artifactDefinition = ArtifactDefinition.builder()
-            .withGlobalDefinitions(globalDefinitions)
+            .withRootDefinitions(globalDefinitions)
             .build();
       }
       return artifactDefinition;
@@ -127,7 +127,7 @@ public class XmlArtifactParser {
               xmlConfigurationDocumentLoader.loadDocument(extensionModels,
                                                           fileNameInputStreamPair.getFirst(),
                                                           fileNameInputStreamPair.getSecond());
-          allComponentsDefinitions.addAll(parseGlobalDefinitions(document.getDocumentElement()));
+          allComponentsDefinitions.add(parseGlobalDefinitions(document.getDocumentElement()));
 
           resolvedConfigFilesBuilder.add(fileNameInputStreamPair.getFirst());
           try {
@@ -233,15 +233,8 @@ public class XmlArtifactParser {
     return UNDEFINED_NAMESPACE;
   }
 
-  private List<ComponentDefinition> parseGlobalDefinitions(Element configElement) {
-    List<ComponentDefinition> globalDefinitions = new ArrayList<>();
-    NodeList childNodes = configElement.getChildNodes();
-    if (childNodes != null) {
-      for (int i = 0; i < childNodes.getLength(); i++) {
-        createComponentDefinitionFromNode(childNodes.item(i)).ifPresent(globalDefinitions::add);
-      }
-    }
-    return globalDefinitions;
+  private ComponentDefinition parseGlobalDefinitions(Element configElement) {
+    return createComponentDefinitionFromNode(configElement).get();
   }
 
   private Optional<ComponentDefinition> createComponentDefinitionFromNode(Node node) {

@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.mule.api.annotation.NoExtend;
+import org.mule.runtime.api.artifact.sintax.SourceCodeLocation;
 import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.component.TypedComponentIdentifier;
 import org.mule.runtime.api.component.location.ComponentLocation;
@@ -158,11 +159,22 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    * @param partPath the path of this part
    * @param partIdentifier the component identifier of the part if it's not a synthetic part
    * @return a new instance with the given location part appended.
+   * 
+   * @deprecated use {@link DefaultComponentLocation#appendLocationPart(String, Optional, Optional)} instead
    */
+  @Deprecated
   public DefaultComponentLocation appendLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier,
                                                      Optional<String> fileName, Optional<Integer> lineInFile) {
     return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
-        .add(new DefaultLocationPart(partPath, partIdentifier, fileName, lineInFile)).build());
+        .add(new DefaultLocationPart(partPath, partIdentifier, of(SourceCodeLocation.builder().withFilename(fileName.orElse(null))
+            .withStartLine(lineInFile.orElse(-1)).build())))
+        .build());
+  }
+
+  public DefaultComponentLocation appendLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier,
+                                                     Optional<SourceCodeLocation> sourceCodeLocation) {
+    return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
+        .add(new DefaultLocationPart(partPath, partIdentifier, sourceCodeLocation)).build());
   }
 
   /**
@@ -198,21 +210,35 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
     private String partPath;
     private TypedComponentIdentifier partIdentifier;
-    private String fileName;
-    private Integer lineInFile;
+    private SourceCodeLocation sourceCodeLocation;
 
     /**
      * @param partPath the path of this part
      * @param partIdentifier the component identifier of the part if it's not a synthetic part
      * @param fileName the file name in which the component was defined
      * @param lineInFile the line number in which the component was defined
+     *
+     * @deprecated use {@link DefaultLocationPart#DefaultLocationPart(String, Optional, Optional)} instead.
      */
+    @Deprecated
     public DefaultLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier, Optional<String> fileName,
                                Optional<Integer> lineInFile) {
       this.partPath = partPath;
       this.partIdentifier = partIdentifier.orElse(null);
-      fileName.ifPresent(configFileName -> this.fileName = configFileName);
-      lineInFile.ifPresent(line -> this.lineInFile = line);
+      lineInFile.ifPresent(line -> this.sourceCodeLocation =
+          SourceCodeLocation.builder().withStartLine(lineInFile.orElse(-1)).withFilename(fileName.orElse(null)).build());
+    }
+
+    /**
+     * @param partPath the path of this part
+     * @param partIdentifier the component identifier of the part if it's not a synthetic part
+     * @param sourceCodeLocation the location in the source code
+     */
+    public DefaultLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier,
+                               Optional<SourceCodeLocation> sourceCodeLocation) {
+      this.partPath = partPath;
+      this.partIdentifier = partIdentifier.orElse(null);
+      sourceCodeLocation.ifPresent(location -> this.sourceCodeLocation = location);
     }
 
     /**
@@ -233,12 +259,12 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
     @Override
     public Optional<String> getFileName() {
-      return ofNullable(fileName);
+      return ofNullable(sourceCodeLocation == null ? null : sourceCodeLocation.getFilename());
     }
 
     @Override
     public Optional<Integer> getLineInFile() {
-      return ofNullable(lineInFile);
+      return ofNullable(sourceCodeLocation == null ? null : sourceCodeLocation.getStartLine());
     }
 
     @Override
@@ -276,12 +302,11 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
     @Override
     public String toString() {
-      return "DefaultLocationPart{" +
-          "partPath='" + partPath + '\'' +
-          ", partIdentifier=" + partIdentifier +
-          ", fileName='" + fileName + '\'' +
-          ", lineInFile=" + lineInFile +
-          '}';
+      return "{\"DefaultLocationPart\":{"
+          + "\"partPath\":\"" + partPath + "\""
+          + ", \"partIdentifier\":" + partIdentifier
+          + ", \"sourceCodeLocation\":" + sourceCodeLocation
+          + "}}";
     }
   }
 
