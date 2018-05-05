@@ -336,7 +336,8 @@ public class XmlArtifactParser {
         namespace = node.getPrefix();
       }
     }
-    return namespace;
+    //TODO review, this should fail
+    return namespace == null ? CORE_PREFIX : namespace;
   }
 
   private String parseIdentifier(Node node) {

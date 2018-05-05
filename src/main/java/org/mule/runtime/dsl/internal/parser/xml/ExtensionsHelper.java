@@ -27,12 +27,14 @@ import org.mule.runtime.api.meta.model.construct.HasConstructModels;
 import org.mule.runtime.api.meta.model.nested.NestableElementModel;
 import org.mule.runtime.api.meta.model.operation.HasOperationModels;
 import org.mule.runtime.api.meta.model.operation.OperationModel;
+import org.mule.runtime.api.meta.model.parameter.ParameterGroupModel;
 import org.mule.runtime.api.meta.model.parameter.ParameterModel;
 import org.mule.runtime.api.meta.model.parameter.ParameterizedModel;
 import org.mule.runtime.api.meta.model.source.HasSourceModels;
 import org.mule.runtime.api.meta.model.source.SourceModel;
 import org.mule.runtime.api.meta.model.util.ExtensionWalker;
 import org.mule.runtime.api.util.Reference;
+import org.mule.runtime.dsl.internal.parser.ParameterGroupModelsProvider;
 import org.mule.runtime.dsl.internal.parser.ParameterModelsProvider;
 import org.mule.runtime.extension.api.dsl.syntax.DslElementSyntax;
 import org.mule.runtime.extension.api.dsl.syntax.resolver.DslSyntaxResolver;
@@ -175,6 +177,17 @@ public class ExtensionsHelper {
     return parameterModelsProvider.getAllParameterModels()
         .stream()
         .filter(parameterModel -> dsl.resolve(parameterModel).getAttributeName().equals(parameterIdentifier.getName()))
+        .findAny();
+  }
+
+  public Optional<ParameterGroupModel> findParameterGroup(ParameterGroupModelsProvider parameterGroupModelsProvider,
+                                                          ComponentIdentifier parameterIdentifier) {
+    return parameterGroupModelsProvider
+        .getParameterGroupModels()
+        .stream()
+        .filter(parameterGroup -> parameterGroup.isShowInDsl()
+            && parameterGroup.getName().equals(parameterIdentifier.getName())) // TODO this is not taking into account namespaces
+        // nor converting Dsl text to
         .findAny();
   }
 

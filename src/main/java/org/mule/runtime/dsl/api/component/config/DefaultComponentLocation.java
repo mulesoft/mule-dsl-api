@@ -56,7 +56,7 @@ import com.google.common.collect.ImmutableList;
 @NoExtend
 public class DefaultComponentLocation implements ComponentLocation, Serializable {
 
-  private static final long serialVersionUID = 4958158607813720623L;
+  private static final long serialVersionUID = 4958158607813721623L;
 
   private String name;
   private LinkedList<DefaultLocationPart> parts;
@@ -206,7 +206,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    */
   public static class DefaultLocationPart implements LocationPart, Serializable {
 
-    private static final long serialVersionUID = 5757545892752260058L;
+    private static final long serialVersionUID = 5857545892752260058L;
 
     private String partPath;
     private TypedComponentIdentifier partIdentifier;

@@ -28,9 +28,11 @@ import org.mule.runtime.api.artifact.ast.ComponentAst;
 import org.mule.runtime.api.artifact.ast.ConfigurationAst;
 import org.mule.runtime.api.artifact.ast.ConnectionProviderAst;
 import org.mule.runtime.api.artifact.ast.ConstructAst;
+import org.mule.runtime.api.artifact.ast.InternalDslOperationAst;
 import org.mule.runtime.api.artifact.ast.ObjectAst;
 import org.mule.runtime.api.artifact.ast.OperationAst;
 import org.mule.runtime.api.artifact.ast.ParameterAst;
+import org.mule.runtime.api.artifact.ast.ParameterComponentAst;
 import org.mule.runtime.api.artifact.ast.ParameterIdentifierAst;
 import org.mule.runtime.api.artifact.ast.RouteAst;
 import org.mule.runtime.api.artifact.ast.SimpleParameterValueAst;
@@ -38,6 +40,7 @@ import org.mule.runtime.api.artifact.ast.SourceAst;
 import org.mule.runtime.api.artifact.ast.SourceResponseAst;
 import org.mule.runtime.api.artifact.sintax.ArtifactDefinition;
 import org.mule.runtime.api.artifact.sintax.ComponentDefinition;
+import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.meta.model.ExtensionModel;
 import org.mule.runtime.api.meta.model.config.ConfigurationModel;
 import org.mule.runtime.api.meta.model.connection.ConnectionProviderModel;
@@ -49,6 +52,7 @@ import org.mule.runtime.api.meta.model.operation.OperationModel;
 import org.mule.runtime.api.meta.model.parameter.ParameterGroupModel;
 import org.mule.runtime.api.meta.model.parameter.ParameterModel;
 import org.mule.runtime.api.meta.model.parameter.ParameterRole;
+import org.mule.runtime.api.meta.model.parameter.ParameterizedModel;
 import org.mule.runtime.api.meta.model.source.SourceCallbackModel;
 import org.mule.runtime.api.meta.model.source.SourceModel;
 import org.mule.runtime.api.util.Preconditions;
@@ -56,14 +60,16 @@ import org.mule.runtime.api.util.Reference;
 import org.mule.runtime.dsl.internal.parser.xml.ExtensionsHelper;
 import org.mule.runtime.extension.api.dsl.syntax.DslSyntaxUtils;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
 
-public class ArtifactModelFactory {
+//TODO review if this factory exists per DSL or can be the same one for all of the DSLs.
+public class XmlArtifactModelFactory {
 
   private final Set<ExtensionModel> extensionsModels;
   private final ExtensionsHelper extensionsHelper;
 
-  public ArtifactModelFactory(Set<ExtensionModel> extensionModels) {
+  public XmlArtifactModelFactory(Set<ExtensionModel> extensionModels) {
     this.extensionsModels = extensionModels;
     this.extensionsHelper = new ExtensionsHelper(extensionModels);
   }
@@ -130,9 +136,49 @@ public class ArtifactModelFactory {
     } else if (model instanceof NestedComponentModel) {
       // TODO proper error handling
       throw new RuntimeException("this should never happen I guess");
+    } else if (componentDefinition.getIdentifier().getNamespace().equalsIgnoreCase("tns")) {
+      return createDslModuleInternalOperation(componentDefinition);
     }
     // TODO improve
-    throw new RuntimeException();
+    throw new RuntimeException("Could not createComponent from " + componentDefinition.getIdentifier());
+  }
+
+  private InternalDslOperationAst createDslModuleInternalOperation(ComponentDefinition componentDefinition) {
+    return InternalDslOperationAst.builder()
+        .withComponentIdentifier(componentDefinition.getIdentifier())
+        .withSourceCodeLocation(componentDefinition.getSourceCodeLocation())
+        .withParameters(createInternalDslOperationParameters(componentDefinition))
+        .build();
+  }
+
+  private List<ParameterAst> createInternalDslOperationParameters(ComponentDefinition componentDefinition) {
+    return Streams.concat(componentDefinition
+        .getParameterDefinitions()
+        .stream()
+        .map(parameterDefinition -> ParameterAst.builder()
+            .withSourceCodeLocation(parameterDefinition.getSourceCodeLocation())
+            .withParameterIdentifier(ParameterIdentifierAst.builder()
+                .withIdentifier(parameterDefinition.getParameterIdentifierDefinition().getComponentIdentifier())
+                .withSourceCodeLocation(parameterDefinition.getParameterIdentifierDefinition().getSourceCodeLocation())
+                .build())
+            .withValue(SimpleParameterValueAst.builder()
+                .withSourceCodeLocation(parameterDefinition.getParameterValueDefinition().getSourceCodeLocation())
+                .withRawValue(parameterDefinition.getParameterValueDefinition().getRawValue())
+                .build())
+            .build()),
+                          componentDefinition.getChildComponentDefinitions().stream()
+                              .map(nestedComponentDefinition -> ParameterAst.builder()
+                                  .withValue(SimpleParameterValueAst.builder()
+                                      .withRawValue(nestedComponentDefinition.getParameterValueDefinition().get().getRawValue())
+                                      .withSourceCodeLocation(nestedComponentDefinition.getParameterValueDefinition().get()
+                                          .getSourceCodeLocation())
+                                      .build())
+                                  .withParameterIdentifier(ParameterIdentifierAst.builder()
+                                      .withIdentifier(nestedComponentDefinition.getIdentifier())
+                                      .withSourceCodeLocation(nestedComponentDefinition.getSourceCodeLocation()).build())
+                                  .withSourceCodeLocation(nestedComponentDefinition.getSourceCodeLocation())
+                                  .build()))
+        .collect(Collectors.toList());
   }
 
   private ComponentAst createChain(ComponentDefinition componentDefinition, NestedChainModel chainModel) {
@@ -148,7 +194,7 @@ public class ArtifactModelFactory {
     return RouteAst.builder()
         .withComponentIdentifier(componentDefinition.getIdentifier()) // TODO for now we use the same but we need to normalize
         .withSourceCodeLocation(componentDefinition.getSourceCodeLocation())
-        .withParameters(extractParameters(componentDefinition, fromParameterizedModel(model)))
+        .withParameters(createParameters(componentDefinition, model))
         .withModel(model)
         .withProcessorComponents(extractProcessorComponents(componentDefinition))
         .build();
@@ -194,7 +240,7 @@ public class ArtifactModelFactory {
         .withModel(model)
         .withComponentIdentifier(componentDefinition.getIdentifier()) // TODO for now we use the same but we need to normalize
         .withSourceCodeLocation(componentDefinition.getSourceCodeLocation())
-        .withParameters(extractParameters(componentDefinition, fromParameterizedModel(model)))
+        .withParameters(createParameters(componentDefinition, model))
         .build();
   }
 
@@ -203,20 +249,21 @@ public class ArtifactModelFactory {
         .withModel(model)
         .withComponentIdentifier(componentDefinition.getIdentifier()) // TODO for now we use the same but we need to normalize
         .withSourceCodeLocation(componentDefinition.getSourceCodeLocation())
-        .withParameters(extractParameters(componentDefinition, fromParameterizedModel(model)))
+        .withParameters(createParameters(componentDefinition, model))
         .withConnectionProvider(createConnectionProvider(componentDefinition, model))
         .build();
   }
 
   private ConstructAst createConstruct(ComponentDefinition componentDefinition, ConstructModel model) {
     ConstructAst.ConstructAstBuilder constructBuilder = ConstructAst.builder()
-        .withParameters(extractParameters(componentDefinition, fromParameterizedModel(model)))
+        .withParameters(createParameters(componentDefinition, model))
         .withComponentIdentifier(componentDefinition.getIdentifier()) // TODO for now we use the same but we need to normalize
         .withModel(model)
         .withSourceCodeLocation(componentDefinition.getSourceCodeLocation());
 
     constructBuilder.withProcessorComponents(componentDefinition.getChildComponentDefinitions()
-        .stream() // add predicate to filter childs that are parameters
+        .stream()
+        .filter(childComponentDefinition -> !isParameterElement(childComponentDefinition.getIdentifier(), model))
         .map(childComponentDefinition -> createComponent(childComponentDefinition, of(model)))
         .collect(Collectors.toList()));
 
@@ -224,12 +271,19 @@ public class ArtifactModelFactory {
         .build();
   }
 
+  private boolean isParameterElement(ComponentIdentifier parameterIdentifier, ParameterizedModel parameterizedModel) {
+    return extensionsHelper.findParameterModel(fromParameterizedModel(parameterizedModel), parameterIdentifier).isPresent()
+        || extensionsHelper
+            .findParameterGroup(ParameterGroupModelsProvider.fromParameterizedModel(parameterizedModel), parameterIdentifier)
+            .isPresent();
+  }
+
   private SourceAst createSource(ComponentDefinition componentDefinition, SourceModel model) {
     return SourceAst.builder()
         .withModel(model)
         .withComponentIdentifier(componentDefinition.getIdentifier()) // TODO for now we use the same but we need to normalize
         .withSourceCodeLocation(componentDefinition.getSourceCodeLocation())
-        .withParameters(extractParameters(componentDefinition, fromParameterizedModel(model)))
+        .withParameters(createParameters(componentDefinition, model))
         .withSuccessResponse(extractSuccessResponse(componentDefinition, model))
         .withErrorResponse(extractErrorResponse(componentDefinition, model))
         .build();
@@ -258,7 +312,7 @@ public class ArtifactModelFactory {
           .filter(childComponentDefinition -> childComponentDefinition.getIdentifier().getName().equalsIgnoreCase(asInConfigName))
           .map(childComponentDefinition -> {
             List<ParameterAst> parameters =
-                extractParameters(childComponentDefinition, fromParameterGroupModel(parameterGroupModel));
+                createParameters(childComponentDefinition, responseCallbackOptional.get());
             return SourceResponseAst.builder()
                 .withSourceCodeLocation(componentDefinition.getSourceCodeLocation())
                 .withModel(sourceCallbackModel)
@@ -277,38 +331,41 @@ public class ArtifactModelFactory {
         .withSourceCodeLocation(componentDefinition.getSourceCodeLocation())
         .withOperationModel(model)
         .withComponentIdentifier(componentDefinition.getIdentifier()) // TODO for now we use the same but we need to normalize
-        .withParameters(extractParameters(componentDefinition, fromParameterizedModel(model)))
+        .withParameters(createParameters(componentDefinition, model))
         .build();
   }
 
-  private List<ParameterAst> extractParameters(ComponentDefinition componentDefinition,
-                                               ParameterModelsProvider parameterModelsProvider) {
+  private List<ParameterAst> createParameters(ComponentDefinition componentDefinition,
+                                              ParameterizedModel parameterizedModel) {
     // TODO work with an indexed extension model
     final Map<String, String> processedParameters = new HashMap<>();
 
     // TODO missing parameters that do not exists in ext. model as the name parameter
     // TODO remove try, just for troubleshooting.
+    ParameterModelsProvider parameterModelsProvider = ParameterModelsProvider.fromParameterizedModel(parameterizedModel);
     Stream<ParameterAst> simpleParametersStream;
     try {
       simpleParametersStream = componentDefinition.getParameterDefinitions().stream()
-          .map(parameterDefinition -> extensionsHelper
-              .findParameterModel(parameterModelsProvider,
-                                  parameterDefinition.getParameterIdentifierDefinition().getComponentIdentifier())
-              .map(parameterModel -> {
-                processedParameters.put(parameterModel.getName(), parameterModel.getName());
-                return ParameterAst.builder()
-                    .withModel(parameterModel)
-                    .withSourceCodeLocation(componentDefinition.getSourceCodeLocation())
-                    .withParameterIdentifier(ParameterIdentifierAst.builder()
-                        .withSourceCodeLocation(parameterDefinition.getParameterIdentifierDefinition().getSourceCodeLocation())
-                        .withIdentifier(parameterDefinition.getParameterIdentifierDefinition().getComponentIdentifier())
-                        .build())
-                    .withValue(SimpleParameterValueAst.builder()
-                        .withRawValue(parameterDefinition.getParameterValueDefinition().getRawValue())
-                        .withSourceCodeLocation(parameterDefinition.getParameterValueDefinition().getSourceCodeLocation())
-                        .build())
-                    .build();
-              }))
+          .map(parameterDefinition -> {
+            return extensionsHelper
+                .findParameterModel(parameterModelsProvider,
+                                    parameterDefinition.getParameterIdentifierDefinition().getComponentIdentifier())
+                .map(parameterModel -> {
+                  processedParameters.put(parameterModel.getName(), parameterModel.getName());
+                  return ParameterAst.builder()
+                      .withModel(parameterModel)
+                      .withSourceCodeLocation(componentDefinition.getSourceCodeLocation())
+                      .withParameterIdentifier(ParameterIdentifierAst.builder()
+                          .withSourceCodeLocation(parameterDefinition.getParameterIdentifierDefinition().getSourceCodeLocation())
+                          .withIdentifier(parameterDefinition.getParameterIdentifierDefinition().getComponentIdentifier())
+                          .build())
+                      .withValue(SimpleParameterValueAst.builder()
+                          .withRawValue(parameterDefinition.getParameterValueDefinition().getRawValue())
+                          .withSourceCodeLocation(parameterDefinition.getParameterValueDefinition().getSourceCodeLocation())
+                          .build())
+                      .build();
+                });
+          })
           .filter(optional -> optional.isPresent())
           .map(optional -> optional.get());
     } catch (Exception e) {
@@ -317,64 +374,130 @@ public class ArtifactModelFactory {
       throw e;
     }
 
-
     Stream<ParameterAst> complexParametersStream = componentDefinition.getChildComponentDefinitions().stream()
+        .filter(childComponentDefinition -> isParameterElement(childComponentDefinition.getIdentifier(), parameterizedModel))
         .map(childComponentDefinition -> {
-          Optional<ParameterModel> parameterModelOptional = parameterModelsProvider.getAllParameterModels().stream()
-              .filter(parameterModel -> {
-                if (isContentParameter(parameterModel)) {
-                  return parameterModel.getName().equals(childComponentDefinition.getIdentifier().getName());
-                } else {
-                  IsObjectTypeMetadataTypeVisitor objectTypeMetadataTypeVisitor = new IsObjectTypeMetadataTypeVisitor();
-                  parameterModel.getType().accept(objectTypeMetadataTypeVisitor);
-                  return objectTypeMetadataTypeVisitor.isObjectType()
-                      && parameterModel.getName().equals(childComponentDefinition.getIdentifier().getName());
-                }
-              })
-              .findAny();
+          Optional<ParameterGroupModel> parameterGroupOptional =
+              extensionsHelper.findParameterGroup(ParameterGroupModelsProvider.fromParameterizedModel(parameterizedModel),
+                                                  childComponentDefinition.getIdentifier());
+          if (parameterGroupOptional.isPresent()) {
+            ParameterGroupModel parameterGroupModel = parameterGroupOptional.get();
+            // specific case for operations output since it's not complaint with extension models
+            if (parameterGroupModel.getName().equals("output") || parameterGroupModel.getName().equals("outputAttributes")) {
 
-          return parameterModelOptional.map(parameterModel -> {
-            Preconditions.checkState(childComponentDefinition.getChildComponentDefinitions().size() <= 1,
-                                     "Only one child maximum should be available at this point");
-            if (isContentParameter(parameterModel)) {
-              return ParameterAst.builder()
-                  .withModel(parameterModel)
+              ParameterAst parameterAst = ParameterAst.builder()
                   .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
                   .withParameterIdentifier(ParameterIdentifierAst.builder()
                       .withIdentifier(childComponentDefinition.getIdentifier())
-                      .build())
-                  .withValue(SimpleParameterValueAst.builder()
-                      .withSourceCodeLocation(childComponentDefinition.getParameterValueDefinition().get()
-                          .getSourceCodeLocation())
-                      .withRawValue(childComponentDefinition.getParameterValueDefinition().get().getRawValue()) // TODO I'm
-                      // assuming the
-                      // value exists.
-                      .build())
-                  .build();
-
-            } else if (!childComponentDefinition.getChildComponentDefinitions().isEmpty()) {
-              // TODO extended type. This syntax is particular of XML. This must be solved by DSL.
-              ComponentDefinition specificImplementionChildDefinition =
-                  childComponentDefinition.getChildComponentDefinitions().get(0);
-              ComponentAst component = createComponent(specificImplementionChildDefinition, empty());
-              return ParameterAst.builder()
-                  .withModel(parameterModel)
-                  .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
-                  .withParameterIdentifier(ParameterIdentifierAst.builder()
-                      .withIdentifier(childComponentDefinition.getIdentifier())
+                      .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
                       .build())
                   .withValue(ComplexParameterValueAst.builder()
-                      .withComponent(component) // TODO review if the value should be over the parameter wrapper or the paramerter
-                      // itself.
-                      .withSourceCodeLocation(specificImplementionChildDefinition.getSourceCodeLocation())
+                      .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
+                      .withComponent(ParameterComponentAst.builder()
+                          .withComponentIdentifier(childComponentDefinition.getIdentifier()) // TODO this does not make sense
+                          .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
+                          .withParameters(childComponentDefinition.getParameterDefinitions().stream()
+                              .map(childParameterDefinition -> ParameterAst.builder()
+                                  .withSourceCodeLocation(childParameterDefinition.getSourceCodeLocation())
+                                  .withModel(extensionsHelper.findParameterModel(fromParameterGroupModel(parameterGroupModel),
+                                                                                 childParameterDefinition
+                                                                                     .getParameterIdentifierDefinition()
+                                                                                     .getComponentIdentifier())
+                                      .orElse(null))
+                                  .withParameterIdentifier(ParameterIdentifierAst.builder()
+                                      .withSourceCodeLocation(childParameterDefinition.getParameterIdentifierDefinition()
+                                          .getSourceCodeLocation())
+                                      .withIdentifier(childParameterDefinition.getParameterIdentifierDefinition()
+                                          .getComponentIdentifier())
+                                      .build())
+                                  .withValue(SimpleParameterValueAst.builder()
+                                      .withRawValue(childParameterDefinition.getParameterValueDefinition().getRawValue())
+                                      .withSourceCodeLocation(childParameterDefinition.getParameterValueDefinition()
+                                          .getSourceCodeLocation())
+                                      .build())
+                                  .build())
+                              .collect(Collectors.toList()))
+                          .build())
                       .build())
                   .build();
-            } else {
-              throw new RuntimeException();
-            }
 
-          }).orElse(null);
+              return ImmutableList.of(parameterAst);
+            }
+            return parameterGroupModel.getParameterModels()
+                .stream()
+                .map(parameterModel -> ParameterAst.builder()
+                    .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
+                    .withParameterIdentifier(ParameterIdentifierAst.builder()
+                        .withIdentifier(childComponentDefinition.getIdentifier())
+                        .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
+                        .build())
+                    .withModel(parameterModel)
+                    .withValue(SimpleParameterValueAst.builder()
+                        .withSourceCodeLocation(childComponentDefinition.getParameterValueDefinition().get()
+                            .getSourceCodeLocation())
+                        .withRawValue(childComponentDefinition.getParameterValueDefinition().get().getRawValue())
+                        .build())
+                    .build())
+                .collect(Collectors.toList());
+          } else {
+            Optional<ParameterModel> parameterModelOptional = parameterModelsProvider.getAllParameterModels().stream()
+                .filter(parameterModel -> {
+                  if (isContentParameter(parameterModel)) {
+                    return parameterModel.getName().equals(childComponentDefinition.getIdentifier().getName());
+                  } else {
+                    IsObjectTypeMetadataTypeVisitor objectTypeMetadataTypeVisitor = new IsObjectTypeMetadataTypeVisitor();
+                    parameterModel.getType().accept(objectTypeMetadataTypeVisitor);
+                    return objectTypeMetadataTypeVisitor.isObjectType()
+                        && parameterModel.getName().equals(childComponentDefinition.getIdentifier().getName());
+                  }
+                })
+                .findAny();
+
+            return Stream.of(parameterModelOptional.map(parameterModel -> {
+              Preconditions.checkState(childComponentDefinition.getChildComponentDefinitions().size() <= 1,
+                                       "Only one child maximum should be available at this point");
+              if (isContentParameter(parameterModel)) {
+                return ParameterAst.builder()
+                    .withModel(parameterModel)
+                    .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
+                    .withParameterIdentifier(ParameterIdentifierAst.builder()
+                        .withIdentifier(childComponentDefinition.getIdentifier())
+                        .build())
+                    .withValue(SimpleParameterValueAst.builder()
+                        .withSourceCodeLocation(childComponentDefinition.getParameterValueDefinition().get()
+                            .getSourceCodeLocation())
+                        .withRawValue(childComponentDefinition.getParameterValueDefinition().get().getRawValue()) // TODO I'm
+                        // assuming the
+                        // value exists.
+                        .build())
+                    .build();
+
+              } else if (!childComponentDefinition.getChildComponentDefinitions().isEmpty()) {
+                // TODO extended type. This syntax is particular of XML. This must be solved by DSL.
+                ComponentDefinition specificImplementionChildDefinition =
+                    childComponentDefinition.getChildComponentDefinitions().get(0);
+                ComponentAst component = createComponent(specificImplementionChildDefinition, empty());
+                return ParameterAst.builder()
+                    .withModel(parameterModel)
+                    .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
+                    .withParameterIdentifier(ParameterIdentifierAst.builder()
+                        .withIdentifier(childComponentDefinition.getIdentifier())
+                        .build())
+                    .withValue(ComplexParameterValueAst.builder()
+                        .withComponent(component) // TODO review if the value should be over the parameter wrapper or the
+                        // paramerter
+                        // itself.
+                        .withSourceCodeLocation(specificImplementionChildDefinition.getSourceCodeLocation())
+                        .build())
+                    .build();
+              } else {
+                throw new RuntimeException();
+              }
+
+            }).orElse(null)).collect(Collectors.toList());
+          }
         })
+        .flatMap(list -> list.stream())
         .filter(value -> value != null);// TODO this seems weird. probably I can get rid of it.
 
     List<ParameterAst> parameters =
