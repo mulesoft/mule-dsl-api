@@ -166,6 +166,14 @@ public class ExtensionsHelper {
   public Optional<ParameterModel> findParameterModel(ParameterModelsProvider parameterModelsProvider,
                                                      ComponentIdentifier parameterIdentifier) {
 
+    // Optional<ExtensionModel> parameterIdentifierExtensionModel = extensionModels.stream().filter(em ->
+    // em.getName().toLowerCase().equals(parameterIdentifier.getNamespace())).findAny();
+    // if (parameterIdentifierExtensionModel.isPresent()) {
+    // ExtensionModel extensionModel = parameterIdentifierExtensionModel.get();
+    // extensionModel.getSubTypes().stream()
+    // .filter(type -> type.getBaseType().)
+    // }
+
     Optional<Map.Entry<ExtensionModel, DslSyntaxResolver>> entry = findExtensionEntry(parameterIdentifier);
 
     if (!entry.isPresent()) {
@@ -176,7 +184,8 @@ public class ExtensionsHelper {
 
     return parameterModelsProvider.getAllParameterModels()
         .stream()
-        .filter(parameterModel -> dsl.resolve(parameterModel).getAttributeName().equals(parameterIdentifier.getName()))
+        .filter(parameterModel -> dsl.resolve(parameterModel).getAttributeName().equals(parameterIdentifier.getName())
+            || dsl.resolve(parameterModel).getElementName().equals(parameterIdentifier.getName()))
         .findAny();
   }
 

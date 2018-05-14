@@ -11,6 +11,7 @@ import static java.util.Optional.of;
 import static org.mule.runtime.dsl.internal.parser.ParameterModelsProvider.fromParameterGroupModel;
 import static org.mule.runtime.dsl.internal.parser.ParameterModelsProvider.fromParameterizedModel;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +58,7 @@ import org.mule.runtime.api.meta.model.source.SourceCallbackModel;
 import org.mule.runtime.api.meta.model.source.SourceModel;
 import org.mule.runtime.api.util.Preconditions;
 import org.mule.runtime.api.util.Reference;
+import org.mule.runtime.dsl.api.config.ConfigResource;
 import org.mule.runtime.dsl.internal.parser.xml.ExtensionsHelper;
 import org.mule.runtime.extension.api.dsl.syntax.DslSyntaxUtils;
 
@@ -74,8 +76,13 @@ public class XmlArtifactModelFactory {
     this.extensionsHelper = new ExtensionsHelper(extensionModels);
   }
 
-  public ArtifactAst createFrom(ArtifactDefinition artifactDefinition) {
+  // TODO remove configFiles and disableXmlValidations
+  public ArtifactAst createFrom(ArtifactDefinition artifactDefinition, Set<URL> configFiles, boolean disableXmlValidations,
+                                ConfigResource[] configResources) {
     return ArtifactAst.builder()
+        .withConfigFiles(configFiles)
+        .withDisableXmlValidations(disableXmlValidations)
+        .withConfigResources(configResources)
         .withArtifactType(artifactDefinition.getRootDefinitions().get(0).getIdentifier().getName())
         .withParameters(createRootParameters(artifactDefinition))
         .withGlobalComponents(createGlobalComponents(artifactDefinition))
@@ -422,6 +429,20 @@ public class XmlArtifactModelFactory {
                   .build();
 
               return ImmutableList.of(parameterAst);
+            } else if (parameterGroupModel.getName().equals("parameters")) {
+              return ImmutableList.of(ParameterAst.builder()
+                  .withParameterIdentifier(ParameterIdentifierAst.builder()
+                      .withIdentifier(childComponentDefinition.getIdentifier())
+                      .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
+                      .build())
+                  .withSourceCodeLocation(childComponentDefinition.getSourceCodeLocation())
+                  .withValue(ComplexParameterValueAst.builder()
+                      .withComponent(ParameterComponentAst.builder()
+                          .withComponentIdentifier(childComponentDefinition.getIdentifier())
+                          .withParameters(extractOperationParameters(childComponentDefinition))
+                          .build())
+                      .build())
+                  .build());
             }
             return parameterGroupModel.getParameterModels()
                 .stream()
@@ -525,6 +546,42 @@ public class XmlArtifactModelFactory {
         });
 
     return parameters;
+  }
+
+  private List<ParameterAst> extractOperationParameters(ComponentDefinition parametersDefinition) {
+    return parametersDefinition.getChildComponentDefinitions()
+        .stream()
+        .map(parameterDefinition -> ParameterAst.builder()
+            .withParameterIdentifier(ParameterIdentifierAst.builder()
+                .withIdentifier(parameterDefinition.getIdentifier())
+                .withSourceCodeLocation(parameterDefinition.getSourceCodeLocation())
+                .build())
+            .withValue(ComplexParameterValueAst.builder()
+                .withComponent(ParameterComponentAst.builder()
+                    .withComponentIdentifier(parameterDefinition.getIdentifier())
+                    .withParameters(createParameterForOperationParameter(parameterDefinition))
+                    .build())
+                .build())
+            .build())
+        .collect(Collectors.toList());
+  }
+
+  private List<ParameterAst> createParameterForOperationParameter(ComponentDefinition parameterComponentDefinition) {
+    List<ParameterAst> parameterAsts = new ArrayList<>();
+
+    parameterComponentDefinition.getParameterDefinitions().stream()
+        .forEach(parameterDefinition -> parameterAsts.add(ParameterAst.builder()
+            .withParameterIdentifier(ParameterIdentifierAst.builder()
+                .withSourceCodeLocation(parameterDefinition.getParameterIdentifierDefinition().getSourceCodeLocation())
+                .withIdentifier(parameterDefinition.getParameterIdentifierDefinition().getComponentIdentifier())
+                .build())
+            .withValue(SimpleParameterValueAst.builder()
+                .withRawValue(parameterDefinition.getParameterValueDefinition().getRawValue())
+                .withSourceCodeLocation(parameterDefinition.getParameterValueDefinition().getSourceCodeLocation())
+                .build())
+            .build()));
+
+    return parameterAsts;
   }
 
   private boolean isContentParameter(ParameterModel parameterModel) {
