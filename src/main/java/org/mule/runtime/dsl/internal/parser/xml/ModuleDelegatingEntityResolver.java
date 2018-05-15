@@ -9,6 +9,7 @@ package org.mule.runtime.dsl.internal.parser.xml;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -38,7 +39,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Custom implementation of resolver for schemas where it will delegate to our custom resolver, then if not found will try to
- * generate the XSDs from the extensions (through {@link })
+ * generate the XSDs from the extensions (through {@link }), and finally fall back to Spring's {@link DelegatingEntityResolver}.
  *
  * @since 4.0
  */
@@ -90,6 +91,16 @@ public class ModuleDelegatingEntityResolver implements EntityResolver {
     }
   }
 
+  // TODO consolidate wit the other lookup provider method.
+  protected static <T> Collection<T> lookupProviders(Class<T> providerClass, ClassLoader classLoader) {
+    Iterator<T> iterator = ServiceLoader.load(providerClass, classLoader).iterator();
+    if (iterator.hasNext()) {
+      return copyOf(iterator);
+    } else {
+      return emptyList();
+    }
+  }
+
   @Override
   public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
     if (LOGGER.isDebugEnabled()) {
@@ -120,9 +131,9 @@ public class ModuleDelegatingEntityResolver implements EntityResolver {
 
   private String overrideSystemIdForCompatibility(String publicId, String systemId) throws SAXException, IOException {
     if (systemId.equals(CORE_XSD)) {
-      Boolean useDeprecated = muleEntityResolver.resolveEntity(publicId, CORE_DEPRECATED_XSD) != null;
-      Boolean usingCompatibility = muleEntityResolver.resolveEntity(publicId, COMPATIBILITY_XSD) != null;
-      Boolean runningTests = isRunningTests(new Throwable().getStackTrace());
+      Boolean useDeprecated = canResolveEntity(publicId, CORE_DEPRECATED_XSD);
+      Boolean usingCompatibility = canResolveEntity(publicId, COMPATIBILITY_XSD);
+      boolean runningTests = isRunningTests();
 
       if (useDeprecated && (usingCompatibility || runningTests)) {
         return CORE_DEPRECATED_XSD;
@@ -130,7 +141,7 @@ public class ModuleDelegatingEntityResolver implements EntityResolver {
         return CORE_CURRENT_XSD;
       }
     } else if (systemId.equals(TEST_XSD)) {
-      Boolean runningTests = isRunningTests(new Throwable().getStackTrace());
+      boolean runningTests = isRunningTests();
       if (!runningTests && generateFromExtensions(publicId, systemId) == null) {
         String message = "Internal runtime mule-test.xsd can't be used in real applications";
         throw new MuleRuntimeException(createStaticMessage(message));
@@ -140,15 +151,33 @@ public class ModuleDelegatingEntityResolver implements EntityResolver {
     return systemId;
   }
 
-  private Boolean isRunningTests(StackTraceElement[] stackTrace) {
-    if (internalIsRunningTests) {
-      return true;
+  protected boolean canResolveEntity(String publicId, String systemId) throws SAXException, IOException {
+    final InputSource resolvedEntity = muleEntityResolver.resolveEntity(publicId, systemId);
+    try {
+      return resolvedEntity != null;
+    } finally {
+      if (resolvedEntity != null) {
+        if (resolvedEntity.getByteStream() != null) {
+          resolvedEntity.getByteStream().close();
+        }
+        if (resolvedEntity.getCharacterStream() != null) {
+          resolvedEntity.getCharacterStream().close();
+        }
+      }
     }
-    for (StackTraceElement element : stackTrace) {
+  }
+
+  private boolean isRunningTests() {
+    if (internalIsRunningTests != null) {
+      return internalIsRunningTests;
+    }
+    for (StackTraceElement element : new Throwable().getStackTrace()) {
       if (element.getClassName().startsWith("org.junit.runners.")) {
+        internalIsRunningTests = true;
         return true;
       }
     }
+    internalIsRunningTests = false;
     return false;
   }
 
@@ -181,16 +210,6 @@ public class ModuleDelegatingEntityResolver implements EntityResolver {
         .orElseThrow(
                      () -> new IllegalStateException("There were no schema generators available when trying to work with the extension '"
                          + extensionModel.getName() + "'"));
-    return new ByteArrayInputStream(generatedResource.getBytes());
-  }
-
-  // TODO consolidate wit the other lookup provider method.
-  protected static <T> Collection<T> lookupProviders(Class<T> providerClass, ClassLoader classLoader) {
-    Iterator<T> iterator = ServiceLoader.load(providerClass, classLoader).iterator();
-    if (iterator.hasNext()) {
-      return copyOf(iterator);
-    } else {
-      return emptyList();
-    }
+    return new ByteArrayInputStream(generatedResource.getBytes(UTF_8));
   }
 }
