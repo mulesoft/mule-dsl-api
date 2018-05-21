@@ -116,7 +116,12 @@ public class XmlArtifactModelFactory {
     artifactDefinition.getRootDefinitions().stream()
         .map(ComponentDefinition::getChildComponentDefinitions)
         .forEach(componentDefinitions -> componentDefinitions.stream()
-            .forEach(componentDefinition -> globalComponents.add(createComponent(componentDefinition, empty()))));
+            .forEach(componentDefinition -> {
+              ComponentAst component = createComponent(componentDefinition, empty());
+              if (component != null) {
+                globalComponents.add(component);
+              }
+            }));
     return globalComponents;
   }
 
@@ -146,8 +151,9 @@ public class XmlArtifactModelFactory {
     } else if (componentDefinition.getIdentifier().getNamespace().equalsIgnoreCase("tns")) {
       return createDslModuleInternalOperation(componentDefinition);
     }
-    // TODO improve
-    throw new RuntimeException("Could not createComponent from " + componentDefinition.getIdentifier());
+    // TODO for now we just return null since we need to consider components that do not have extension model
+    return null;
+    // throw new RuntimeException("Could not createComponent from " + componentDefinition.getIdentifier());
   }
 
   private InternalDslOperationAst createDslModuleInternalOperation(ComponentDefinition componentDefinition) {
@@ -211,6 +217,7 @@ public class XmlArtifactModelFactory {
     // TODO filter those that are parameters
     return componentDefinition.getChildComponentDefinitions().stream()
         .map(childComponentDefinition -> createComponent(childComponentDefinition, empty()))
+        .filter(value -> value != null)
         .collect(Collectors.toList());
   }
 
@@ -272,6 +279,7 @@ public class XmlArtifactModelFactory {
         .stream()
         .filter(childComponentDefinition -> !isParameterElement(childComponentDefinition.getIdentifier(), model))
         .map(childComponentDefinition -> createComponent(childComponentDefinition, of(model)))
+        .filter(value -> value != null)
         .collect(Collectors.toList()));
 
     return constructBuilder

@@ -60,7 +60,7 @@ public class ModuleDelegatingEntityResolver implements EntityResolver {
   private Optional<ExtensionSchemaGenerator> extensionSchemaFactory;
   private Map<String, Boolean> checkedEntities; // It saves already checked entities so that if the resolution already failed
   // once, it will raise and exception and not loop failing over and over again.
-  private static Boolean internalIsRunningTests = false;
+  private static Boolean internalIsRunningTests;
 
   /**
    * Returns an instance of {@link ModuleDelegatingEntityResolver}
