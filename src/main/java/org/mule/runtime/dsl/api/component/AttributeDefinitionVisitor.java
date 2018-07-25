@@ -59,7 +59,6 @@ public interface AttributeDefinitionVisitor {
    */
   void onFixedValue(Object value);
 
-
   /**
    * Called when the attribute is configured from a simple configuration attribute.
    *
@@ -69,6 +68,17 @@ public interface AttributeDefinitionVisitor {
    *        attribute.
    */
   void onConfigurationParameter(String parameterName, Object defaultValue, Optional<TypeConverter> typeConverter);
+
+  /**
+   * Called when the attribute is configured from a simple configuration attribute and could reference to a another object defined
+   * in the configuration.
+   *
+   * @param parameterName configuration parameter name.
+   * @param defaultValue default value for the configuration parameter if it has not value.
+   * @param typeConverter a value converter to convert from the value provided by the config to the value required of the
+   *        attribute.
+   */
+  void onReferenceConfigurationParameter(String parameterName, Object defaultValue, Optional<TypeConverter> typeConverter);
 
   /**
    * Called when the attribute holds all the simple configuration attributes not mapped to any other attribute.

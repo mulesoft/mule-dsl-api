@@ -41,7 +41,7 @@ public class AttributeDefinition {
   private KeyAttributeDefinitionPair[] definitions;
   private String wrapperIdentifier;
   private String childIdentifier;
-
+  private boolean referenceConfigurationParameter;
 
   private AttributeDefinition() {}
 
@@ -50,7 +50,11 @@ public class AttributeDefinition {
    */
   public void accept(AttributeDefinitionVisitor visitor) {
     if (configParameterName != null) {
-      visitor.onConfigurationParameter(configParameterName, defaultValue, ofNullable(typeConverter));
+      if (referenceConfigurationParameter) {
+        visitor.onReferenceConfigurationParameter(configParameterName, defaultValue, ofNullable(typeConverter));
+      } else {
+        visitor.onConfigurationParameter(configParameterName, defaultValue, ofNullable(typeConverter));
+      }
     } else if (referenceObject != null) {
       visitor.onReferenceObject(referenceObject);
     } else if (undefinedSimpleParametersHolder) {
@@ -107,6 +111,19 @@ public class AttributeDefinition {
       Builder builder = new Builder();
       builder.attributeDefinition.configParameterName = configParameterName;
       builder.attributeDefinition.typeConverter = typeConverter;
+      return builder;
+    }
+
+    /**
+     * @param configParameterName name of the configuration parameter from which this attribute value will be extracted.
+     * @param typeConverter converter from the configuration value to a custom type.
+     * @return the builder
+     */
+    public static Builder fromSimpleReferenceParameter(String configParameterName, TypeConverter typeConverter) {
+      Builder builder = new Builder();
+      builder.attributeDefinition.configParameterName = configParameterName;
+      builder.attributeDefinition.typeConverter = typeConverter;
+      builder.attributeDefinition.referenceConfigurationParameter = true;
       return builder;
     }
 
