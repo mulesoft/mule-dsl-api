@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.mule.api.annotation.NoExtend;
-import org.mule.runtime.api.artifact.sintax.SourceCodeLocation;
+import org.mule.runtime.api.artifact.ast.SourceCodeLocation;
 import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.component.TypedComponentIdentifier;
 import org.mule.runtime.api.component.location.ComponentLocation;

@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.runtime.dsl.internal.parser.xml;
+package org.mule.runtime.dsl.api;
 
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toMap;
@@ -13,7 +13,6 @@ import static org.mule.runtime.api.component.ComponentIdentifier.builder;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.mule.metadata.api.model.ObjectType;
 import org.mule.runtime.api.component.ComponentIdentifier;
@@ -43,11 +42,11 @@ public class ExtensionsHelper {
 
   private final DslResolvingContext resolvingContext;
   private final Map<ExtensionModel, DslSyntaxResolver> resolvers;
-  private Set<ExtensionModel> extensionModels;
+  private ExtensionModelProvider extensionModelProvider;
 
-  public ExtensionsHelper(Set<ExtensionModel> extensionModels) {
-    this.extensionModels = extensionModels;
-    this.resolvingContext = DslResolvingContext.getDefault(extensionModels);
+  public ExtensionsHelper(ExtensionModelProvider extensionModelProvider) {
+    this.extensionModelProvider = extensionModelProvider;
+    this.resolvingContext = DslResolvingContext.getDefault(extensionModelProvider.getExtensionModels());
     this.resolvers = resolvingContext.getExtensions().stream()
         .collect(toMap(e -> e, e -> DslSyntaxResolver.getDefault(e, resolvingContext)));
   }
@@ -251,7 +250,7 @@ public class ExtensionsHelper {
   }
 
   public ExtensionModel findExtensionModelOwning(ComponentIdentifier identifier) {
-    return extensionModels.stream()
+    return extensionModelProvider.getExtensionModels().stream()
         .filter(extensionModel -> extensionModel.getName().equalsIgnoreCase(identifier.getNamespace()))
         .findAny().get();
   }
