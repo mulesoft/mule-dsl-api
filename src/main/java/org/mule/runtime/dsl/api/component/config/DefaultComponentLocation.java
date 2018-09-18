@@ -55,7 +55,7 @@ import java.util.Optional;
 @NoExtend
 public class DefaultComponentLocation implements ComponentLocation, Serializable {
 
-  private static final long serialVersionUID = 4958158607813120623L;
+  private static final long serialVersionUID = 4958158607813720623L;
 
   private String name;
   private LinkedList<DefaultLocationPart> parts;
