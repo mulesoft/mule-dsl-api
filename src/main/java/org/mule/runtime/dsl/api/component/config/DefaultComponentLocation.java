@@ -12,8 +12,8 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.mule.runtime.api.component.TypedComponentIdentifier.ComponentType.UNKNOWN;
-
 import org.mule.api.annotation.NoExtend;
+import org.mule.api.annotation.NoInstantiate;
 import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.component.TypedComponentIdentifier;
 import org.mule.runtime.api.component.location.ComponentLocation;
@@ -80,6 +80,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
                                                                .buildFromStringRepresentation(component))
                                                            .build()),
                                                        empty(),
+                                                       empty(),
                                                        empty());
     return new DefaultComponentLocation(of(component), asList(part));
   }
@@ -134,6 +135,14 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Optional<Integer> getStartColumn() {
+    return parts.getLast().getStartColumn();
+  }
+
+  /**
    * @return a string representation of the {@link DefaultComponentLocation}.
    */
   @Override
@@ -168,9 +177,10 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    * @return a new instance with the given location part appended.
    */
   public DefaultComponentLocation appendLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier,
-                                                     Optional<String> fileName, Optional<Integer> lineInFile) {
+                                                     Optional<String> fileName, Optional<Integer> lineInFile,
+                                                     Optional<Integer> startColumn) {
     return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
-        .add(new DefaultLocationPart(partPath, partIdentifier, fileName, lineInFile)).build());
+        .add(new DefaultLocationPart(partPath, partIdentifier, fileName, lineInFile, startColumn)).build());
   }
 
   /**
@@ -181,7 +191,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    */
   public DefaultComponentLocation appendProcessorsPart() {
     return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
-        .add(new DefaultLocationPart("processors", empty(), empty(), empty())).build());
+        .add(new DefaultLocationPart("processors", empty(), empty(), empty(), empty())).build());
   }
 
   /**
@@ -192,7 +202,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    */
   public DefaultComponentLocation appendRoutePart() {
     return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
-        .add(new DefaultLocationPart("route", empty(), empty(), empty())).build());
+        .add(new DefaultLocationPart("route", empty(), empty(), empty(), empty())).build());
   }
 
   /**
@@ -200,6 +210,8 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    *
    * @since 4.0
    */
+  @NoInstantiate
+  @NoExtend
   public static class DefaultLocationPart implements LocationPart, Serializable {
 
     private static final long serialVersionUID = 5757545892752260058L;
@@ -208,6 +220,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
     private TypedComponentIdentifier partIdentifier;
     private String fileName;
     private Integer lineInFile;
+    private Integer startColumn;
 
     /**
      * @param partPath the path of this part
@@ -216,11 +229,12 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
      * @param lineInFile the line number in which the component was defined
      */
     public DefaultLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier, Optional<String> fileName,
-                               Optional<Integer> lineInFile) {
+                               Optional<Integer> lineInFile, Optional<Integer> startColumn) {
       this.partPath = partPath;
       this.partIdentifier = partIdentifier.orElse(null);
       fileName.ifPresent(configFileName -> this.fileName = configFileName);
       lineInFile.ifPresent(line -> this.lineInFile = line);
+      startColumn.ifPresent(column -> this.startColumn = column);
     }
 
     /**
@@ -250,6 +264,11 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
     }
 
     @Override
+    public Optional<Integer> getStartColumn() {
+      return ofNullable(startColumn);
+    }
+
+    @Override
     public boolean equals(Object o) {
       if (this == o) {
         return true;
@@ -270,6 +289,9 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
       if (getFileName() != null ? !getFileName().equals(that.getFileName()) : that.getFileName() != null) {
         return false;
       }
+      if (getStartColumn() != null ? !getStartColumn().equals(that.getStartColumn()) : that.getStartColumn() != null) {
+        return false;
+      }
       return getLineInFile() != null ? getLineInFile().equals(that.getLineInFile()) : that.getLineInFile() == null;
     }
 
@@ -279,6 +301,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
       result = 31 * result + (getPartIdentifier() != null ? getPartIdentifier().hashCode() : 0);
       result = 31 * result + (getFileName() != null ? getFileName().hashCode() : 0);
       result = 31 * result + (getLineInFile() != null ? getLineInFile().hashCode() : 0);
+      result = 31 * result + (getStartColumn() != null ? getStartColumn().hashCode() : 0);
       return result;
     }
 
@@ -289,6 +312,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
           ", partIdentifier=" + partIdentifier +
           ", fileName='" + fileName + '\'' +
           ", lineInFile=" + lineInFile +
+          ", startColumn=" + startColumn +
           '}';
     }
   }
