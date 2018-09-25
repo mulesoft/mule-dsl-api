@@ -12,6 +12,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.mule.runtime.api.component.TypedComponentIdentifier.ComponentType.UNKNOWN;
+
 import org.mule.api.annotation.NoExtend;
 import org.mule.api.annotation.NoInstantiate;
 import org.mule.runtime.api.component.ComponentIdentifier;
@@ -61,6 +62,8 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   private LinkedList<DefaultLocationPart> parts;
   private volatile String location;
 
+  private final TypedComponentIdentifier componentIdentifier;
+
   /**
    * Creates a virtual {@link ComponentLocation} for a single element, using the core namespace and using UNKNOWN as type. Only
    * meant for situations where a real location cannot be obtained.
@@ -88,6 +91,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   public DefaultComponentLocation(Optional<String> name, List<DefaultLocationPart> parts) {
     this.name = name.orElse(null);
     this.parts = new LinkedList<>(parts);
+    componentIdentifier = parts.get(parts.size() - 1).getPartIdentifier().get();
   }
 
   /**
@@ -107,7 +111,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
   @Override
   public TypedComponentIdentifier getComponentIdentifier() {
-    return parts.get(parts.size() - 1).getPartIdentifier().get();
+    return componentIdentifier;
   }
 
   /**
