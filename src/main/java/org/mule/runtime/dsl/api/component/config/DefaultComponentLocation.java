@@ -22,6 +22,7 @@ import org.mule.runtime.api.component.location.LocationPart;
 
 import com.google.common.collect.ImmutableList;
 
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   private LinkedList<DefaultLocationPart> parts;
   private volatile String location;
 
-  private final TypedComponentIdentifier componentIdentifier;
+  private transient TypedComponentIdentifier componentIdentifier;
 
   /**
    * Creates a virtual {@link ComponentLocation} for a single element, using the core namespace and using UNKNOWN as type. Only
@@ -91,7 +92,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   public DefaultComponentLocation(Optional<String> name, List<DefaultLocationPart> parts) {
     this.name = name.orElse(null);
     this.parts = new LinkedList<>(parts);
-    componentIdentifier = parts.get(parts.size() - 1).getPartIdentifier().get();
+    componentIdentifier = calculateComponentIdentifier(parts);
   }
 
   /**
@@ -311,6 +312,15 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
           ", startColumn=" + startColumn +
           '}';
     }
+  }
+
+  private void readObject(ObjectInputStream in) throws Exception {
+    in.defaultReadObject();
+    this.componentIdentifier = calculateComponentIdentifier(this.parts);
+  }
+
+  protected TypedComponentIdentifier calculateComponentIdentifier(List<DefaultLocationPart> parts) {
+    return parts.get(parts.size() - 1).getPartIdentifier().get();
   }
 
   @Override
