@@ -324,7 +324,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   }
 
   protected TypedComponentIdentifier calculateComponentIdentifier(List<DefaultLocationPart> parts) {
-    return parts.get(parts.size() - 1).getPartIdentifier().orElse(null);
+    return parts.isEmpty() ? null : parts.get(parts.size() - 1).getPartIdentifier().orElse(null);
   }
 
   @Override
