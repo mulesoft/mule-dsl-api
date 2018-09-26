@@ -26,6 +26,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -112,6 +113,9 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
   @Override
   public TypedComponentIdentifier getComponentIdentifier() {
+    if (componentIdentifier == null) {
+      throw new NoSuchElementException();
+    }
     return componentIdentifier;
   }
 
@@ -320,7 +324,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   }
 
   protected TypedComponentIdentifier calculateComponentIdentifier(List<DefaultLocationPart> parts) {
-    return parts.get(parts.size() - 1).getPartIdentifier().get();
+    return parts.get(parts.size() - 1).getPartIdentifier().orElse(null);
   }
 
   @Override
