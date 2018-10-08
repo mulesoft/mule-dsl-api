@@ -6,11 +6,16 @@
  */
 package org.mule.runtime.dsl.api.xml.parser;
 
+import org.mule.api.annotation.NoExtend;
+import org.mule.api.annotation.NoInstantiate;
+
 /**
  * Represents a simple configuration attribute.
  *
  * @since 4.0
  */
+@NoExtend
+@NoInstantiate
 public final class SimpleConfigAttribute {
 
   private final String name;

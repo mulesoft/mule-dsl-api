@@ -6,8 +6,9 @@
  */
 package org.mule.runtime.dsl.api.xml.parser;
 
-import static com.google.common.collect.ImmutableMap.copyOf;
 import static org.mule.runtime.api.util.Preconditions.checkState;
+import org.mule.api.annotation.NoExtend;
+import org.mule.api.annotation.NoInstantiate;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -24,6 +25,8 @@ import org.w3c.dom.Node;
  *
  * @since 4.0
  */
+@NoExtend
+@NoInstantiate
 public final class ConfigLine {
 
   /**

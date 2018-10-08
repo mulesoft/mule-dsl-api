@@ -6,6 +6,9 @@
  */
 package org.mule.runtime.dsl.api.xml.parser;
 
+import org.mule.api.annotation.NoImplement;
+import org.mule.api.annotation.NoInstantiate;
+
 /**
  * A configuration line provider allows to have a parent child relationship between {@code ConfigLine} while keeping the object
  * immutable.
@@ -13,6 +16,8 @@ package org.mule.runtime.dsl.api.xml.parser;
  * @since 4.0
  */
 @FunctionalInterface
+@NoImplement
+@NoInstantiate
 public interface ConfigLineProvider {
 
   /**

@@ -7,6 +7,8 @@
 package org.mule.runtime.dsl.api.xml.parser;
 
 import static org.mule.runtime.api.util.Preconditions.checkState;
+import org.mule.api.annotation.NoExtend;
+import org.mule.api.annotation.NoInstantiate;
 
 import java.util.List;
 
@@ -19,6 +21,8 @@ import java.util.List;
  *
  * @since 4.0
  */
+@NoExtend
+@NoInstantiate
 public final class ConfigFile implements Comparable<ConfigFile> {
 
   private String filename;

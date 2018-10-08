@@ -7,9 +7,9 @@
 package org.mule.runtime.dsl.internal.xml.parser;
 
 
-import static org.mule.runtime.dsl.api.xml.parser.XmlApplicationParser.DECLARED_PREFIX;
-import static org.mule.runtime.dsl.api.xml.parser.XmlApplicationParser.NAMESPACE_URI;
-import static org.mule.runtime.dsl.api.xml.parser.XmlApplicationParser.XML_NODE;
+import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.DECLARED_PREFIX;
+import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.NAMESPACE_URI;
+import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.XML_NODE;
 import org.mule.runtime.dsl.api.xml.parser.ConfigLine;
 
 import org.w3c.dom.Node;

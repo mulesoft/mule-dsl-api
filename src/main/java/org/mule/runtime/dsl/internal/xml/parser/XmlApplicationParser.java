@@ -5,7 +5,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.runtime.dsl.api.xml.parser;
+package org.mule.runtime.dsl.internal.xml.parser;
 
 import static org.mule.runtime.internal.dsl.DslConstants.CORE_PREFIX;
 import static org.mule.runtime.internal.dsl.DslConstants.DOMAIN_NAMESPACE;
@@ -15,8 +15,8 @@ import static org.mule.runtime.internal.dsl.DslConstants.EE_DOMAIN_PREFIX;
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.dsl.api.xml.XmlNamespaceInfo;
 import org.mule.runtime.dsl.api.xml.XmlNamespaceInfoProvider;
-import org.mule.runtime.dsl.internal.xml.parser.XmlCustomAttributeHandler;
-import org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations;
+import org.mule.runtime.dsl.api.xml.parser.ConfigLine;
+import org.mule.runtime.dsl.api.xml.parser.ConfigLineProvider;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

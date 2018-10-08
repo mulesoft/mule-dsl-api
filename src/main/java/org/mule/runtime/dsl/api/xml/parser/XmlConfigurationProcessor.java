@@ -16,6 +16,7 @@ import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.api.util.Pair;
 import org.mule.runtime.dsl.api.ConfigResource;
 import org.mule.runtime.dsl.api.xml.XmlDslConstants;
+import org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

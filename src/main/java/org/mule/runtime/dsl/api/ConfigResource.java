@@ -6,6 +6,8 @@
  */
 package org.mule.runtime.dsl.api;
 
+import org.mule.api.annotation.NoExtend;
+import org.mule.api.annotation.NoInstantiate;
 import org.mule.runtime.api.util.IOUtils;
 
 import java.io.FileNotFoundException;
@@ -17,6 +19,8 @@ import java.net.URL;
  * A ConfigResource holds the url description (or location) and the url stream. It is useful to associate the two for error
  * reporting when the stream cannot be read.
  */
+@NoExtend
+@NoInstantiate
 public final class ConfigResource {
 
   protected String resourceName;
