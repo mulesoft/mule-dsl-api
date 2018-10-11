@@ -114,8 +114,9 @@ public final class XmlApplicationParser {
     XmlMetadataAnnotations userData = (XmlMetadataAnnotations) node.getUserData(XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY);
     int lineNumber = userData.getLineNumber();
     builder.setLineNumber(lineNumber).setStartColumn(userData.getColumnNumber());
+    builder.setSourceCode(userData.getElementString());
 
-    XmlCustomAttributeHandler.to(builder).addNode(node);
+    XmlCustomAttributeHandler.to(builder).addCustomAttributes(node);
 
     Element element = (Element) node;
     NamedNodeMap attributes = element.getAttributes();

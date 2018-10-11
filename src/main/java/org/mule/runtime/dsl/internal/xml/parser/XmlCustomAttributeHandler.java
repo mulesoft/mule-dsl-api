@@ -7,9 +7,9 @@
 package org.mule.runtime.dsl.internal.xml.parser;
 
 
+import static org.mule.runtime.api.component.Component.Annotations.NAME_ANNOTATION_KEY;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.DECLARED_PREFIX;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.NAMESPACE_URI;
-import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.XML_NODE;
 import org.mule.runtime.dsl.api.xml.parser.ConfigLine;
 
 import org.w3c.dom.Node;
@@ -29,15 +29,6 @@ public class XmlCustomAttributeHandler {
     return new ConfigLineCustomAttributeStore(builder);
   }
 
-  /**
-   * @param configLine line from which the custom attribute must be retrieved.
-   * @return a handler for retrieving custom attributes.
-   */
-  public static ConfigLineCustomAttributeRetrieve from(ConfigLine configLine) {
-    return new ConfigLineCustomAttributeRetrieve(configLine);
-  }
-
-
   public static class ConfigLineCustomAttributeStore {
 
     private final ConfigLine.Builder builder;
@@ -46,32 +37,17 @@ public class XmlCustomAttributeHandler {
       this.builder = builder;
     }
 
-    public ConfigLineCustomAttributeStore addNode(Node node) {
-      addCustomAttributes(node);
-      return this;
-    }
-
-    private void addCustomAttributes(Node node) {
-      this.builder.addCustomAttribute(XML_NODE, node);
+    public void addCustomAttributes(Node node) {
       this.builder.addCustomAttribute(NAMESPACE_URI, node.getNamespaceURI());
+      Node nameAttribute = node.getAttributes()
+          .getNamedItemNS(NAME_ANNOTATION_KEY.getNamespaceURI(), NAME_ANNOTATION_KEY.getLocalPart());
+      if (nameAttribute != null) {
+        this.builder.addCustomAttribute(NAME_ANNOTATION_KEY.toString(), nameAttribute.getNodeValue());
+      }
       if (node.getPrefix() != null) {
         this.builder.addCustomAttribute(DECLARED_PREFIX, node.getPrefix());
       }
     }
-  }
-
-  public static class ConfigLineCustomAttributeRetrieve {
-
-    private final ConfigLine configLine;
-
-    private ConfigLineCustomAttributeRetrieve(ConfigLine configLine) {
-      this.configLine = configLine;
-    }
-
-    public Node getNode() {
-      return (Node) this.configLine.getCustomAttributes().get(XML_NODE);
-    }
-
   }
 
 }

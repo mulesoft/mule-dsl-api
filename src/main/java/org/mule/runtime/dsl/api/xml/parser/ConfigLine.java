@@ -66,6 +66,7 @@ public final class ConfigLine {
   private Node node;
   private String textContent;
   private int startColumn;
+  private String sourceCode;
 
   public ConfigLine() {}
 
@@ -107,6 +108,10 @@ public final class ConfigLine {
 
   public int getStartColumn() {
     return startColumn;
+  }
+
+  public String getSourceCode() {
+    return sourceCode;
   }
 
   @Override
@@ -203,6 +208,11 @@ public final class ConfigLine {
 
     public Builder setTextContent(String textContent) {
       configLine.textContent = textContent;
+      return this;
+    }
+
+    public Builder setSourceCode(String sourceCode) {
+      configLine.sourceCode = sourceCode;
       return this;
     }
 
