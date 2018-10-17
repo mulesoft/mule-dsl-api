@@ -12,6 +12,8 @@ import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.DECL
 import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.NAMESPACE_URI;
 import org.mule.runtime.dsl.api.xml.parser.ConfigLine;
 
+import javax.xml.namespace.QName;
+
 import org.w3c.dom.Node;
 
 /**
@@ -46,6 +48,13 @@ public class XmlCustomAttributeHandler {
       }
       if (node.getPrefix() != null) {
         this.builder.addCustomAttribute(DECLARED_PREFIX, node.getPrefix());
+      }
+      for (int i = 0; i < node.getAttributes().getLength(); i++) {
+        Node attributeNode = node.getAttributes().item(i);
+        if (attributeNode.getNamespaceURI() != null) {
+          this.builder.addCustomAttribute(new QName(attributeNode.getNamespaceURI(), attributeNode.getLocalName()).toString(),
+                                          attributeNode.getNodeValue());
+        }
       }
     }
   }
