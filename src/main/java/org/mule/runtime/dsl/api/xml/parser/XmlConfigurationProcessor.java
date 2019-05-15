@@ -12,14 +12,12 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
 import static org.mule.runtime.internal.dsl.DslConstants.CORE_PREFIX;
+
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.api.util.Pair;
 import org.mule.runtime.dsl.api.ConfigResource;
 import org.mule.runtime.dsl.api.xml.XmlDslConstants;
 import org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +28,9 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.w3c.dom.Document;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class XmlConfigurationProcessor {
 
@@ -60,31 +61,24 @@ public class XmlConfigurationProcessor {
                                                                 XmlParsingConfiguration parsingConfiguration) {
 
     ImmutableList.Builder<ConfigFile> resolvedConfigFilesBuilder =
-        ImmutableList.<ConfigFile>builder().addAll(alreadyResolvedConfigFiles);
-    configFilesToResolve.stream()
-        .filter(fileNameInputStreamPair -> !alreadyResolvedConfigFiles.stream()
-            .anyMatch(configFile -> configFile.getFilename().equals(fileNameInputStreamPair.getFirst())))
-        .forEach(fileNameInputStreamPair -> {
-          InputStream is = null;
-          try {
-            is = fileNameInputStreamPair.getSecond().get();
-            Document document = parsingConfiguration.getXmlConfigurationDocumentLoader()
-                .loadDocument(parsingConfiguration.getSaxParserFactory(), parsingConfiguration.getEntityResolver(),
-                              fileNameInputStreamPair.getFirst(), fileNameInputStreamPair.getSecond().get());
-            ConfigLine mainConfigLine = new XmlApplicationParser(parsingConfiguration.getXmlNamespaceInfoProvider())
-                .parse(document.getDocumentElement()).get();
-            ConfigFile configFile = new ConfigFile(fileNameInputStreamPair.getFirst(), asList(mainConfigLine));
-            resolvedConfigFilesBuilder.add(configFile);
-          } finally {
-            if (is != null) {
-              try {
-                is.close();
-              } catch (IOException e) {
-                throw new MuleRuntimeException(e);
-              }
-            }
-          }
-        });
+        ImmutableList.<ConfigFile>builder()
+            .addAll(alreadyResolvedConfigFiles)
+            .addAll(configFilesToResolve.stream()
+                .filter(fileNameInputStreamPair -> !alreadyResolvedConfigFiles.stream()
+                    .anyMatch(configFile -> configFile.getFilename().equals(fileNameInputStreamPair.getFirst())))
+                .map(fileNameInputStreamPair -> {
+                  try (InputStream is = fileNameInputStreamPair.getSecond().get()) {
+                    Document document = parsingConfiguration.getXmlConfigurationDocumentLoader()
+                        .loadDocument(parsingConfiguration.getSaxParserFactory(), parsingConfiguration.getEntityResolver(),
+                                      fileNameInputStreamPair.getFirst(), is);
+                    ConfigLine mainConfigLine = new XmlApplicationParser(parsingConfiguration.getXmlNamespaceInfoProvider())
+                        .parse(document.getDocumentElement()).get();
+                    return new ConfigFile(fileNameInputStreamPair.getFirst(), asList(mainConfigLine));
+                  } catch (IOException e) {
+                    throw new MuleRuntimeException(e);
+                  }
+                })
+                .collect(toList()));
 
     ImmutableSet.Builder<String> importedFiles = ImmutableSet.builder();
     for (ConfigFile configFile : resolvedConfigFilesBuilder.build()) {

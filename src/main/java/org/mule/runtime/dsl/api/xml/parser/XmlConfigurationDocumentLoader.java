@@ -9,6 +9,7 @@ package org.mule.runtime.dsl.api.xml.parser;
 import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
 import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
+
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.dsl.internal.xml.parser.DefaultXmlGathererErrorHandlerFactory;
 import org.mule.runtime.dsl.internal.xml.parser.DefaultXmlLoggerErrorHandler;
@@ -39,6 +40,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public final class XmlConfigurationDocumentLoader {
 
+  private static final XmlConfigurationDocumentLoader NO_VALIDATION_DOCUMENT_LOADER = new XmlConfigurationDocumentLoader(null);
+
   /**
    * Indicates that XSD validation should be used (found no "DOCTYPE" declaration).
    */
@@ -49,6 +52,7 @@ public final class XmlConfigurationDocumentLoader {
    */
   private static final int NO_VALIDATION = 0;
 
+  private final MuleDocumentLoader documentLoader = new MuleDocumentLoader();
   private final XmlGathererErrorHandlerFactory xmlGathererErrorHandlerFactory;
   private final int validationMode;
 
@@ -91,7 +95,7 @@ public final class XmlConfigurationDocumentLoader {
    * @return a new instance of {@link XmlConfigurationDocumentLoader}
    */
   public static XmlConfigurationDocumentLoader noValidationDocumentLoader() {
-    return new XmlConfigurationDocumentLoader(null);
+    return NO_VALIDATION_DOCUMENT_LOADER;
   }
 
   private XmlConfigurationDocumentLoader(XmlGathererErrorHandlerFactory errorHandlerFactory) {
@@ -110,8 +114,7 @@ public final class XmlConfigurationDocumentLoader {
    */
   public Document loadDocument(Supplier<SAXParserFactory> saxParserFactorySupplier, String filename, InputStream inputStream,
                                EntityResolver entityResolver) {
-    return loadDocument(saxParserFactorySupplier,
-                        entityResolver, filename, inputStream);
+    return loadDocument(saxParserFactorySupplier, entityResolver, filename, inputStream);
   }
 
   /**
@@ -127,23 +130,24 @@ public final class XmlConfigurationDocumentLoader {
    */
   public Document loadDocument(Supplier<SAXParserFactory> saxParserFactorySupplier, EntityResolver entityResolver,
                                String filename, InputStream inputStream) {
-    final XmlGathererErrorHandler errorHandler = createXmlGathererErrorHandler();
-    Document document;
     try {
-      document = new MuleDocumentLoader()
-          .loadDocument(saxParserFactorySupplier, new InputSource(inputStream),
-                        entityResolver,
-                        errorHandler == null ? new DefaultHandler() : errorHandler,
-                        validationMode, true);
+      final XmlGathererErrorHandler errorHandler = createXmlGathererErrorHandler();
+      Document document = documentLoader.loadDocument(saxParserFactorySupplier,
+                                                      new InputSource(inputStream),
+                                                      entityResolver,
+                                                      errorHandler == null ? new DefaultHandler() : errorHandler,
+                                                      validationMode,
+                                                      true);
+
+      if (validationMode == VALIDATION_XSD) {
+        throwExceptionIfErrorsWereFound(errorHandler, filename);
+      }
+      return document;
     } catch (Exception e) {
       throw new MuleRuntimeException(createStaticMessage(format("Error loading: %s, %s", filename, e.getMessage())), e);
     } finally {
       closeQuietly(inputStream);
     }
-    if (validationMode == VALIDATION_XSD) {
-      throwExceptionIfErrorsWereFound(errorHandler, filename);
-    }
-    return document;
   }
 
   private void closeQuietly(InputStream inputStream) {

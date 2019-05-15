@@ -6,13 +6,13 @@
  */
 package org.mule.runtime.dsl.api.xml.parser;
 
+import static com.google.common.collect.ImmutableMap.copyOf;
+import static java.util.Collections.unmodifiableMap;
 import static org.mule.runtime.api.util.Preconditions.checkState;
+
 import org.mule.api.annotation.NoExtend;
 import org.mule.api.annotation.NoInstantiate;
 
-import com.google.common.collect.ImmutableMap;
-
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,17 +45,17 @@ public final class ConfigLine {
   /**
    * The identifier attributes defined in the configuration
    */
-  private Map<String, SimpleConfigAttribute> configAttributes = new HashMap<>();
+  private final Map<String, SimpleConfigAttribute> configAttributes = new HashMap<>();
 
   /**
    * Generic set of attributes to be used for custom configuration file formats attributes
    */
-  private Map<String, Object> customAttributes = new HashMap<>();
+  private final Map<String, Object> customAttributes = new HashMap<>();
 
   /**
    * Config lines embedded inside this config line
    */
-  private List<ConfigLine> childrenConfigLines = new LinkedList<>();
+  private final List<ConfigLine> childrenConfigLines = new LinkedList<>();
 
   /**
    * Line number within the config file in which this config was defined.
@@ -79,11 +79,11 @@ public final class ConfigLine {
   }
 
   public Map<String, SimpleConfigAttribute> getConfigAttributes() {
-    return ImmutableMap.copyOf(configAttributes);
+    return copyOf(configAttributes);
   }
 
   public Map<String, Object> getCustomAttributes() {
-    return Collections.unmodifiableMap(customAttributes);
+    return unmodifiableMap(customAttributes);
   }
 
   public List<ConfigLine> getChildren() {
@@ -145,12 +145,16 @@ public final class ConfigLine {
     return result;
   }
 
+  @Override
+  public String toString() {
+    return namespace + ":" + identifier + " @ " + lineNumber + ":" + startColumn;
+  }
 
   public static class Builder {
 
     public static final String BUILDER_ALREADY_BUILD_AN_OBJECT_YOU_CANNOT_MODIFY_IT =
         "builder already build an object, you cannot modify it";
-    private ConfigLine configLine = new ConfigLine();
+    private final ConfigLine configLine = new ConfigLine();
     private boolean alreadyBuild;
 
     public Builder setNamespace(String namespace) {
