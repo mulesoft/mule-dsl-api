@@ -7,20 +7,18 @@
 
 package org.mule.runtime.dsl.internal.xml.parser;
 
+import static org.mule.runtime.internal.dsl.DslConstants.CORE_NAMESPACE;
 import static org.mule.runtime.internal.dsl.DslConstants.CORE_PREFIX;
 import static org.mule.runtime.internal.dsl.DslConstants.DOMAIN_NAMESPACE;
 import static org.mule.runtime.internal.dsl.DslConstants.DOMAIN_PREFIX;
 import static org.mule.runtime.internal.dsl.DslConstants.EE_DOMAIN_NAMESPACE;
 import static org.mule.runtime.internal.dsl.DslConstants.EE_DOMAIN_PREFIX;
+
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.dsl.api.xml.XmlNamespaceInfo;
 import org.mule.runtime.dsl.api.xml.XmlNamespaceInfoProvider;
 import org.mule.runtime.dsl.api.xml.parser.ConfigLine;
 import org.mule.runtime.dsl.api.xml.parser.ConfigLineProvider;
-
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.ImmutableList;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +31,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ImmutableList;
+
 /**
  * Simple parser that transforms an XML document to a set of {@link ConfigLine} objects.
  * <p>
@@ -44,7 +46,6 @@ import org.w3c.dom.NodeList;
 public final class XmlApplicationParser {
 
   public static final String DECLARED_PREFIX = "DECLARED_PREFIX";
-  public static final String NAMESPACE_URI = "NAMESPACE_URI";
   public static final String XML_NODE = "XML_NODE";
   public static final String LINE_NUMBER = "LINE_NUMBER";
   public static final String CONFIG_FILE_NAME = "CONFIG_FILE_NAME";
@@ -107,9 +108,14 @@ public final class XmlApplicationParser {
 
     String identifier = parseIdentifier(node);
     String namespace = parseNamespace(node);
+    String namespaceUri = parseNamespaceUri(node);
 
-    ConfigLine.Builder builder =
-        new ConfigLine.Builder().setIdentifier(identifier).setNamespace(namespace).setNode(node).setParent(parentProvider);
+    ConfigLine.Builder builder = new ConfigLine.Builder()
+        .setIdentifier(identifier)
+        .setNamespace(namespace)
+        .setNamespaceUri(namespaceUri)
+        .setNode(node)
+        .setParent(parentProvider);
 
     XmlMetadataAnnotations userData = (XmlMetadataAnnotations) node.getUserData(XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY);
     int lineNumber = userData.getLineNumber();
@@ -153,6 +159,14 @@ public final class XmlApplicationParser {
       if (namespace.equals(UNDEFINED_NAMESPACE)) {
         namespace = node.getPrefix();
       }
+    }
+    return namespace;
+  }
+
+  private String parseNamespaceUri(Node node) {
+    String namespace = CORE_NAMESPACE;
+    if (node.getNodeType() != Node.CDATA_SECTION_NODE) {
+      namespace = node.getNamespaceURI();
     }
     return namespace;
   }

@@ -11,15 +11,13 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
-import static org.mule.runtime.internal.dsl.DslConstants.CORE_PREFIX;
+import static org.mule.runtime.dsl.api.xml.XmlDslConstants.IMPORT_ELEMENT;
+import static org.mule.runtime.internal.dsl.DslConstants.CORE_NAMESPACE;
+
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.api.util.Pair;
 import org.mule.runtime.dsl.api.ConfigResource;
-import org.mule.runtime.dsl.api.xml.XmlDslConstants;
 import org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +28,9 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.w3c.dom.Document;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class XmlConfigurationProcessor {
 
@@ -91,8 +92,8 @@ public class XmlConfigurationProcessor {
       List<ConfigLine> rootConfigLines = configFile.getConfigLines();
       ConfigLine muleRootElementConfigLine = rootConfigLines.get(0);
       importedFiles.addAll(muleRootElementConfigLine.getChildren().stream()
-          .filter(configLine -> configLine.getNamespace().equals(CORE_PREFIX)
-              && configLine.getIdentifier().equals(XmlDslConstants.IMPORT_ELEMENT))
+          .filter(configLine -> CORE_NAMESPACE.equals(configLine.getNamespaceUri())
+              && IMPORT_ELEMENT.equals(configLine.getIdentifier()))
           .map(configLine -> {
             SimpleConfigAttribute fileConfigAttribute = configLine.getConfigAttributes().get("file");
             if (fileConfigAttribute == null) {

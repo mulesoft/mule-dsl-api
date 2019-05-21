@@ -9,7 +9,7 @@ package org.mule.runtime.dsl.internal.xml.parser;
 
 import static org.mule.runtime.api.component.Component.Annotations.NAME_ANNOTATION_KEY;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.DECLARED_PREFIX;
-import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.NAMESPACE_URI;
+
 import org.mule.runtime.dsl.api.xml.parser.ConfigLine;
 
 import javax.xml.namespace.QName;
@@ -40,7 +40,6 @@ public class XmlCustomAttributeHandler {
     }
 
     public void addCustomAttributes(Node node) {
-      this.builder.addCustomAttribute(NAMESPACE_URI, node.getNamespaceURI());
       Node nameAttribute = node.getAttributes()
           .getNamedItemNS(NAME_ANNOTATION_KEY.getNamespaceURI(), NAME_ANNOTATION_KEY.getLocalPart());
       if (nameAttribute != null) {
