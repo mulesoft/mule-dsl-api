@@ -138,9 +138,9 @@ public final class ConfigLine {
       return false;
     if (identifier != null ? !identifier.equals(that.identifier) : that.identifier != null)
       return false;
-    if (configAttributes != null ? !configAttributes.equals(that.configAttributes) : that.configAttributes != null)
+    if (!configAttributes.equals(that.configAttributes))
       return false;
-    return childrenConfigLines != null ? childrenConfigLines.equals(that.childrenConfigLines) : that.childrenConfigLines == null;
+    return childrenConfigLines.equals(that.childrenConfigLines);
 
   }
 
@@ -149,8 +149,8 @@ public final class ConfigLine {
     int result = parent != null ? parent.hashCode() : 0;
     result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
     result = 31 * result + (identifier != null ? identifier.hashCode() : 0);
-    result = 31 * result + (configAttributes != null ? configAttributes.hashCode() : 0);
-    result = 31 * result + (childrenConfigLines != null ? childrenConfigLines.hashCode() : 0);
+    result = 31 * result + (configAttributes.hashCode());
+    result = 31 * result + (childrenConfigLines.hashCode());
     return result;
   }
 
