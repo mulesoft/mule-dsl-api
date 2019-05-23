@@ -114,7 +114,6 @@ public final class XmlApplicationParser {
         .setIdentifier(identifier)
         .setNamespace(namespace)
         .setNamespaceUri(namespaceUri)
-        .setNode(node)
         .setParent(parentProvider);
 
     XmlMetadataAnnotations userData = (XmlMetadataAnnotations) node.getUserData(XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY);

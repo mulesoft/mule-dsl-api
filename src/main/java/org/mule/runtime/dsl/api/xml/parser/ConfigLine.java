@@ -17,8 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.Node;
-
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -67,8 +65,6 @@ public final class ConfigLine {
    */
   private int lineNumber;
 
-  // TODO MULE-9638 remove once we don't need the old parsing mechanism anymore.
-  private Node node;
   private String textContent;
   private int startColumn;
   private String sourceCode;
@@ -101,10 +97,6 @@ public final class ConfigLine {
 
   public ConfigLine getParent() {
     return parent.getConfigLine();
-  }
-
-  public Node getNode() {
-    return node;
   }
 
   public String getTextContent() {
@@ -213,11 +205,6 @@ public final class ConfigLine {
     public Builder setParent(ConfigLineProvider parent) {
       checkState(!alreadyBuild, BUILDER_ALREADY_BUILD_AN_OBJECT_YOU_CANNOT_MODIFY_IT);
       configLine.parent = parent;
-      return this;
-    }
-
-    public Builder setNode(Node node) {
-      configLine.node = node;
       return this;
     }
 
