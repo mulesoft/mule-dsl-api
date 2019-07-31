@@ -115,7 +115,7 @@
         <aspectjVersion>1.8.10</aspectjVersion>
         <guavaVersion>25.1-jre</guavaVersion>
 
-        <muleModuleMavenPluginVersion>1.0.2-SNAPSHOT</muleModuleMavenPluginVersion>
+        <muleModuleMavenPluginVersion>1.0.2</muleModuleMavenPluginVersion>
 
         <javaFormatter.plugin.version>2.0.1</javaFormatter.plugin.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
