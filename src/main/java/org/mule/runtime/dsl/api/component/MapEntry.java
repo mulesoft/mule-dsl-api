@@ -6,6 +6,8 @@
  */
 package org.mule.runtime.dsl.api.component;
 
+import org.mule.runtime.api.component.AbstractComponent;
+
 /**
  * Instances of this classes represent a map entry defined in the configuration.
  *
@@ -16,10 +18,10 @@ package org.mule.runtime.dsl.api.component;
  * @param <KeyType> the key type
  * @param <ValueType> the value type
  */
-public final class MapEntry<KeyType, ValueType> {
+public final class MapEntry<KeyType, ValueType> extends AbstractComponent {
 
-  private KeyType key;
-  private ValueType value;
+  private final KeyType key;
+  private final ValueType value;
 
   public MapEntry(KeyType key, ValueType value) {
     this.key = key;

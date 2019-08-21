@@ -8,6 +8,7 @@ package org.mule.runtime.dsl.api.component.config;
 
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
+
 import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.component.location.ComponentLocation;
 
@@ -24,9 +25,11 @@ import java.util.Optional;
  * namespace, name and the set of simple attributes or complex nested attributes required by the component.
  *
  * @since 4.0
+ *
+ * @deprecated Use {@code org.mule.runtime.ast.api.ComponentAst} from {@code mule-artifact-ast} instead. This will be removed in
+ *             4.4.0.
  */
-// TODO MULE-11496 Delete this configuration once everything has an ExtensionModel and can be represented with
-// ComponentDeclaration
+@Deprecated
 public abstract class ComponentConfiguration {
 
   protected ComponentIdentifier identifier;
