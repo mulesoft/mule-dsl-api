@@ -51,7 +51,7 @@ public class ComponentBuildingDefinition<T> {
   private boolean scope;
   private List<AttributeDefinition> constructorAttributeDefinition = new ArrayList<>();
   private List<SetterAttributeDefinition> setterParameterDefinitions = new ArrayList<>();
-  private Set<String> ignoredConfigurationParameters = new HashSet<>();
+  private final Set<String> ignoredConfigurationParameters = new HashSet<>();
   private Class<? extends ObjectFactory<T>> objectFactoryType;
   private boolean prototype;
   private boolean named = false;
@@ -172,7 +172,7 @@ public class ComponentBuildingDefinition<T> {
 
     private String namespace;
     private String identifier;
-    private ComponentBuildingDefinition<T> definition = new ComponentBuildingDefinition<>();
+    private final ComponentBuildingDefinition<T> definition = new ComponentBuildingDefinition<>();
 
     /**
      * Adds a new constructor parameter to be used during the object instantiation.
@@ -230,7 +230,7 @@ public class ComponentBuildingDefinition<T> {
      * which means the type is predefined. Or it may be created from {@link TypeDefinition#fromConfigurationAttribute(String)}
      * which means that the object type is declared within the configuration using a config attribute.
      *
-     * @param typeDefinition the type definition to discover the objecvt type
+     * @param typeDefinition the type definition to discover the object type
      * @return a copy of {@code this} builder
      */
     public Builder<T> withTypeDefinition(TypeDefinition<T> typeDefinition) {

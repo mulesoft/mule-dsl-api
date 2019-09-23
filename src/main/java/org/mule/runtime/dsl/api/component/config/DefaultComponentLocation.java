@@ -20,8 +20,6 @@ import org.mule.runtime.api.component.TypedComponentIdentifier;
 import org.mule.runtime.api.component.location.ComponentLocation;
 import org.mule.runtime.api.component.location.LocationPart;
 
-import com.google.common.collect.ImmutableList;
-
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -29,6 +27,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * A component location describes where the component is defined in the configuration of the artifact.
@@ -60,8 +61,8 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
   private static final long serialVersionUID = 4958158607813720623L;
 
-  private String name;
-  private LinkedList<DefaultLocationPart> parts;
+  private final String name;
+  private final LinkedList<DefaultLocationPart> parts;
   private volatile String location;
 
   private transient TypedComponentIdentifier componentIdentifier;
@@ -81,8 +82,8 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
                                                                .buildFromStringRepresentation(component))
                                                            .build()),
                                                        empty(),
-                                                       empty(),
-                                                       empty());
+                                                       OptionalInt.empty(),
+                                                       OptionalInt.empty());
     return new DefaultComponentLocation(of(component), asList(part));
   }
 
@@ -176,7 +177,27 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    * @param partPath the path of this part
    * @param partIdentifier the component identifier of the part if it's not a synthetic part
    * @return a new instance with the given location part appended.
+   *
+   * @since 1.3
    */
+  public DefaultComponentLocation appendLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier,
+                                                     Optional<String> fileName, OptionalInt lineInFile,
+                                                     OptionalInt startColumn) {
+    return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
+        .add(new DefaultLocationPart(partPath, partIdentifier, fileName, lineInFile, startColumn)).build());
+  }
+
+
+  /**
+   * Creates a new instance of ComponentLocation adding the specified part.
+   *
+   * @param partPath the path of this part
+   * @param partIdentifier the component identifier of the part if it's not a synthetic part
+   * @return a new instance with the given location part appended.
+   *
+   * @deprecated since 1.3 use {@link #appendLocationPart(String, Optional, Optional, OptionalInt, OptionalInt)} instead.
+   */
+  @Deprecated
   public DefaultComponentLocation appendLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier,
                                                      Optional<String> fileName, Optional<Integer> lineInFile,
                                                      Optional<Integer> startColumn) {
@@ -192,7 +213,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    */
   public DefaultComponentLocation appendProcessorsPart() {
     return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
-        .add(new DefaultLocationPart("processors", empty(), empty(), empty(), empty())).build());
+        .add(new DefaultLocationPart("processors", empty(), empty(), OptionalInt.empty(), OptionalInt.empty())).build());
   }
 
   /**
@@ -203,7 +224,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    */
   public DefaultComponentLocation appendRoutePart() {
     return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
-        .add(new DefaultLocationPart("route", empty(), empty(), empty(), empty())).build());
+        .add(new DefaultLocationPart("route", empty(), empty(), OptionalInt.empty(), OptionalInt.empty())).build());
   }
 
   /**
@@ -217,8 +238,8 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
     private static final long serialVersionUID = 5757545892752260058L;
 
-    private String partPath;
-    private TypedComponentIdentifier partIdentifier;
+    private final String partPath;
+    private final TypedComponentIdentifier partIdentifier;
     private String fileName;
     private Integer lineInFile;
     private Integer startColumn;
@@ -228,7 +249,27 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
      * @param partIdentifier the component identifier of the part if it's not a synthetic part
      * @param fileName the file name in which the component was defined
      * @param lineInFile the line number in which the component was defined
+     *
+     * @since 1.3
      */
+    public DefaultLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier, Optional<String> fileName,
+                               OptionalInt lineInFile, OptionalInt startColumn) {
+      this.partPath = partPath;
+      this.partIdentifier = partIdentifier.orElse(null);
+      fileName.ifPresent(configFileName -> this.fileName = configFileName);
+      lineInFile.ifPresent(line -> this.lineInFile = line);
+      startColumn.ifPresent(column -> this.startColumn = column);
+    }
+
+    /**
+     * @param partPath the path of this part
+     * @param partIdentifier the component identifier of the part if it's not a synthetic part
+     * @param fileName the file name in which the component was defined
+     * @param lineInFile the line number in which the component was defined
+     *
+     * @deprecated since 1.3 use {@link #DefaultComponentLocation(String, Optional, Optional, Optional, Optional)} instead.
+     */
+    @Deprecated
     public DefaultLocationPart(String partPath, Optional<TypedComponentIdentifier> partIdentifier, Optional<String> fileName,
                                Optional<Integer> lineInFile, Optional<Integer> startColumn) {
       this.partPath = partPath;
