@@ -1,4 +1,63 @@
 {
+  "1.2.0": {
+    "revapi": {
+      "ignore": [
+        {
+           "code": "java.field.serialVersionUIDUnchanged",
+           "old": "field org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart.serialVersionUID",
+           "new": "field org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart.serialVersionUID",
+           "serialVersionUID": "5757545892752260058",
+           "package": "org.mule.runtime.dsl.api.component.config",
+           "classSimpleName": "DefaultLocationPart",
+           "fieldName": "serialVersionUID",
+           "elementKind": "field",
+           "justification": "This interface is not meant to be implemented or used by the user"
+         },
+         {
+           "code": "java.method.numberOfParametersChanged",
+           "old": "method void org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart::<init>(java.lang.String, java.util.Optional<org.mule.runtime.api.component.TypedComponentIdentifier>, java.util.Optional<java.lang.String>, java.util.Optional<java.lang.Integer>)",
+           "new": "method void org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart::<init>(java.lang.String, java.util.Optional<org.mule.runtime.api.component.TypedComponentIdentifier>, java.util.Optional<java.lang.String>, java.util.Optional<java.lang.Integer>, java.util.Optional<java.lang.Integer>)",
+           "package": "org.mule.runtime.dsl.api.component.config",
+           "classSimpleName": "DefaultLocationPart",
+           "methodName": "<init>",
+           "elementKind": "constructor",
+           "justification": "This interface is not meant to be implemented or used by the user"
+         },
+         {
+           "code": "java.method.numberOfParametersChanged",
+           "old": "method org.mule.runtime.dsl.api.component.config.DefaultComponentLocation org.mule.runtime.dsl.api.component.config.DefaultComponentLocation::appendLocationPart(java.lang.String, java.util.Optional<org.mule.runtime.api.component.TypedComponentIdentifier>, java.util.Optional<java.lang.String>, java.util.Optional<java.lang.Integer>)",
+           "new": "method org.mule.runtime.dsl.api.component.config.DefaultComponentLocation org.mule.runtime.dsl.api.component.config.DefaultComponentLocation::appendLocationPart(java.lang.String, java.util.Optional<org.mule.runtime.api.component.TypedComponentIdentifier>, java.util.Optional<java.lang.String>, java.util.Optional<java.lang.Integer>, java.util.Optional<java.lang.Integer>)",
+           "package": "org.mule.runtime.dsl.api.component.config",
+           "classSimpleName": "DefaultComponentLocation",
+           "methodName": "appendLocationPart",
+           "elementKind": "method",
+           "justification": "This interface is not meant to be implemented or used by the user"
+         },
+        {
+           "code": "java.annotation.added",
+           "old": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart",
+           "new": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart",
+           "annotationType": "org.mule.api.annotation.NoExtend",
+           "annotation": "@org.mule.api.annotation.NoExtend",
+           "package": "org.mule.runtime.dsl.api.component.config",
+           "classSimpleName": "DefaultLocationPart",
+           "elementKind": "class",
+           "justification": "This interface is not meant to be implemented or used by the user"
+         },
+         {
+           "code": "java.annotation.added",
+           "old": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart",
+           "new": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart",
+           "annotationType": "org.mule.api.annotation.NoInstantiate",
+           "annotation": "@org.mule.api.annotation.NoInstantiate",
+           "package": "org.mule.runtime.dsl.api.component.config",
+           "classSimpleName": "DefaultLocationPart",
+           "elementKind": "class",
+           "justification": "This interface is not meant to be implemented or used by the user"
+         }
+      ]
+    }
+  },
   "1.1.1": {
     "revapi": {
       "ignore": [
@@ -121,83 +180,6 @@
           "methodName": "fromSimpleReferenceParameter",
           "elementKind": "method",
           "justification": "MULE-15441"
-        }
-      ]
-    }
-  },
-  "1.1.7": {
-    "revapi": {
-      "ignore": [
-        {
-          "code": "java.field.serialVersionUIDUnchanged",
-          "old": "field org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart.serialVersionUID",
-          "new": "field org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart.serialVersionUID",
-          "serialVersionUID": "5757545892752260058",
-          "package": "org.mule.runtime.dsl.api.component.config",
-          "classSimpleName": "DefaultLocationPart",
-          "fieldName": "serialVersionUID",
-          "elementKind": "field",
-          "justification": "This interface is not meant to be implemented or used by the user"
-        },
-        {
-          "code": "java.method.numberOfParametersChanged",
-          "old": "method void org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart::<init>(java.lang.String, java.util.Optional<org.mule.runtime.api.component.TypedComponentIdentifier>, java.util.Optional<java.lang.String>, java.util.Optional<java.lang.Integer>)",
-          "new": "method void org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart::<init>(java.lang.String, java.util.Optional<org.mule.runtime.api.component.TypedComponentIdentifier>, java.util.Optional<java.lang.String>, java.util.Optional<java.lang.Integer>, java.util.Optional<java.lang.Integer>)",
-          "package": "org.mule.runtime.dsl.api.component.config",
-          "classSimpleName": "DefaultLocationPart",
-          "methodName": "<init>",
-          "elementKind": "constructor",
-          "justification": "This interface is not meant to be implemented or used by the user"
-        },
-        {
-          "code": "java.method.added",
-          "new": "method java.util.Optional<java.lang.Integer> org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart::getStartColumn()",
-          "package": "org.mule.runtime.dsl.api.component.config",
-          "classSimpleName": "DefaultLocationPart",
-          "methodName": "getStartColumn",
-          "elementKind": "method",
-          "justification": "This interface is not meant to be implemented or used by the user"
-        },
-        {
-          "code": "java.annotation.added",
-          "old": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart",
-          "new": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart",
-          "annotationType": "org.mule.api.annotation.NoExtend",
-          "annotation": "@org.mule.api.annotation.NoExtend",
-          "package": "org.mule.runtime.dsl.api.component.config",
-          "classSimpleName": "DefaultLocationPart",
-          "elementKind": "class",
-          "justification": "This interface is not meant to be implemented or used by the user"
-        },
-        {
-          "code": "java.annotation.added",
-          "old": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart",
-          "new": "class org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart",
-          "annotationType": "org.mule.api.annotation.NoInstantiate",
-          "annotation": "@org.mule.api.annotation.NoInstantiate",
-          "package": "org.mule.runtime.dsl.api.component.config",
-          "classSimpleName": "DefaultLocationPart",
-          "elementKind": "class",
-          "justification": "This interface is not meant to be implemented or used by the user"
-        },
-        {
-          "code": "java.method.numberOfParametersChanged",
-          "old": "method org.mule.runtime.dsl.api.component.config.DefaultComponentLocation org.mule.runtime.dsl.api.component.config.DefaultComponentLocation::appendLocationPart(java.lang.String, java.util.Optional<org.mule.runtime.api.component.TypedComponentIdentifier>, java.util.Optional<java.lang.String>, java.util.Optional<java.lang.Integer>)",
-          "new": "method org.mule.runtime.dsl.api.component.config.DefaultComponentLocation org.mule.runtime.dsl.api.component.config.DefaultComponentLocation::appendLocationPart(java.lang.String, java.util.Optional<org.mule.runtime.api.component.TypedComponentIdentifier>, java.util.Optional<java.lang.String>, java.util.Optional<java.lang.Integer>, java.util.Optional<java.lang.Integer>)",
-          "package": "org.mule.runtime.dsl.api.component.config",
-          "classSimpleName": "DefaultComponentLocation",
-          "methodName": "appendLocationPart",
-          "elementKind": "method",
-          "justification": "MULE-15715 - Support column number for component locations"
-        },
-        {
-          "code": "java.method.added",
-          "new": "method java.util.Optional<java.lang.Integer> org.mule.runtime.dsl.api.component.config.DefaultComponentLocation::getStartColumn()",
-          "package": "org.mule.runtime.dsl.api.component.config",
-          "classSimpleName": "DefaultComponentLocation",
-          "methodName": "getStartColumn",
-          "elementKind": "method",
-          "justification": "This interface is not meant to be implemented or used by the user"
         }
       ]
     }

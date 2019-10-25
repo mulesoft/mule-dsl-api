@@ -137,6 +137,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   /**
    * {@inheritDoc}
    */
+  @Override
   public Optional<Integer> getStartColumn() {
     return parts.getLast().getStartColumn();
   }
@@ -262,6 +263,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
       return ofNullable(lineInFile);
     }
 
+    @Override
     public Optional<Integer> getStartColumn() {
       return ofNullable(startColumn);
     }
