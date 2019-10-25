@@ -1,7 +1,25 @@
 {
-  "1.2.0": {
+  "1.1.7": {
     "revapi": {
       "ignore": [
+        {
+          "code": "java.method.added",
+          "new": "method java.util.Optional<java.lang.Integer> org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart::getStartColumn()",
+          "package": "org.mule.runtime.dsl.api.component.config",
+          "classSimpleName": "DefaultLocationPart",
+          "methodName": "getStartColumn",
+          "elementKind": "method",
+          "justification": "Interception API: Smart connectors inside a choice router are not skipped properly"
+        },
+        {
+          "code": "java.method.added",
+          "new": "method java.util.Optional<java.lang.Integer> org.mule.runtime.dsl.api.component.config.DefaultComponentLocation::getStartColumn()",
+          "package": "org.mule.runtime.dsl.api.component.config",
+          "classSimpleName": "DefaultComponentLocation",
+          "methodName": "getStartColumn",
+          "elementKind": "method",
+          "justification": "Interception API: Smart connectors inside a choice router are not skipped properly"
+        },
         {
            "code": "java.field.serialVersionUIDUnchanged",
            "old": "field org.mule.runtime.dsl.api.component.config.DefaultComponentLocation.DefaultLocationPart.serialVersionUID",
