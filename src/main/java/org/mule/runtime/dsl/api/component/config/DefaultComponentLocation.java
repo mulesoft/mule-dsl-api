@@ -234,9 +234,12 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    *
    * @return a new instance with the connection location part appended.
    */
-  public DefaultComponentLocation appendConnectionPart() {
+  public DefaultComponentLocation appendConnectionPart(Optional<TypedComponentIdentifier> partIdentifier,
+                                                       Optional<String> fileName,
+                                                       OptionalInt lineInFile,
+                                                       OptionalInt startColumn) {
     return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
-            .add(new DefaultLocationPart("connection", empty(), empty(), OptionalInt.empty(), OptionalInt.empty())).build());
+        .add(new DefaultLocationPart("connection", partIdentifier, fileName, lineInFile, startColumn)).build());
   }
 
   /**
