@@ -228,6 +228,18 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   }
 
   /**
+   * Utility method that adds a connection part to the location. Keep in mind that this method in no way validates that
+   * the actual location is a valid one. Clients should add the required logic before calling this method to make sure
+   * that the final location corresponds to a correct element.
+   *
+   * @return a new instance with the connection location part appended.
+   */
+  public DefaultComponentLocation appendConnectionPart() {
+    return new DefaultComponentLocation(ofNullable(name), ImmutableList.<DefaultLocationPart>builder().addAll(parts)
+            .add(new DefaultLocationPart("connection", empty(), empty(), OptionalInt.empty(), OptionalInt.empty())).build());
+  }
+
+  /**
    * A location part represent an specific location of a component within another component.
    *
    * @since 4.0
