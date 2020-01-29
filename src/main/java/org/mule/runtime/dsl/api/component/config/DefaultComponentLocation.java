@@ -65,6 +65,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   private final LinkedList<DefaultLocationPart> parts;
   private volatile String location;
 
+  private transient String rootContainerName;
   private transient TypedComponentIdentifier componentIdentifier;
 
   /**
@@ -95,6 +96,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
     this.name = name.orElse(null);
     this.parts = new LinkedList<>(parts);
     componentIdentifier = calculateComponentIdentifier(parts);
+    rootContainerName = calculateRootContainerName();
   }
 
   /**
@@ -168,7 +170,11 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    */
   @Override
   public String getRootContainerName() {
-    return getParts().get(0).getPartPath();
+    return rootContainerName;
+  }
+
+  private String calculateRootContainerName() {
+    return getParts().isEmpty() ? null : getParts().get(0).getPartPath();
   }
 
   /**
@@ -377,6 +383,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   private void readObject(ObjectInputStream in) throws Exception {
     in.defaultReadObject();
     this.componentIdentifier = calculateComponentIdentifier(this.parts);
+    this.rootContainerName = calculateRootContainerName();
   }
 
   protected TypedComponentIdentifier calculateComponentIdentifier(List<DefaultLocationPart> parts) {
