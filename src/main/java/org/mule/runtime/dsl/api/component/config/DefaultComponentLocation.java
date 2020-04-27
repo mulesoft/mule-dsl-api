@@ -20,7 +20,9 @@ import org.mule.runtime.api.component.TypedComponentIdentifier;
 import org.mule.runtime.api.component.location.ComponentLocation;
 import org.mule.runtime.api.component.location.LocationPart;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -74,7 +76,23 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    *
    * @param component the name of the element
    * @return a location for it
+   *
+   * @since 1.4.0
    */
+  public static ComponentLocation from(String component) {
+    return fromSingleComponent(component);
+  }
+
+  /**
+   * Creates a virtual {@link ComponentLocation} for a single element, using the core namespace and using UNKNOWN as type. Only
+   * meant for situations where a real location cannot be obtained.
+   *
+   * @param component the name of the element
+   * @return a location for it
+   *
+   * @deprecated use {@link #from(String)} instead.
+   */
+  @Deprecated
   public static DefaultComponentLocation fromSingleComponent(String component) {
     DefaultLocationPart part = new DefaultLocationPart(component,
                                                        of(TypedComponentIdentifier.builder()
@@ -144,6 +162,16 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   @Override
   public Optional<Integer> getStartColumn() {
     return parts.getLast().getStartColumn();
+  }
+
+  @Override
+  public OptionalInt getLine() {
+    return parts.getLast().getLine();
+  }
+
+  @Override
+  public OptionalInt getColumn() {
+    return parts.getLast().getColumn();
   }
 
   /**
@@ -262,8 +290,8 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
     private final String partPath;
     private final TypedComponentIdentifier partIdentifier;
     private String fileName;
-    private Integer lineInFile;
-    private Integer startColumn;
+    private transient int lineInFile = -1;
+    private transient int startColumn = -1;
 
     /**
      * @param partPath the path of this part
@@ -323,12 +351,30 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
     @Override
     public Optional<Integer> getLineInFile() {
-      return ofNullable(lineInFile);
+      return lineInFile == -1
+          ? empty()
+          : ofNullable(lineInFile);
+    }
+
+    @Override
+    public OptionalInt getLine() {
+      return lineInFile == -1
+          ? OptionalInt.empty()
+          : OptionalInt.of(lineInFile);
     }
 
     @Override
     public Optional<Integer> getStartColumn() {
-      return ofNullable(startColumn);
+      return startColumn == -1
+          ? empty()
+          : ofNullable(startColumn);
+    }
+
+    @Override
+    public OptionalInt getColumn() {
+      return startColumn == -1
+          ? OptionalInt.empty()
+          : OptionalInt.of(startColumn);
     }
 
     @Override
@@ -342,29 +388,29 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
       DefaultLocationPart that = (DefaultLocationPart) o;
 
-      if (!Objects.equals(getPartPath(), that.getPartPath())) {
+      if (lineInFile != that.lineInFile) {
         return false;
       }
-      if (getPartIdentifier() != null ? !getPartIdentifier().equals(that.getPartIdentifier())
-          : that.getPartIdentifier() != null) {
+      if (startColumn != that.startColumn) {
         return false;
       }
-      if (getFileName() != null ? !getFileName().equals(that.getFileName()) : that.getFileName() != null) {
+      if (!Objects.equals(partPath, that.partPath)) {
         return false;
       }
-      if (getStartColumn() != null ? !getStartColumn().equals(that.getStartColumn()) : that.getStartColumn() != null) {
+      if (partIdentifier != null ? !partIdentifier.equals(that.partIdentifier)
+          : that.partIdentifier != null) {
         return false;
       }
-      return getLineInFile() != null ? getLineInFile().equals(that.getLineInFile()) : that.getLineInFile() == null;
+      return fileName != null ? fileName.equals(that.fileName) : that.fileName == null;
     }
 
     @Override
     public int hashCode() {
-      int result = getPartPath() != null ? getPartPath().hashCode() : 31;
-      result = 31 * result + (getPartIdentifier() != null ? getPartIdentifier().hashCode() : 0);
-      result = 31 * result + (getFileName() != null ? getFileName().hashCode() : 0);
-      result = 31 * result + (getLineInFile() != null ? getLineInFile().hashCode() : 0);
-      result = 31 * result + (getStartColumn() != null ? getStartColumn().hashCode() : 0);
+      int result = partPath != null ? partPath.hashCode() : 31;
+      result = 31 * result + (partIdentifier != null ? partIdentifier.hashCode() : 0);
+      result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
+      result = 31 * result + (lineInFile != -1 ? lineInFile : 0);
+      result = 31 * result + (startColumn != -1 ? startColumn : 0);
       return result;
     }
 
@@ -377,6 +423,22 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
           ", lineInFile=" + lineInFile +
           ", startColumn=" + startColumn +
           '}';
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+      oos.defaultWriteObject();
+
+      oos.writeObject(lineInFile != -1 ? null : Integer.valueOf(lineInFile));
+      oos.writeObject(startColumn != -1 ? null : Integer.valueOf(startColumn));
+    }
+
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+      ois.defaultReadObject();
+
+      final Integer readLine = (Integer) ois.readObject();
+      lineInFile = readLine != null ? readLine : -1;
+      final Integer readColumn = (Integer) ois.readObject();
+      startColumn = readColumn != null ? readColumn : -1;
     }
   }
 
