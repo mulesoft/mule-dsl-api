@@ -95,6 +95,10 @@ public final class ConfigLine {
     return childrenConfigLines;
   }
 
+  /**
+   * @deprecated since 1.4 Use the AST instead to navigate the structure.
+   */
+  @Deprecated
   public ConfigLine getParent() {
     return parent.getConfigLine();
   }
@@ -124,8 +128,6 @@ public final class ConfigLine {
 
     ConfigLine that = (ConfigLine) o;
 
-    if (parent != null ? !parent.equals(that.parent) : that.parent != null)
-      return false;
     if (namespace != null ? !namespace.equals(that.namespace) : that.namespace != null)
       return false;
     if (identifier != null ? !identifier.equals(that.identifier) : that.identifier != null)
@@ -138,8 +140,7 @@ public final class ConfigLine {
 
   @Override
   public int hashCode() {
-    int result = parent != null ? parent.hashCode() : 0;
-    result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
+    int result = namespace != null ? namespace.hashCode() : 0;
     result = 31 * result + (identifier != null ? identifier.hashCode() : 0);
     result = 31 * result + (configAttributes.hashCode());
     result = 31 * result + (childrenConfigLines.hashCode());
@@ -202,6 +203,10 @@ public final class ConfigLine {
       return this;
     }
 
+    /**
+     * @deprecated since 1.4 Use the AST instead to navigate the structure.
+     */
+    @Deprecated
     public Builder setParent(ConfigLineProvider parent) {
       checkState(!alreadyBuild, BUILDER_ALREADY_BUILD_AN_OBJECT_YOU_CANNOT_MODIFY_IT);
       configLine.parent = parent;

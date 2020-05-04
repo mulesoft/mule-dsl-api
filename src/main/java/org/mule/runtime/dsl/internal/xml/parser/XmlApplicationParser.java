@@ -113,8 +113,7 @@ public final class XmlApplicationParser {
     ConfigLine.Builder builder = new ConfigLine.Builder()
         .setIdentifier(identifier)
         .setNamespace(namespace)
-        .setNamespaceUri(namespaceUri)
-        .setParent(parentProvider);
+        .setNamespaceUri(namespaceUri);
 
     XmlMetadataAnnotations userData = (XmlMetadataAnnotations) node.getUserData(XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY);
     int lineNumber = userData.getLineNumber();
