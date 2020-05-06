@@ -6,11 +6,14 @@
  */
 package org.mule.runtime.dsl.internal.xml.parser;
 
+import static java.lang.String.format;
+import static java.lang.System.lineSeparator;
 import static java.util.regex.Pattern.compile;
-import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
+import static java.util.regex.Pattern.quote;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -24,13 +27,19 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
   private static final Pattern COMPACT_PATTERN = compile(">\\s+<+");
   public static final String METADATA_ANNOTATIONS_KEY = "metadataAnnotations";
 
-  private StringBuilder xmlContent = new StringBuilder();
+  private static final Pattern URL_PATTERN = compile("url=\"[a-z]*://([^@]*)@");
+  private static final Pattern ADDRESS_PATTERN = compile("address=\"[a-z]*://([^@]*)@");
+  private static final Pattern PASSWORD_PATTERN = compile("password=\"([^\"|\n]*)\"");
+  private static final String PASSWORD_MASK = "@@credentials@@";
+  private static final String PASSWORD_ATTRIBUTE_MASK = "password=\"%s\"";
+
+  private final StringBuilder xmlContent = new StringBuilder();
   private int lineNumber;
   private int columnNumber;
 
   /**
    * Builds the opening tag of the xml element.
-   * 
+   *
    * @param qName the qualified name of the element
    * @param atts the attributes of the element, with the qualified name as key
    */
@@ -38,14 +47,14 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
   public void appendElementStart(String qName, Map<String, String> atts) {
     xmlContent.append("<" + qName);
     for (Entry<String, String> entry : atts.entrySet()) {
-      xmlContent.append(" " + entry.getKey() + "=\"" + entry.getValue() + "\"");
+      xmlContent.append(maskPasswords(" " + entry.getKey() + "=\"" + entry.getValue() + "\""));
     }
     xmlContent.append(">");
   }
 
   /**
    * Adds the body of the xml tag.
-   * 
+   *
    * @param elementBody the body content to be added
    */
   @Override
@@ -55,7 +64,7 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
 
   /**
    * Builds the closing tag of the xml element.
-   * 
+   *
    * @param qName the qualified name of the element
    */
   @Override
@@ -71,12 +80,13 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
    */
   @Override
   public String getElementString() {
-    return COMPACT_PATTERN.matcher(xmlContent.toString().trim()).replaceAll(">" + LINE_SEPARATOR + "<");
+    return COMPACT_PATTERN.matcher(xmlContent.toString().trim()).replaceAll(">" + lineSeparator() + "<");
   }
 
   /**
    * @param lineNumber the line where the declaration of the element starts in its source xml file.
    */
+  @Override
   public void setLineNumber(int lineNumber) {
     this.lineNumber = lineNumber;
   }
@@ -92,6 +102,7 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
   /**
    * @param columnNumber the column where the declaration of the element starts in the source xml file.
    */
+  @Override
   public void setColumnNumber(int columnNumber) {
     this.columnNumber = columnNumber;
   }
@@ -99,7 +110,37 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
   /**
    * @return the column where the declaration of the element starts in the source xml file.
    */
+  @Override
   public int getColumnNumber() {
     return columnNumber;
+  }
+
+  private static String maskPasswords(String xml, String passwordMask) {
+    xml = maskUrlPassword(xml, URL_PATTERN, passwordMask);
+    xml = maskUrlPassword(xml, ADDRESS_PATTERN, passwordMask);
+
+    Matcher matcher = PASSWORD_PATTERN.matcher(xml);
+    if (matcher.find() && matcher.groupCount() > 0) {
+      xml = xml.replaceAll(quote(maskPasswordAttribute(matcher.group(1))), maskPasswordAttribute(passwordMask));
+    }
+    xml = maskUrlPassword(xml, PASSWORD_PATTERN, passwordMask);
+
+    return xml;
+  }
+
+  private static String maskPasswords(String xml) {
+    return maskPasswords(xml, PASSWORD_MASK);
+  }
+
+  private static String maskUrlPassword(String xml, Pattern pattern, String passwordMask) {
+    Matcher matcher = pattern.matcher(xml);
+    if (matcher.find() && matcher.groupCount() > 0) {
+      xml = xml.replaceAll(quote(matcher.group(1)), passwordMask);
+    }
+    return xml;
+  }
+
+  private static String maskPasswordAttribute(String password) {
+    return format(PASSWORD_ATTRIBUTE_MASK, password);
   }
 }

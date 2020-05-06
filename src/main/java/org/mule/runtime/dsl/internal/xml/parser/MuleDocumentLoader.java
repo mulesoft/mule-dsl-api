@@ -6,8 +6,10 @@
  */
 package org.mule.runtime.dsl.internal.xml.parser;
 
-import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
+import static java.lang.System.lineSeparator;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
+
 import org.mule.runtime.dsl.internal.SourcePosition;
 
 import java.io.ByteArrayInputStream;
@@ -39,7 +41,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * Alternative to Spring's default document loader that uses <b>SAX</b> to add metadata to the <b>DOM</b> elements that are the
  * result of the default parser.
- * 
+ *
  * @since 3.8.0
  */
 final public class MuleDocumentLoader {
@@ -147,9 +149,10 @@ final public class MuleDocumentLoader {
 
     private Locator locator;
     private DomWalkerElement walker;
-    private XmlMetadataAnnotationsFactory metadataFactory;
-    private Stack<XmlMetadataAnnotations> annotationsStack = new Stack<>();
+    private final XmlMetadataAnnotationsFactory metadataFactory;
+    private final Stack<XmlMetadataAnnotations> annotationsStack = new Stack<>();
     private SourcePosition trackingPoint = new SourcePosition();
+    private boolean writingBody = false;
 
     private XmlMetadataAnnotator(Document doc, XmlMetadataAnnotationsFactory metadataFactory) {
       this.walker = new DomWalkerElement(doc.getDocumentElement());
@@ -164,6 +167,7 @@ final public class MuleDocumentLoader {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+      writingBody = false;
       walker = walker.walkIn();
 
       XmlMetadataAnnotations metadataBuilder = metadataFactory.create(locator);
@@ -179,8 +183,21 @@ final public class MuleDocumentLoader {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-      this.updateTrackingPoint();// update the starting point
-      annotationsStack.peek().appendElementBody(new String(ch, start, length).trim());
+      // update the starting point
+      this.updateTrackingPoint();
+
+      final String body = new String(ch, start, length).trim();
+
+      if (!isEmpty(body)) {
+        if (!writingBody) {
+          annotationsStack.peek()
+              .appendElementBody("<![CDATA[" + lineSeparator());
+        }
+
+        annotationsStack.peek()
+            .appendElementBody(body);
+        writingBody = true;
+      }
     }
 
     @Override
@@ -190,13 +207,11 @@ final public class MuleDocumentLoader {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-
-      /* here we can get our source position */
-      SourcePosition tagStartingPosition = this.trackingPoint;
-      SourcePosition tagEndPosition =
-          new SourcePosition(this.locator.getLineNumber(),
-                             this.locator.getColumnNumber());
-
+      if (writingBody) {
+        annotationsStack.peek()
+            .appendElementBody(lineSeparator() + "]]>");
+      }
+      writingBody = false;
       XmlMetadataAnnotations metadataAnnotations = annotationsStack.pop();
       metadataAnnotations.appendElementEnd(qName);
 
@@ -204,7 +219,7 @@ final public class MuleDocumentLoader {
         XmlMetadataAnnotations xmlMetadataAnnotations = annotationsStack.peek();
 
         xmlMetadataAnnotations
-            .appendElementBody(LINE_SEPARATOR + metadataAnnotations.getElementString() + LINE_SEPARATOR);
+            .appendElementBody(lineSeparator() + metadataAnnotations.getElementString() + lineSeparator());
       }
 
       walker.getParentNode().setUserData(METADATA_ANNOTATIONS_KEY, metadataAnnotations, COPY_METADATA_ANNOTATIONS_DATA_HANDLER);
