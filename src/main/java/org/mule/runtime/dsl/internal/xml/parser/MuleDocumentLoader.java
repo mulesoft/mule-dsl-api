@@ -15,8 +15,9 @@ import org.mule.runtime.dsl.internal.SourcePosition;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.LinkedHashMap;
-import java.util.Stack;
 import java.util.function.Supplier;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -150,7 +151,7 @@ final public class MuleDocumentLoader {
     private Locator locator;
     private DomWalkerElement walker;
     private final XmlMetadataAnnotationsFactory metadataFactory;
-    private final Stack<XmlMetadataAnnotations> annotationsStack = new Stack<>();
+    private final Deque<XmlMetadataAnnotations> annotationsStack = new ArrayDeque<>();
     private SourcePosition trackingPoint = new SourcePosition();
     private boolean writingBody = false;
 
