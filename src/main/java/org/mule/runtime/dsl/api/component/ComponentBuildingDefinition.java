@@ -137,7 +137,10 @@ public class ComponentBuildingDefinition<T> {
 
   /**
    * @return if the component should be enabled even if excluded when building a partial application model
+   *
+   * @deprecated since 4.4. No longer used. stereotypes are used to determine this.
    */
+  @Deprecated
   public boolean isAlwaysEnabled() {
     return alwaysEnabled;
   }
@@ -270,12 +273,14 @@ public class ComponentBuildingDefinition<T> {
     }
 
     /**
-     * This method configures the component as enabled even if excluded from a partial application model (for instance
-     * when building one for data sense).
+     * This method configures the component as enabled even if excluded from a partial application model (for instance when
+     * building one for data sense).
      *
      * @param value boolean indicating if the component should be always enabled
      * @return a copy of ${@code this} builder
+     * @deprecated since 4.4. No longer used. stereotypes are used to determine this.
      */
+    @Deprecated
     public Builder<T> alwaysEnabled(boolean value) {
       Builder<T> next = copy();
       next.definition.alwaysEnabled = value;

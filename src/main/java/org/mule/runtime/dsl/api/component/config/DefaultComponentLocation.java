@@ -135,7 +135,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   @Override
   public TypedComponentIdentifier getComponentIdentifier() {
     if (componentIdentifier == null) {
-      throw new NoSuchElementException();
+      throw new NoSuchElementException("No 'componentIdentifier' set for location '" + getLocation() + "'");
     }
     return componentIdentifier;
   }
