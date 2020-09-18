@@ -6,11 +6,13 @@
  */
 package org.mule.runtime.dsl.internal.xml.parser;
 
+import static com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.XMLGRAMMAR_POOL;
 import static java.lang.System.lineSeparator;
 import static java.lang.Thread.currentThread;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
 
+import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 import org.mule.runtime.dsl.internal.SourcePosition;
 
 import java.io.ByteArrayInputStream;
@@ -28,6 +30,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.mule.runtime.dsl.internal.xni.parser.SchemaGrammarPool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.UserDataHandler;
@@ -84,7 +87,9 @@ final public class MuleDocumentLoader {
       InputSource defaultInputSource = new InputSource(new ByteArrayInputStream(output.toByteArray()));
       InputSource enrichInputSource = new InputSource(new ByteArrayInputStream(output.toByteArray()));
 
-      DocumentBuilderFactory factory = this.createDocumentBuilderFactory(validationMode, namespaceAware);
+      XMLGrammarPool grammarPool = createXmlGrammarPool(entityResolver);
+
+      DocumentBuilderFactory factory = this.createDocumentBuilderFactory(validationMode, namespaceAware, grammarPool);
       DocumentBuilder builder = this.createDocumentBuilder(factory, entityResolver, errorHandler);
       Document doc = builder.parse(defaultInputSource);
       createSaxAnnotator(saxParserFactorySupplier, doc).parse(enrichInputSource);
@@ -104,7 +109,8 @@ final public class MuleDocumentLoader {
     return documentReader;
   }
 
-  protected DocumentBuilderFactory createDocumentBuilderFactory(int validationMode, boolean namespaceAware)
+  protected DocumentBuilderFactory createDocumentBuilderFactory(int validationMode, boolean namespaceAware,
+                                                                XMLGrammarPool grammarPool)
       throws ParserConfigurationException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(namespaceAware);
@@ -125,6 +131,9 @@ final public class MuleDocumentLoader {
       }
     }
 
+    if (grammarPool != null) {
+      factory.setAttribute(XMLGRAMMAR_POOL, grammarPool);
+    }
     return factory;
   }
 
@@ -140,6 +149,7 @@ final public class MuleDocumentLoader {
   protected DocumentBuilder createDocumentBuilder(DocumentBuilderFactory factory, EntityResolver entityResolver,
                                                   ErrorHandler errorHandler)
       throws ParserConfigurationException {
+
     DocumentBuilder docBuilder = factory.newDocumentBuilder();
     if (entityResolver != null) {
       docBuilder.setEntityResolver(entityResolver);
@@ -286,5 +296,11 @@ final public class MuleDocumentLoader {
     public Node getParentNode() {
       return parent.node;
     }
+  }
+
+  private XMLGrammarPool createXmlGrammarPool(EntityResolver entityResolver) {
+    SchemaGrammarPool pool = SchemaGrammarPool.getInstance();
+    pool.init(entityResolver);
+    return pool;
   }
 }
