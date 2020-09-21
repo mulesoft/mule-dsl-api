@@ -9,6 +9,8 @@ package org.mule.runtime.dsl.api.xml.parser;
 import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
 import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
+
+import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.dsl.internal.xml.parser.DefaultXmlGathererErrorHandlerFactory;
 import org.mule.runtime.dsl.internal.xml.parser.DefaultXmlLoggerErrorHandler;
@@ -127,6 +129,23 @@ public final class XmlConfigurationDocumentLoader {
    */
   public Document loadDocument(Supplier<SAXParserFactory> saxParserFactorySupplier, EntityResolver entityResolver,
                                String filename, InputStream inputStream) {
+    return loadDocument(saxParserFactorySupplier, entityResolver, filename, inputStream, null);
+  }
+
+  /**
+   * Creates a {@link Document} from an {@link InputStream} with the required configuration of a mule configuration file parsing.
+   *
+   * @param entityResolver resolver for XML schemas.
+   * @param filename name of the file to display a better error messages (if there are any). Non null.
+   * @param inputStream the input stream with the XML configuration content.
+   * @param xmlGrammarPool a {@ling XMLGrammarPool} pool to be used while file parsing.
+   * @return a new {@link Document} object with the provided content.
+   * @throws MuleRuntimeException if an error occurs in {@link MuleDocumentLoader} factory, or if the current {@code filename}
+   *         contains 1 or more errors.
+   * @see {@link DefaultXmlLoggerErrorHandler#getErrors()}
+   */
+  public Document loadDocument(Supplier<SAXParserFactory> saxParserFactorySupplier, EntityResolver entityResolver,
+                               String filename, InputStream inputStream, XMLGrammarPool xmlGrammarPool) {
     final XmlGathererErrorHandler errorHandler = createXmlGathererErrorHandler();
     Document document;
     try {
@@ -134,7 +153,7 @@ public final class XmlConfigurationDocumentLoader {
           .loadDocument(saxParserFactorySupplier, new InputSource(inputStream),
                         entityResolver,
                         errorHandler == null ? new DefaultHandler() : errorHandler,
-                        validationMode, true);
+                        validationMode, true, xmlGrammarPool);
     } catch (Exception e) {
       throw new MuleRuntimeException(createStaticMessage(format("Error loading: %s, %s", filename, e.getMessage())), e);
     } finally {

@@ -71,7 +71,8 @@ public class XmlConfigurationProcessor {
             is = fileNameInputStreamPair.getSecond().get();
             Document document = parsingConfiguration.getXmlConfigurationDocumentLoader()
                 .loadDocument(parsingConfiguration.getSaxParserFactory(), parsingConfiguration.getEntityResolver(),
-                              fileNameInputStreamPair.getFirst(), fileNameInputStreamPair.getSecond().get());
+                              fileNameInputStreamPair.getFirst(), fileNameInputStreamPair.getSecond().get(),
+                              parsingConfiguration.getXMLGrammarPool());
             ConfigLine mainConfigLine = new XmlApplicationParser(parsingConfiguration.getXmlNamespaceInfoProvider())
                 .parse(document.getDocumentElement()).get();
             ConfigFile configFile = new ConfigFile(fileNameInputStreamPair.getFirst(), asList(mainConfigLine));
