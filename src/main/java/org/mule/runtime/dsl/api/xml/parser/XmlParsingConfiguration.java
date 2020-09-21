@@ -6,6 +6,7 @@
  */
 package org.mule.runtime.dsl.api.xml.parser;
 
+import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 import org.mule.runtime.api.util.ResourceLocator;
 import org.mule.runtime.dsl.api.ConfigResource;
 import org.mule.runtime.dsl.api.xml.XmlNamespaceInfoProvider;
@@ -41,4 +42,7 @@ public interface XmlParsingConfiguration {
 
   List<XmlNamespaceInfoProvider> getXmlNamespaceInfoProvider();
 
+  default XMLGrammarPool getXMLGrammarPool() {
+    return null;
+  }
 }

@@ -4,15 +4,18 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.runtime.dsl.api.xni.parser;
+package org.mule.runtime.dsl;
 
-import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
-import org.mule.api.annotation.NoImplement;
+public interface AllureConstants {
 
-import java.util.List;
+  interface DslParsing {
 
-@NoImplement
-public interface SchemaProvider {
+    String DSL_PARSING = "Mule DSL Parsing";
 
-  List<XMLInputSource> getSchemas();
+    interface XmlGrammarPool {
+
+      String XML_GRAMMAR_POOL = "XML Grammar Pool";
+    }
+
+  }
 }
