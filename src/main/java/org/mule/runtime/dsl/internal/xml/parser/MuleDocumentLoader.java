@@ -146,7 +146,6 @@ final public class MuleDocumentLoader {
   protected DocumentBuilder createDocumentBuilder(DocumentBuilderFactory factory, EntityResolver entityResolver,
                                                   ErrorHandler errorHandler)
       throws ParserConfigurationException {
-
     DocumentBuilder docBuilder = factory.newDocumentBuilder();
     if (entityResolver != null) {
       docBuilder.setEntityResolver(entityResolver);
