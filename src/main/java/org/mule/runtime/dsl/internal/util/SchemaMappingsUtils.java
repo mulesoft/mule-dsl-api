@@ -6,10 +6,12 @@
  */
 package org.mule.runtime.dsl.internal.util;
 
+import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
 import static org.mule.runtime.dsl.internal.util.CollectionUtils.mergePropertiesIntoMap;
 import static org.mule.runtime.dsl.internal.util.ResourceUtils.useCachesIfNecessary;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -33,6 +35,7 @@ public class SchemaMappingsUtils {
   private static final Logger LOGGER = getLogger(SchemaMappingsUtils.class);
 
   public static final String CUSTOM_SCHEMA_MAPPINGS_LOCATION = "META-INF/mule.schemas";
+  public static final String TEST_XSD = "http://www.mulesoft.org/schema/mule/test/current/mule-test.xsd";
   public static final String CORE_XSD = "http://www.mulesoft.org/schema/mule/core/current/mule.xsd";
   public static final String CORE_CURRENT_XSD = "http://www.mulesoft.org/schema/mule/core/current/mule-core.xsd";
   public static final String CORE_DEPRECATED_XSD = "http://www.mulesoft.org/schema/mule/core/current/mule-core-deprecated.xsd";
@@ -81,11 +84,11 @@ public class SchemaMappingsUtils {
    *
    * @param publicId The public identifier of the external entity being referenced, or null if none was supplied.
    * @param systemId The system identifier of the external entity being referenced.
-   * @param runningTests true if running tests
+   * @param runningTests {@code true} if running tests
    * @param canResolveEntity a {@link BiFunction} that return {@code true} if schema can be resolved for the given {@code publicId} and {@code systemId}
    * @return resolved systemId
    */
-  public static String resolveSystemId(String publicId, String systemId, Boolean runningTests,
+  public static String resolveSystemId(String publicId, String systemId, boolean runningTests,
                                        BiFunction<String, String, Boolean> canResolveEntity) {
     if (systemId.equals(CORE_XSD)) {
       Boolean useDeprecated = canResolveEntity.apply(publicId, CORE_DEPRECATED_XSD);
@@ -95,6 +98,11 @@ public class SchemaMappingsUtils {
         return CORE_DEPRECATED_XSD;
       } else {
         return CORE_CURRENT_XSD;
+      }
+    } else if (systemId.contains(TEST_XSD)) {
+      if (!runningTests && canResolveEntity.apply(publicId, systemId)) {
+        String message = "Internal runtime mule-test.xsd can't be used in real applications";
+        throw new MuleRuntimeException(createStaticMessage(message));
       }
     } else if (systemId.contains("spring")) {
       systemId = systemId.replace("-current.xsd", ".xsd");
