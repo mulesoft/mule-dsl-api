@@ -49,18 +49,16 @@ public class DefaultXmlGrammarPoolBuilder implements XmlGrammarPoolBuilder {
 
   @Override
   public XMLGrammarPool build() {
-    return new RuntimeXmlGrammarPool(new LazyValue<>(createCorePool()));
-  }
-
-  private XMLGrammarPool createCorePool() {
-    XMLGrammarPool pool;
-    try {
-      pool = initializeCoreGrammarPool();
-    } catch (Throwable e) {
-      LOGGER.warn("Unable to create grammar pool. Using empty XMLGrammarPool", e);
-      pool = createEmptyXMLGrammarPool();
-    }
-    return pool;
+    return new RuntimeXmlGrammarPool(new LazyValue<>(() -> {
+      XMLGrammarPool pool;
+      try {
+        pool = initializeCoreGrammarPool();
+      } catch (Throwable e) {
+        LOGGER.warn("Unable to create grammar pool. Using empty XMLGrammarPool", e);
+        pool = createEmptyXMLGrammarPool();
+      }
+      return pool;
+    }));
   }
 
   private XMLGrammarPool initializeCoreGrammarPool() throws IOException {

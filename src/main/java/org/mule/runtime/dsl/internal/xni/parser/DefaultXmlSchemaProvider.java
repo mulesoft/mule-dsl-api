@@ -36,10 +36,6 @@ public class DefaultXmlSchemaProvider implements XmlSchemaProvider {
     this.schemas = getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION, DefaultXmlSchemaProvider.class::getClassLoader);
   }
 
-  public Map<String, String> getSchemasMappings() {
-    return schemas;
-  }
-
   @Override
   public List<XMLInputSource> getSchemas() {
     return schemas.entrySet().stream()
@@ -51,7 +47,7 @@ public class DefaultXmlSchemaProvider implements XmlSchemaProvider {
           if (is == null) {
             LOGGER.debug("Couldn't find XML schema [" + systemId + "]: " + resourceLocation);
           } else {
-            xis = new XMLInputSource(null, entry.getKey(), null);
+            xis = new XMLInputSource(null, systemId, null);
             xis.setByteStream(is);
           }
           return ofNullable(xis);
