@@ -10,10 +10,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.DSL_PARSING;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.XmlGrammarPool.XML_GRAMMAR_POOL;
-import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.COMPATIBILITY_XSD;
-import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.CORE_CURRENT_XSD;
-import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.CORE_DEPRECATED_XSD;
-import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.CORE_XSD;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.COMPATIBILITY_XSD;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_XSD;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_CURRENT_XSD;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_DEPRECATED_XSD;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.resolveSystemId;
 
 import io.qameta.allure.Feature;

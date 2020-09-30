@@ -9,6 +9,11 @@ package org.mule.runtime.dsl.internal.util;
 import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
 import static org.mule.runtime.dsl.internal.util.CollectionUtils.mergePropertiesIntoMap;
 import static org.mule.runtime.dsl.internal.util.ResourceUtils.useCachesIfNecessary;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.COMPATIBILITY_XSD;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_XSD;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_CURRENT_XSD;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_DEPRECATED_XSD;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.TEST_XSD;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.mule.runtime.api.exception.MuleRuntimeException;
@@ -35,12 +40,6 @@ public class SchemaMappingsUtils {
   private static final Logger LOGGER = getLogger(SchemaMappingsUtils.class);
 
   public static final String CUSTOM_SCHEMA_MAPPINGS_LOCATION = "META-INF/mule.schemas";
-  public static final String TEST_XSD = "http://www.mulesoft.org/schema/mule/test/current/mule-test.xsd";
-  public static final String CORE_XSD = "http://www.mulesoft.org/schema/mule/core/current/mule.xsd";
-  public static final String CORE_CURRENT_XSD = "http://www.mulesoft.org/schema/mule/core/current/mule-core.xsd";
-  public static final String CORE_DEPRECATED_XSD = "http://www.mulesoft.org/schema/mule/core/current/mule-core-deprecated.xsd";
-  public static final String COMPATIBILITY_XSD =
-      "http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd";
 
   private SchemaMappingsUtils() {}
 
