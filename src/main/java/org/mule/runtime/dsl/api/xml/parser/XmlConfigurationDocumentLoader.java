@@ -138,7 +138,7 @@ public final class XmlConfigurationDocumentLoader {
    * @param entityResolver resolver for XML schemas.
    * @param filename name of the file to display a better error messages (if there are any). Non null.
    * @param inputStream the input stream with the XML configuration content.
-   * @param xmlGrammarPool a {@ling XMLGrammarPool} pool to be used while file parsing.
+   * @param xmlGrammarPool a {@link XMLGrammarPool} pool to be used while file parsing.
    * @return a new {@link Document} object with the provided content.
    * @throws MuleRuntimeException if an error occurs in {@link MuleDocumentLoader} factory, or if the current {@code filename}
    *         contains 1 or more errors.
