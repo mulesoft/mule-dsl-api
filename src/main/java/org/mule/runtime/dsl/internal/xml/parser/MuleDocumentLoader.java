@@ -7,6 +7,7 @@
 package org.mule.runtime.dsl.internal.xml.parser;
 
 import static java.lang.System.lineSeparator;
+import static java.lang.Thread.currentThread;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
 
@@ -70,20 +71,28 @@ final public class MuleDocumentLoader {
                                EntityResolver entityResolver, ErrorHandler errorHandler,
                                int validationMode, boolean namespaceAware)
       throws Exception {
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    try (InputStream inputStream = inputSource.getByteStream()) {
-      IOUtils.copy(inputStream, output);
+    final Thread thread = currentThread();
+    final ClassLoader currentClassLoader = thread.getContextClassLoader();
+    try {
+      thread.setContextClassLoader(MuleDocumentLoader.class.getClassLoader());
+
+      ByteArrayOutputStream output = new ByteArrayOutputStream();
+      try (InputStream inputStream = inputSource.getByteStream()) {
+        IOUtils.copy(inputStream, output);
+      }
+
+      InputSource defaultInputSource = new InputSource(new ByteArrayInputStream(output.toByteArray()));
+      InputSource enrichInputSource = new InputSource(new ByteArrayInputStream(output.toByteArray()));
+
+      DocumentBuilderFactory factory = this.createDocumentBuilderFactory(validationMode, namespaceAware);
+      DocumentBuilder builder = this.createDocumentBuilder(factory, entityResolver, errorHandler);
+      Document doc = builder.parse(defaultInputSource);
+      createSaxAnnotator(saxParserFactorySupplier, doc).parse(enrichInputSource);
+
+      return doc;
+    } finally {
+      thread.setContextClassLoader(currentClassLoader);
     }
-
-    InputSource defaultInputSource = new InputSource(new ByteArrayInputStream(output.toByteArray()));
-    InputSource enrichInputSource = new InputSource(new ByteArrayInputStream(output.toByteArray()));
-
-    DocumentBuilderFactory factory = this.createDocumentBuilderFactory(validationMode, namespaceAware);
-    DocumentBuilder builder = this.createDocumentBuilder(factory, entityResolver, errorHandler);
-    Document doc = builder.parse(defaultInputSource);
-    createSaxAnnotator(saxParserFactorySupplier, doc).parse(enrichInputSource);
-
-    return doc;
   }
 
   protected XMLReader createSaxAnnotator(Supplier<SAXParserFactory> saxParserFactorySupplier, Document doc)
