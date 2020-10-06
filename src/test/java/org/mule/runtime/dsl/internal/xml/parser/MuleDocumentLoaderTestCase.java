@@ -16,6 +16,8 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.mock;
 
 import io.qameta.allure.Issue;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mule.runtime.dsl.api.xml.parser.XmlGathererErrorHandler;
 import org.w3c.dom.Document;
@@ -37,6 +39,18 @@ public class MuleDocumentLoaderTestCase {
       "    </flow>\n" +
       "\n" +
       "</mule>";
+
+  private ClassLoader originalClassLoader;
+
+  @Before
+  public void setup() {
+    originalClassLoader = currentThread().getContextClassLoader();
+  }
+
+  @After
+  public void tearDown() {
+    currentThread().setContextClassLoader(originalClassLoader);
+  }
 
   @Test
   @Issue("MULE-18813")
