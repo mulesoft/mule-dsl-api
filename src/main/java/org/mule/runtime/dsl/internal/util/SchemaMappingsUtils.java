@@ -6,17 +6,12 @@
  */
 package org.mule.runtime.dsl.internal.util;
 
-import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
 import static org.mule.runtime.dsl.internal.util.CollectionUtils.mergePropertiesIntoMap;
 import static org.mule.runtime.dsl.internal.util.ResourceUtils.useCachesIfNecessary;
-import static org.mule.runtime.dsl.internal.util.SchemasConstants.COMPATIBILITY_XSD;
 import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_XSD;
 import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_CURRENT_XSD;
-import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_DEPRECATED_XSD;
-import static org.mule.runtime.dsl.internal.util.SchemasConstants.TEST_XSD;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -27,7 +22,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
@@ -43,71 +37,15 @@ public class SchemaMappingsUtils {
 
   private SchemaMappingsUtils() {}
 
-  /**
-   * Override schema systemId according certain rule:
-   * <p>
-   * <ul>
-   *     <li>Mule deprecated schema: Enable usage of 'mule-core-deprecated.xsd' for compatibility.
-   *     If 'mule-core-deprecated.xsd' and 'mule-compatibility.xsd' can be resolved by {@code canResolveEntity},
-   *     {@code systemId} will be replaced by 'mule-core-deprecated.xsd'. @see: MULE-13538 and MULE-13782</li>
-   *
-   *     <li>Legacy spring schemas: If {@code systemId} contains 'spring' keyword and ends with '-current.xsd',
-   *     '-current.xsd' will be removed from {@code systemId}. @see: MULE-16572</li>
-   * </ul>
-   *
-   * @param publicId The public identifier of the external entity being referenced, or null if none was supplied.
-   * @param systemId The system identifier of the external entity being referenced.
-   * @param canResolveEntity a {@link BiFunction} that return {@code true} if schema can be resolved for the given {@code publicId} and {@code systemId}
-   * @return resolved systemId
-   */
-  public static String resolveSystemId(String publicId, String systemId,
-                                       BiFunction<String, String, Boolean> canResolveEntity) {
-    return resolveSystemId(publicId, systemId, false, canResolveEntity);
-  }
-
-  /**
-   * Override schema {@code systemId} according certain rule:
-   * <p>
-   * <ul>
-   *     <li>Enable usage of 'mule-core-deprecated.xsd' for testing purpose.
-   *     If 'mule-core-deprecated.xsd' can be resolved by {@code canResolveEntity} and {@code runningTests} is {@code true},
-   *     {@code systemId} will be replaced by 'mule-core-deprecated.xsd'. {@code systemId} @see: MULE-13538</li>
-   *
-   *     <li>Enable usage of 'mule-core-deprecated.xsd' for compatibility.
-   *     If 'mule-core-deprecated.xsd' and 'mule-compatibility.xsd' can be resolved by {@code canResolveEntity},
-   *     {@code systemId} will be replaced by 'mule-core-deprecated.xsd'. @see: MULE-13782</li>
-   *
-   *     <li>Legacy spring schemas. If {@code systemId} contains 'spring' keyword and ends with '-current.xsd',
-   *     '-current.xsd' will be removed from {@code systemId}. @see: MULE-16572</li>
-   * </ul>
-   *
-   * @param publicId The public identifier of the external entity being referenced, or null if none was supplied.
-   * @param systemId The system identifier of the external entity being referenced.
-   * @param runningTests {@code true} if running tests
-   * @param canResolveEntity a {@link BiFunction} that return {@code true} if schema can be resolved for the given {@code publicId} and {@code systemId}
-   * @return resolved systemId
-   */
-  public static String resolveSystemId(String publicId, String systemId, boolean runningTests,
-                                       BiFunction<String, String, Boolean> canResolveEntity) {
+  public static String resolveSystemId(String publicId, String systemId) {
     if (systemId.equals(CORE_XSD)) {
-      Boolean useDeprecated = canResolveEntity.apply(publicId, CORE_DEPRECATED_XSD);
-      Boolean usingCompatibility = canResolveEntity.apply(publicId, COMPATIBILITY_XSD);
-
-      if (useDeprecated && (usingCompatibility || runningTests)) {
-        return CORE_DEPRECATED_XSD;
-      } else {
-        return CORE_CURRENT_XSD;
-      }
-    } else if (systemId.contains(TEST_XSD)) {
-      if (!runningTests && canResolveEntity.apply(publicId, systemId)) {
-        String message = "Internal runtime mule-test.xsd can't be used in real applications";
-        throw new MuleRuntimeException(createStaticMessage(message));
-      }
+      return CORE_CURRENT_XSD;
     } else if (systemId.contains("spring")) {
-      systemId = systemId.replace("-current.xsd", ".xsd");
+      // This is to support importing Spring xsd's from custom xsd's. Compatibility module does such thing.
+      return systemId.replace("-current.xsd", ".xsd");
+    } else {
+      return systemId;
     }
-
-    return systemId;
   }
 
   /**

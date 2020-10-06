@@ -13,12 +13,8 @@ package org.mule.runtime.dsl.internal.util;
  */
 public class SchemasConstants {
 
-  public static final String TEST_XSD = "http://www.mulesoft.org/schema/mule/test/current/mule-test.xsd";
   public static final String CORE_XSD = "http://www.mulesoft.org/schema/mule/core/current/mule.xsd";
   public static final String CORE_CURRENT_XSD = "http://www.mulesoft.org/schema/mule/core/current/mule-core.xsd";
-  public static final String CORE_DEPRECATED_XSD = "http://www.mulesoft.org/schema/mule/core/current/mule-core-deprecated.xsd";
-  public static final String COMPATIBILITY_XSD =
-      "http://www.mulesoft.org/schema/mule/compatibility/current/mule-compatibility.xsd";
 
   private SchemasConstants() {}
 }

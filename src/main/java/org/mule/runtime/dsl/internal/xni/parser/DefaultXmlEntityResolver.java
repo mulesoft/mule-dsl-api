@@ -6,13 +6,10 @@
  */
 package org.mule.runtime.dsl.internal.xni.parser;
 
-import static java.lang.Thread.currentThread;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.CUSTOM_SCHEMA_MAPPINGS_LOCATION;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.getSchemaMappings;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.resolveSystemId;
 import static org.slf4j.LoggerFactory.getLogger;
-import static java.util.Optional.of;
-import static java.util.Optional.empty;
 
 import com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
 import com.sun.org.apache.xerces.internal.xni.XNIException;
@@ -22,9 +19,7 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Custom {@link XMLEntityResolver} that resolve entities over mule schemas.
@@ -34,18 +29,11 @@ import java.util.Optional;
 public class DefaultXmlEntityResolver implements XMLEntityResolver {
 
   private static final Logger LOGGER = getLogger(DefaultXmlEntityResolver.class);
-  private static Boolean IS_RUNNING_TESTS;
 
   private final Map<String, String> schemas;
-  private Optional<ClassLoader> classLoader = empty();
-  private Map<String, String> appPluginsSchemaMappings = new HashMap<>();
 
   public DefaultXmlEntityResolver() {
     this.schemas = getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION, DefaultXmlEntityResolver.class::getClassLoader);
-    if (isRunningTests()) {
-      this.classLoader = of(currentThread().getContextClassLoader());
-      this.appPluginsSchemaMappings = getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION, () -> classLoader.get());
-    }
   }
 
   @Override
@@ -54,14 +42,8 @@ public class DefaultXmlEntityResolver implements XMLEntityResolver {
     String systemId = resourceIdentifier.getExpandedSystemId();
     if (publicId == null && systemId == null)
       return null;
-    systemId =
-        resolveSystemId(publicId, systemId, isRunningTests(),
-                        (pId, sId) -> schemas.containsKey(sId) || appPluginsSchemaMappings.containsKey(sId));
-    XMLInputSource xis = resolveEntity(schemas, publicId, systemId, DefaultXmlEntityResolver.class.getClassLoader());
-    if (xis == null && isRunningTests()) {
-      xis = resolveEntity(appPluginsSchemaMappings, publicId, systemId, classLoader.orElse(null));
-    }
-    return xis;
+    systemId = resolveSystemId(publicId, systemId);
+    return resolveEntity(schemas, publicId, systemId, DefaultXmlEntityResolver.class.getClassLoader());
   }
 
   private XMLInputSource resolveEntity(Map<String, String> schemas, String publicId, String systemId, ClassLoader classLoader) {
@@ -81,19 +63,5 @@ public class DefaultXmlEntityResolver implements XMLEntityResolver {
     } else {
       return null;
     }
-  }
-
-  private boolean isRunningTests() {
-    if (IS_RUNNING_TESTS != null) {
-      return IS_RUNNING_TESTS;
-    }
-    for (StackTraceElement element : new Throwable().getStackTrace()) {
-      if (element.getClassName().startsWith("org.junit.runners.")) {
-        IS_RUNNING_TESTS = true;
-        return true;
-      }
-    }
-    IS_RUNNING_TESTS = false;
-    return false;
   }
 }

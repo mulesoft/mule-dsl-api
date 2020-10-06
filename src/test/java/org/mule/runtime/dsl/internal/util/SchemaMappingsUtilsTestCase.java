@@ -10,10 +10,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.DSL_PARSING;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.XmlGrammarPool.XML_GRAMMAR_POOL;
-import static org.mule.runtime.dsl.internal.util.SchemasConstants.COMPATIBILITY_XSD;
 import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_XSD;
 import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_CURRENT_XSD;
-import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_DEPRECATED_XSD;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.resolveSystemId;
 
 import io.qameta.allure.Feature;
@@ -31,35 +29,19 @@ public class SchemaMappingsUtilsTestCase {
   @Test
   @Issue("MULE-16572")
   public void legacySpring() {
-    String systemId = resolveSystemId(null, LEGACY_SPRING_XSD, (pId, sId) -> false);
+    String systemId = resolveSystemId(null, LEGACY_SPRING_XSD);
     assertThat(systemId, is("http://www.springframework.org/schema/beans/spring-beans.xsd"));
   }
 
   @Test
   public void unknownSystemIdShouldNotBeResolved() {
-    String systemId = resolveSystemId(null, UNKNOW_XSD, (pId, sId) -> false);
+    String systemId = resolveSystemId(null, UNKNOW_XSD);
     assertThat(systemId, is(systemId));
   }
 
   @Test
-  public void deprecatedCoreXsdShouldBeResolvedIfIsRunningTestsAndDeprecatedCanBeResolved() {
-    String systemId = resolveSystemId(null, CORE_XSD, true, (pId, sId) -> sId.equals(CORE_DEPRECATED_XSD));
-    assertThat(systemId, is(CORE_DEPRECATED_XSD));
-
-    systemId = resolveSystemId(null, CORE_XSD, (pId, sId) -> sId.equals(CORE_DEPRECATED_XSD));
-    assertThat(systemId, is(CORE_CURRENT_XSD));
-  }
-
-  @Test
-  public void deprecatedCoreXsdShouldBeResolvedIfCanResolveCompatibilityAndDeprecatedXsd() {
-    String systemId =
-        resolveSystemId(null, CORE_XSD, (pId, sId) -> sId.equals(COMPATIBILITY_XSD) || sId.equals(CORE_DEPRECATED_XSD));
-    assertThat(systemId, is(CORE_DEPRECATED_XSD));
-  }
-
-  @Test
-  public void coreCurrentXsdShouldBeResolvedIfCoreXsdCanNotBeResolvedAsDeprecatedOrCompatibility() {
-    String systemId = resolveSystemId(null, CORE_XSD, (pId, sId) -> false);
+  public void coreCurrentXsdShouldBeResolved() {
+    String systemId = resolveSystemId(null, CORE_XSD);
     assertThat(systemId, is(CORE_CURRENT_XSD));
   }
 }
