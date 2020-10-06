@@ -64,7 +64,7 @@ public class MuleDocumentLoaderTestCase {
 
     InputSource is = new InputSource(toInputStream(SIMPLE_APPLICATION, UTF_8));
     XmlGathererErrorHandler errorHandler = new DefaultXmlGathererErrorHandlerFactory().create();
-    Document document = loader.loadDocument(SAXParserFactory::newInstance, is, null, errorHandler, 0, false);
+    Document document = loader.loadDocument(SAXParserFactory::newInstance, is, null, errorHandler, 0, false, null);
 
     verifyZeroInteractions(failing);
 
