@@ -29,7 +29,7 @@ public class DefaultXmlGrammarPoolManagerTestCase {
   public void grammarPoolManagerShouldReturnSingletonInstance() {
     Optional<XMLGrammarPool> grammarPool = getGrammarPool();
     assertThat(grammarPool.isPresent(), is(true));
-    assertThat(grammarPool.get(), is(instanceOf(RuntimeXmlGrammarPool.class)));
+    assertThat(grammarPool.get(), is(instanceOf(ReadOnlyXmlGrammarPool.class)));
     Optional<XMLGrammarPool> grammarPool2 = getGrammarPool();
     assertThat(grammarPool2.isPresent(), is(true));
     assertThat(grammarPool.get(), is(sameInstance(grammarPool2.get())));

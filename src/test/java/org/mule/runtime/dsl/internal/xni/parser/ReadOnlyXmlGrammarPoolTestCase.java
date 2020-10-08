@@ -31,10 +31,10 @@ import org.junit.Test;
 
 @Feature(DSL_PARSING)
 @Story(XML_GRAMMAR_POOL)
-public class RuntimeXmlGrammarPoolTestCase {
+public class ReadOnlyXmlGrammarPoolTestCase {
 
   private XMLGrammarPool core;
-  private RuntimeXmlGrammarPool runtimeXmlGrammarPool;
+  private ReadOnlyXmlGrammarPool readOnlyXmlGrammarPool;
 
   @Before
   public void setup() {
@@ -42,45 +42,45 @@ public class RuntimeXmlGrammarPoolTestCase {
     when(core.retrieveInitialGrammarSet(eq(XML_SCHEMA))).thenReturn(new Grammar[] {mock(Grammar.class)});
     when(core.retrieveInitialGrammarSet(eq(XML_DTD))).thenReturn(new Grammar[0]);
 
-    runtimeXmlGrammarPool = new RuntimeXmlGrammarPool(core);
+    readOnlyXmlGrammarPool = new ReadOnlyXmlGrammarPool(core);
   }
 
   @Test
-  public void runtimeXmlGrammarPoolShouldContainsOnlyPreloadGrammars() {
+  public void readOnlyXmlGrammarPoolShouldContainsOnlyPreloadGrammars() {
     Grammar[] grammars = new Grammar[1];
     grammars[0] = mock(Grammar.class);
-    runtimeXmlGrammarPool.cacheGrammars(XML_SCHEMA, grammars);
-    runtimeXmlGrammarPool.cacheGrammars(XML_DTD, grammars);
+    readOnlyXmlGrammarPool.cacheGrammars(XML_SCHEMA, grammars);
+    readOnlyXmlGrammarPool.cacheGrammars(XML_DTD, grammars);
     verify(core, never()).cacheGrammars(anyString(), any());
 
-    grammars = runtimeXmlGrammarPool.retrieveInitialGrammarSet(XML_SCHEMA);
+    grammars = readOnlyXmlGrammarPool.retrieveInitialGrammarSet(XML_SCHEMA);
     assertThat(grammars.length, is(1));
     verify(core).retrieveInitialGrammarSet(XML_SCHEMA);
 
-    grammars = runtimeXmlGrammarPool.retrieveInitialGrammarSet(XML_DTD);
+    grammars = readOnlyXmlGrammarPool.retrieveInitialGrammarSet(XML_DTD);
     assertThat(grammars.length, is(0));
     verify(core).retrieveInitialGrammarSet(XML_DTD);
   }
 
   @Test
-  public void runtimeXmlGrammarPoolUseCorePoolToRetrieveGrammars() {
+  public void readOnlyXmlGrammarPoolUseCorePoolToRetrieveGrammars() {
     XMLGrammarDescription description = mock(XMLGrammarDescription.class);
-    runtimeXmlGrammarPool.retrieveGrammar(description);
+    readOnlyXmlGrammarPool.retrieveGrammar(description);
     verify(core).retrieveGrammar(description);
   }
 
   @Test
-  public void runtimeXmlGrammarPoolNotAllowLockOrUnlockPool() {
-    runtimeXmlGrammarPool.lockPool();
+  public void readOnlyXmlGrammarPoolNotAllowLockOrUnlockPool() {
+    readOnlyXmlGrammarPool.lockPool();
     verify(core, never()).lockPool();
 
-    runtimeXmlGrammarPool.unlockPool();
+    readOnlyXmlGrammarPool.unlockPool();
     verify(core, never()).unlockPool();
   }
 
   @Test
-  public void runtimeXmlGrammarPoolNotAllowClearPool() {
-    runtimeXmlGrammarPool.clear();
+  public void readOnlyXmlGrammarPoolNotAllowClearPool() {
+    readOnlyXmlGrammarPool.clear();
     verify(core, never()).clear();
   }
 }

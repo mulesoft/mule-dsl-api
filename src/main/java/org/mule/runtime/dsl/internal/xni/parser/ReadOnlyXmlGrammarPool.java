@@ -15,11 +15,11 @@ import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
  *
  * @since 1.4.0
  */
-public class RuntimeXmlGrammarPool implements XMLGrammarPool {
+public class ReadOnlyXmlGrammarPool implements XMLGrammarPool {
 
   private final XMLGrammarPool core;
 
-  public RuntimeXmlGrammarPool(XMLGrammarPool core) {
+  public ReadOnlyXmlGrammarPool(XMLGrammarPool core) {
     this.core = core;
   }
 

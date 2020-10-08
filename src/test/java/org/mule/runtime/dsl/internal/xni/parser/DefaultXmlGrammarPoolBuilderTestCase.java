@@ -71,7 +71,7 @@ public class DefaultXmlGrammarPoolBuilderTestCase {
     XMLGrammarPool xmlGrammarPool = builder.build();
 
     assertThat(xmlGrammarPool, is(notNullValue()));
-    assertThat(xmlGrammarPool, is(instanceOf(RuntimeXmlGrammarPool.class)));
+    assertThat(xmlGrammarPool, is(instanceOf(ReadOnlyXmlGrammarPool.class)));
 
     Grammar[] grammars = xmlGrammarPool.retrieveInitialGrammarSet(XML_SCHEMA);
     assertThat(grammars, is(notNullValue()));
@@ -92,7 +92,7 @@ public class DefaultXmlGrammarPoolBuilderTestCase {
     XMLGrammarPool xmlGrammarPool = builder.build();
 
     assertThat(xmlGrammarPool, is(notNullValue()));
-    assertThat(xmlGrammarPool, is(instanceOf(RuntimeXmlGrammarPool.class)));
+    assertThat(xmlGrammarPool, is(instanceOf(ReadOnlyXmlGrammarPool.class)));
 
     Grammar[] grammars = xmlGrammarPool.retrieveInitialGrammarSet(XML_SCHEMA);
     assertThat(grammars, is(notNullValue()));
@@ -118,7 +118,7 @@ public class DefaultXmlGrammarPoolBuilderTestCase {
     XMLGrammarPool xmlGrammarPool = builder.build();
 
     assertThat(xmlGrammarPool, is(notNullValue()));
-    assertThat(xmlGrammarPool, is(instanceOf(RuntimeXmlGrammarPool.class)));
+    assertThat(xmlGrammarPool, is(instanceOf(ReadOnlyXmlGrammarPool.class)));
 
     Grammar[] grammars = xmlGrammarPool.retrieveInitialGrammarSet(XML_SCHEMA);
     assertThat(grammars, is(notNullValue()));
@@ -145,7 +145,7 @@ public class DefaultXmlGrammarPoolBuilderTestCase {
     XMLGrammarPool xmlGrammarPool = builder.build();
 
     assertThat(xmlGrammarPool, is(notNullValue()));
-    assertThat(xmlGrammarPool, is(instanceOf(RuntimeXmlGrammarPool.class)));
+    assertThat(xmlGrammarPool, is(instanceOf(ReadOnlyXmlGrammarPool.class)));
 
     Grammar[] grammars = xmlGrammarPool.retrieveInitialGrammarSet(XML_SCHEMA);
     assertThat(grammars, is(notNullValue()));

@@ -22,7 +22,7 @@ import org.mule.runtime.dsl.api.xni.parser.XmlSchemaProvider;
 import org.slf4j.Logger;
 
 /**
- * Default implementation of {@link XmlGrammarPoolBuilder} provides a way of creating {@link RuntimeXmlGrammarPool} instances.
+ * Default implementation of {@link XmlGrammarPoolBuilder} provides a way of creating {@link ReadOnlyXmlGrammarPool} instances.
  *
  * @since 1.4.0
  */
@@ -46,7 +46,7 @@ public class DefaultXmlGrammarPoolBuilder implements XmlGrammarPoolBuilder {
 
   @Override
   public XMLGrammarPool build() {
-    return new RuntimeXmlGrammarPool(buildCoreGrammarPool());
+    return new ReadOnlyXmlGrammarPool(buildCoreGrammarPool());
   }
 
   private XMLGrammarPool buildCoreGrammarPool() {
