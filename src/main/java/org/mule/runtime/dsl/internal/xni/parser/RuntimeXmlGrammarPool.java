@@ -9,7 +9,6 @@ package org.mule.runtime.dsl.internal.xni.parser;
 import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
 import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription;
 import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
-import org.mule.runtime.api.util.LazyValue;
 
 /**
  * A read-only {@link XMLGrammarPool} preloaded with mule schemas
@@ -18,20 +17,20 @@ import org.mule.runtime.api.util.LazyValue;
  */
 public class RuntimeXmlGrammarPool implements XMLGrammarPool {
 
-  private final LazyValue<XMLGrammarPool> core;
+  private final XMLGrammarPool core;
 
-  public RuntimeXmlGrammarPool(LazyValue<XMLGrammarPool> core) {
+  public RuntimeXmlGrammarPool(XMLGrammarPool core) {
     this.core = core;
   }
 
   @Override
   public Grammar[] retrieveInitialGrammarSet(String s) {
-    return core.get().retrieveInitialGrammarSet(s);
+    return core.retrieveInitialGrammarSet(s);
   }
 
   @Override
   public Grammar retrieveGrammar(XMLGrammarDescription xmlGrammarDescription) {
-    return core.get().retrieveGrammar(xmlGrammarDescription);
+    return core.retrieveGrammar(xmlGrammarDescription);
   }
 
   @Override

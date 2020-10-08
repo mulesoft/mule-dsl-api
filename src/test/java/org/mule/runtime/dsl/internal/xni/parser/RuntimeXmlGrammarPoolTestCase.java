@@ -28,7 +28,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.runtime.api.util.LazyValue;
 
 @Feature(DSL_PARSING)
 @Story(XML_GRAMMAR_POOL)
@@ -43,7 +42,7 @@ public class RuntimeXmlGrammarPoolTestCase {
     when(core.retrieveInitialGrammarSet(eq(XML_SCHEMA))).thenReturn(new Grammar[] {mock(Grammar.class)});
     when(core.retrieveInitialGrammarSet(eq(XML_DTD))).thenReturn(new Grammar[0]);
 
-    runtimeXmlGrammarPool = new RuntimeXmlGrammarPool(new LazyValue<>(core));
+    runtimeXmlGrammarPool = new RuntimeXmlGrammarPool(core);
   }
 
   @Test

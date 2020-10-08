@@ -17,12 +17,9 @@ import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
 import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 import com.sun.org.apache.xerces.internal.xni.parser.XMLEntityResolver;
 import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
-import org.mule.runtime.api.util.LazyValue;
 import org.mule.runtime.dsl.api.xni.parser.XmlGathererErrorHandler;
 import org.mule.runtime.dsl.api.xni.parser.XmlSchemaProvider;
 import org.slf4j.Logger;
-
-import java.io.IOException;
 
 /**
  * Default implementation of {@link XmlGrammarPoolBuilder} provides a way of creating {@link RuntimeXmlGrammarPool} instances.
@@ -49,62 +46,62 @@ public class DefaultXmlGrammarPoolBuilder implements XmlGrammarPoolBuilder {
 
   @Override
   public XMLGrammarPool build() {
-    return new RuntimeXmlGrammarPool(new LazyValue<>(() -> {
-      XMLGrammarPool pool;
-      try {
-        pool = initializeCoreGrammarPool();
-      } catch (Throwable e) {
-        LOGGER.warn("Unable to create grammar pool. Using empty XMLGrammarPool", e);
-        pool = createEmptyXMLGrammarPool();
+    return new RuntimeXmlGrammarPool(buildCoreGrammarPool());
+  }
+
+  private XMLGrammarPool buildCoreGrammarPool() {
+    XMLGrammarPool pool;
+    try {
+      pool = new XMLGrammarPoolImpl();
+      // create grammar preparser
+      XMLGrammarPreparser preparser = new XMLGrammarPreparser();
+      preparser.setGrammarPool(pool);
+
+      preparser.registerPreparser(XML_SCHEMA, null);
+
+      // set properties
+      preparser.setFeature(NAMESPACES_FEATURE_ID, true);
+      preparser.setFeature(VALIDATION_FEATURE_ID, true);
+
+      preparser.setErrorHandler(errorHandler);
+      preparser.setEntityResolver(entityResolver);
+
+      // parse grammars
+      for (XMLInputSource is : schemaProvider.getSchemas()) {
+        preparser.preparseGrammar(XML_SCHEMA, is);
       }
-      return pool;
-    }));
+
+      if (errorHandler.getErrors().isEmpty()) {
+        Grammar[] grammars = pool.retrieveInitialGrammarSet(XML_SCHEMA);
+        LOGGER.info(format("Loaded %s grammars", grammars.length));
+      } else {
+        final String subMessage =
+            format(errorHandler.getErrors().size() == 1 ? "was '%s' error" : "were '%s' errors", errorHandler.getErrors().size());
+        final StringBuilder sb =
+            new StringBuilder("There " + subMessage + " while creating XMLSchemaGrammarPool. Using empty XMLGrammarPool");
+        sb.append(lineSeparator()).append("Full list:");
+        errorHandler.getErrors().forEach(error -> sb.append(lineSeparator()).append(error));
+        sb.append(lineSeparator());
+        LOGGER.warn(sb.toString());
+
+        pool = buildEmptyXMLGrammarPool();
+      }
+      pool.lockPool();
+
+    } catch (Throwable e) {
+      LOGGER.warn("Unable to create grammar pool. Using empty XMLGrammarPool", e);
+      pool = buildEmptyXMLGrammarPool();
+    }
+    return pool;
   }
 
-  private XMLGrammarPool initializeCoreGrammarPool() throws IOException {
-    XMLGrammarPool core = new XMLGrammarPoolImpl();
-
-    // create grammar preparser
-    XMLGrammarPreparser preparser = new XMLGrammarPreparser();
-    preparser.setGrammarPool(core);
-
-    preparser.registerPreparser(XML_SCHEMA, null);
-
-    // set properties
-    preparser.setFeature(NAMESPACES_FEATURE_ID, true);
-    preparser.setFeature(VALIDATION_FEATURE_ID, true);
-
-    preparser.setErrorHandler(errorHandler);
-    preparser.setEntityResolver(entityResolver);
-
-    // parse grammars
-    for (XMLInputSource is : schemaProvider.getSchemas()) {
-      preparser.preparseGrammar(XML_SCHEMA, is);
-    }
-
-    if (errorHandler.getErrors().isEmpty()) {
-      Grammar[] grammars = core.retrieveInitialGrammarSet(XML_SCHEMA);
-      LOGGER.info(format("Loaded %s grammars", grammars.length));
-    } else {
-      final String subMessage =
-          format(errorHandler.getErrors().size() == 1 ? "was '%s' error" : "were '%s' errors", errorHandler.getErrors().size());
-      final StringBuilder sb =
-          new StringBuilder("There " + subMessage + " while creating XMLSchemaGrammarPool. Using empty XMLGrammarPool\"");
-      sb.append(lineSeparator()).append("Full list:");
-      errorHandler.getErrors().forEach(error -> sb.append(lineSeparator()).append(error));
-      sb.append(lineSeparator());
-      LOGGER.warn(sb.toString());
-
-      core = createEmptyXMLGrammarPool();
-    }
-    core.lockPool();
-    return core;
-  }
-
-  private XMLGrammarPool createEmptyXMLGrammarPool() {
+  /**
+   *
+   * @return an empty grammar pool implementation
+   */
+  public static XMLGrammarPool buildEmptyXMLGrammarPool() {
     XMLGrammarPool pool = new XMLGrammarPoolImpl(1);
     pool.lockPool();
     return pool;
   }
-
 }

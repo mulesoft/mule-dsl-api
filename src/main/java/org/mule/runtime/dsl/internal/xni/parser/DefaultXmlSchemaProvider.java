@@ -16,7 +16,10 @@ import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
 import org.mule.runtime.dsl.api.xni.parser.XmlSchemaProvider;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,12 +46,19 @@ public class DefaultXmlSchemaProvider implements XmlSchemaProvider {
           String systemId = entry.getKey();
           String resourceLocation = entry.getValue();
           XMLInputSource xis = null;
-          InputStream is = DefaultXmlSchemaProvider.class.getClassLoader().getResourceAsStream(resourceLocation);
-          if (is == null) {
-            LOGGER.debug("Couldn't find XML schema [" + systemId + "]: " + resourceLocation);
+          URL resource = DefaultXmlSchemaProvider.class.getClassLoader().getResource(resourceLocation);
+          if (resource == null) {
+            LOGGER.debug("Couldn't find schema [" + systemId + "]: " + resourceLocation);
           } else {
-            xis = new XMLInputSource(null, systemId, null);
-            xis.setByteStream(is);
+            try {
+              URLConnection connection = resource.openConnection();
+              connection.setUseCaches(false);
+              InputStream is = connection.getInputStream();
+              xis = new XMLInputSource(null, systemId, null);
+              xis.setByteStream(is);
+            } catch (IOException e) {
+              LOGGER.warn("Error loading XSD [" + systemId + "]: " + resourceLocation, e);
+            }
           }
           return ofNullable(xis);
         })

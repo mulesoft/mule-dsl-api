@@ -37,11 +37,11 @@ public class SchemaMappingsUtils {
 
   private SchemaMappingsUtils() {}
 
-  public static String resolveSystemId(String publicId, String systemId) {
+  public static String resolveSystemId(String systemId) {
     if (systemId.equals(CORE_XSD)) {
       return CORE_CURRENT_XSD;
     } else if (systemId.contains("spring")) {
-      // This is to support importing Spring xsd's from custom xsd's. Compatibility module does such thing.
+      // [MULE-16572] This is to support importing Spring xsd's from custom xsd's. Compatibility module does such thing.
       return systemId.replace("-current.xsd", ".xsd");
     } else {
       return systemId;

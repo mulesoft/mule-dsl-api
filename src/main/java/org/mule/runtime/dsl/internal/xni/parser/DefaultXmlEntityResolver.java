@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
 
 /**
@@ -42,26 +44,32 @@ public class DefaultXmlEntityResolver implements XMLEntityResolver {
     String systemId = resourceIdentifier.getExpandedSystemId();
     if (publicId == null && systemId == null)
       return null;
-    systemId = resolveSystemId(publicId, systemId);
-    return resolveEntity(schemas, publicId, systemId, DefaultXmlEntityResolver.class.getClassLoader());
+    systemId = resolveSystemId(systemId);
+    return resolveEntity(schemas, publicId, systemId);
   }
 
-  private XMLInputSource resolveEntity(Map<String, String> schemas, String publicId, String systemId, ClassLoader classLoader) {
+  private XMLInputSource resolveEntity(Map<String, String> schemas, String publicId, String systemId) {
     String resourceLocation = schemas.get(systemId);
-    if (classLoader != null && resourceLocation != null) {
-      InputStream is = classLoader.getResourceAsStream(resourceLocation);
-      if (is == null) {
-        LOGGER.debug("Couldn't find XML schema [" + systemId + "]: " + resourceLocation);
-        return null;
+    if (resourceLocation != null) {
+      URL resource = DefaultXmlEntityResolver.class.getClassLoader().getResource(resourceLocation);
+      if (resource == null) {
+        LOGGER.debug("Couldn't find schema [" + systemId + "]: " + resourceLocation);
+      } else {
+        try {
+          URLConnection connection = resource.openConnection();
+          connection.setUseCaches(false);
+          InputStream is = connection.getInputStream();
+          XMLInputSource source = new XMLInputSource(publicId, systemId, null);
+          source.setByteStream(is);
+          if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Found XML schema [" + systemId + "] in classpath: " + resourceLocation);
+          }
+          return source;
+        } catch (IOException e) {
+          LOGGER.warn("Error loading XSD [" + systemId + "]: " + resourceLocation, e);
+        }
       }
-      XMLInputSource source = new XMLInputSource(publicId, systemId, null);
-      source.setByteStream(is);
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Found XML schema [" + systemId + "] in classpath: " + resourceLocation);
-      }
-      return source;
-    } else {
-      return null;
     }
+    return null;
   }
 }

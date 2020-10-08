@@ -29,19 +29,19 @@ public class SchemaMappingsUtilsTestCase {
   @Test
   @Issue("MULE-16572")
   public void legacySpring() {
-    String systemId = resolveSystemId(null, LEGACY_SPRING_XSD);
+    String systemId = resolveSystemId(LEGACY_SPRING_XSD);
     assertThat(systemId, is("http://www.springframework.org/schema/beans/spring-beans.xsd"));
   }
 
   @Test
   public void unknownSystemIdShouldNotBeResolved() {
-    String systemId = resolveSystemId(null, UNKNOW_XSD);
+    String systemId = resolveSystemId(UNKNOW_XSD);
     assertThat(systemId, is(systemId));
   }
 
   @Test
   public void coreCurrentXsdShouldBeResolved() {
-    String systemId = resolveSystemId(null, CORE_XSD);
+    String systemId = resolveSystemId(CORE_XSD);
     assertThat(systemId, is(CORE_CURRENT_XSD));
   }
 }

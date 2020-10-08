@@ -7,13 +7,11 @@
 package org.mule.runtime.dsl.internal.xml.parser;
 
 import static com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.XMLGRAMMAR_POOL;
-import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
 import static java.lang.Thread.currentThread;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
 import static org.mule.runtime.internal.util.xmlsecurity.DefaultXMLSecureFactories.DOCUMENT_BUILDER_FACTORY;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 import org.mule.runtime.dsl.internal.SourcePosition;
@@ -31,10 +29,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.stream.FactoryConfigurationError;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.UserDataHandler;
@@ -54,8 +50,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since 3.8.0
  */
 final public class MuleDocumentLoader {
-
-  private final static Logger LOGGER = getLogger(MuleDocumentLoader.class);
 
   private static final UserDataHandler COPY_METADATA_ANNOTATIONS_DATA_HANDLER = new UserDataHandler() {
 
@@ -117,16 +111,10 @@ final public class MuleDocumentLoader {
                                                                 XMLGrammarPool grammarPool)
       throws ParserConfigurationException {
     DocumentBuilderFactory factory;
-    try {
-      factory = DocumentBuilderFactory.newInstance(DOCUMENT_BUILDER_FACTORY, MuleDocumentLoader.class.getClassLoader());
-      if (grammarPool != null) {
-        factory.setAttribute(XMLGRAMMAR_POOL, grammarPool);
-      }
-    } catch (FactoryConfigurationError e) {
-      LOGGER.warn(format("Can't create %s (%s), falling back to default implementation. Grammar pool will not be used.",
-                         DocumentBuilderFactory.class.getName(), DOCUMENT_BUILDER_FACTORY),
-                  e);
-      factory = DocumentBuilderFactory.newInstance();
+    // Sure we are using standard Java implementations
+    factory = DocumentBuilderFactory.newInstance(DOCUMENT_BUILDER_FACTORY, MuleDocumentLoader.class.getClassLoader());
+    if (grammarPool != null) {
+      factory.setAttribute(XMLGRAMMAR_POOL, grammarPool);
     }
     factory.setNamespaceAware(namespaceAware);
     if (validationMode != 0) {
