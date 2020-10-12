@@ -110,7 +110,7 @@
 
         <muleApiVersion>1.4.0-SNAPSHOT</muleApiVersion>
 
-        <junitVersion>4.12</junitVersion>
+        <junitVersion>4.13.1</junitVersion>
         <hamcrestVersion>1.3</hamcrestVersion>
         <guavaVersion>25.1-jre</guavaVersion>
         <aspectjVersion>1.9.2</aspectjVersion>
