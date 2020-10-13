@@ -14,12 +14,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.DSL_PARSING;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.XmlGrammarPool.XML_GRAMMAR_POOL;
 
 import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
+import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription;
 import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 import com.sun.org.apache.xerces.internal.xni.parser.XMLEntityResolver;
 import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
@@ -98,6 +100,10 @@ public class DefaultXmlGrammarPoolBuilderTestCase {
 
     grammars = xmlGrammarPool.retrieveInitialGrammarSet(XML_DTD);
     assertThat(grammars.length, is(0));
+
+    XMLGrammarDescription description = mock(XMLGrammarDescription.class);
+    Grammar grammar = xmlGrammarPool.retrieveGrammar(description);
+    assertThat(grammar, is(nullValue()));
   }
 
   @Test
@@ -126,6 +132,10 @@ public class DefaultXmlGrammarPoolBuilderTestCase {
     assertThat(grammars.length, is(0));
 
     assertThat(errorHandler.getErrors().size(), is(1));
+
+    XMLGrammarDescription description = mock(XMLGrammarDescription.class);
+    Grammar grammar = xmlGrammarPool.retrieveGrammar(description);
+    assertThat(grammar, is(nullValue()));
   }
 
   @Test

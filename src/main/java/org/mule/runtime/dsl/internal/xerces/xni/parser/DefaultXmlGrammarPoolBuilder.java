@@ -98,6 +98,8 @@ public class DefaultXmlGrammarPoolBuilder implements XmlGrammarPoolBuilder {
    * @return an empty grammar pool implementation
    */
   public static XMLGrammarPool buildEmptyXMLGrammarPool() {
+    // By default XMLGrammarPoolImpl creates an internal array with initial capacity = 11.
+    // Setting initial pool capacity = 1 minimize unnecessary array (using capacity = 0 can cause an ArithmeticException (/ by zero) while trying to retrieveGrammar a grammar)
     XMLGrammarPool pool = new XMLGrammarPoolImpl(1);
     pool.lockPool();
     return pool;
