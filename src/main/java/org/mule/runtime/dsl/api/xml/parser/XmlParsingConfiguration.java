@@ -42,7 +42,4 @@ public interface XmlParsingConfiguration {
 
   List<XmlNamespaceInfoProvider> getXmlNamespaceInfoProvider();
 
-  default XMLGrammarPool getXMLGrammarPool() {
-    return null;
-  }
 }

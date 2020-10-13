@@ -12,6 +12,7 @@ import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_XSD;
 import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_CURRENT_XSD;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import org.mule.runtime.api.util.LazyValue;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -29,11 +30,16 @@ import java.util.function.Supplier;
  *
  * @since 1.4.0
  */
-public class SchemaMappingsUtils {
-
-  private static final Logger LOGGER = getLogger(SchemaMappingsUtils.class);
+public final class SchemaMappingsUtils {
 
   public static final String CUSTOM_SCHEMA_MAPPINGS_LOCATION = "META-INF/mule.schemas";
+  public static final String CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION = "META-INF/spring.schemas";
+
+  private static final Logger LOGGER = getLogger(SchemaMappingsUtils.class);
+  private static final LazyValue<Map<String, String>> MULE_SCHEMAS_MAPPINGS =
+      new LazyValue<>(() -> getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION, SchemaMappingsUtils.class::getClassLoader));
+  private static final LazyValue<Map<String, String>> SPRING_SCHEMAS_MAPPINGS =
+      new LazyValue<>(() -> getSchemaMappings(CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION, SchemaMappingsUtils.class::getClassLoader));
 
   private SchemaMappingsUtils() {}
 
@@ -46,6 +52,20 @@ public class SchemaMappingsUtils {
     } else {
       return systemId;
     }
+  }
+
+  /**
+   * @return schemas mappings located at {@code CUSTOM_SCHEMA_MAPPINGS_LOCATION} location
+   */
+  public static Map<String, String> getMuleSchemasMappings() {
+    return MULE_SCHEMAS_MAPPINGS.get();
+  }
+
+  /**
+   * @return schemas mappings located at {@code CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION} location
+   */
+  public static Map<String, String> getSpringSchemasMappings() {
+    return SPRING_SCHEMAS_MAPPINGS.get();
   }
 
   /**
