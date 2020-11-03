@@ -6,6 +6,8 @@
  */
 package org.mule.runtime.dsl.api;
 
+import static java.util.Arrays.asList;
+
 import org.mule.api.annotation.NoExtend;
 import org.mule.api.annotation.NoInstantiate;
 import org.mule.runtime.api.util.IOUtils;
@@ -14,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * A ConfigResource holds the url description (or location) and the url stream. It is useful to associate the two for error
@@ -22,6 +25,12 @@ import java.net.URL;
 @NoExtend
 @NoInstantiate
 public final class ConfigResource {
+
+  private static final List<String> CLASS_PATH_ENTRIES;
+
+  static {
+    CLASS_PATH_ENTRIES = asList(System.getProperty("java.class.path").split(":"));
+  }
 
   protected String resourceName;
   private URL url;
@@ -37,7 +46,17 @@ public final class ConfigResource {
 
   public ConfigResource(URL url) {
     this.url = url;
-    this.resourceName = url.toExternalForm();
+
+    if (url.getProtocol().equals("jar")) {
+      this.resourceName = url.toExternalForm().split("!/")[1];
+    } else if (url.getProtocol().equals("file")) {
+      this.resourceName = CLASS_PATH_ENTRIES.stream()
+          .filter(cp -> url.getPath().startsWith(cp)).findAny()
+          .map(cp -> url.getPath().substring(cp.length() + 1))
+          .orElse(url.toExternalForm());
+    } else {
+      this.resourceName = url.toExternalForm();
+    }
   }
 
   public ConfigResource(String resourceName, InputStream inputStream) {
@@ -64,6 +83,7 @@ public final class ConfigResource {
     return inputStream != null;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -81,6 +101,7 @@ public final class ConfigResource {
     return true;
   }
 
+  @Override
   public int hashCode() {
     int result = 17;
     result = 31 * result + (resourceName != null ? resourceName.hashCode() : 0);
@@ -88,6 +109,7 @@ public final class ConfigResource {
   }
 
 
+  @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder();
     sb.append("ConfigResource");
