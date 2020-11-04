@@ -17,6 +17,10 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.EntityResolver;
 
+/**
+ * @deprecated since 1.4 use {@code mule-artifact-ast-xml-parser} instead.
+ */
+@Deprecated
 public interface XmlParsingConfiguration {
 
 

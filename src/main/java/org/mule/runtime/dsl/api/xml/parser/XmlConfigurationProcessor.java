@@ -33,9 +33,16 @@ import org.w3c.dom.Document;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
+/**
+ * @deprecated since 1.4 use {@code mule-artifact-ast-xml-parser} instead.
+ */
+@Deprecated
 public class XmlConfigurationProcessor {
 
-
+  /**
+   * @deprecated since 1.4 use {@code mule-artifact-ast-xml-parser} instead.
+   */
+  @Deprecated
   public static List<ConfigFile> processXmlConfiguration(XmlParsingConfiguration parsingConfiguration) {
     List<ConfigFile> configFiles = new ArrayList<>();
     if (!ArrayUtils.isEmpty(parsingConfiguration.getArtifactConfigResources())) {
