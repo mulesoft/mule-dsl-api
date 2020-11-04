@@ -12,7 +12,7 @@ import org.mule.runtime.api.component.ComponentIdentifier;
 import java.util.Optional;
 
 /**
- * Registry with all {@link ComponentBuildingDefinition} that where discovered.
+ * Registry with all {@link ComponentBuildingDefinition} that were discovered.
  *
  * @since 1.4.0
  */
