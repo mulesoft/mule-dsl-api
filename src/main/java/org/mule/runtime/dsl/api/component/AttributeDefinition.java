@@ -42,6 +42,7 @@ public class AttributeDefinition {
   private String wrapperIdentifier;
   private String childIdentifier;
   private boolean referenceConfigurationParameter;
+  private String parameterAst;
 
   private AttributeDefinition() {}
 
@@ -81,6 +82,8 @@ public class AttributeDefinition {
       visitor.onMultipleValues(definitions);
     } else if (hasDefaultValue) {
       visitor.onFixedValue(defaultValue);
+    } else if (parameterAst != null) {
+      visitor.onParameterAst(parameterAst);
     } else {
       throw new RuntimeException();
     }
@@ -309,6 +312,16 @@ public class AttributeDefinition {
     public static Builder fromMultipleDefinitions(KeyAttributeDefinitionPair... definitions) {
       Builder builder = new Builder();
       builder.attributeDefinition.definitions = definitions;
+      return builder;
+    }
+
+    /**
+     * @param parameterAst name of the parameter ast from which this attribute value will be extracted.
+     * @return the builder
+     */
+    public static Builder fromParameterAst(String parameterAst) {
+      Builder builder = new Builder();
+      builder.attributeDefinition.parameterAst = parameterAst;
       return builder;
     }
 

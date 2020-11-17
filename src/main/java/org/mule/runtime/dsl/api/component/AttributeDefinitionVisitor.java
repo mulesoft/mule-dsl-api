@@ -130,4 +130,11 @@ public interface AttributeDefinitionVisitor {
    */
   void onMultipleValues(KeyAttributeDefinitionPair[] definitions);
 
+  /**
+   * Called when the attribute is configured from a parameter ast attribute.
+   *
+   * @param parameterAst name of the parameter ast from which this attribute value will be extracted.
+   */
+  void onParameterAst(String parameterAst);
+
 }
