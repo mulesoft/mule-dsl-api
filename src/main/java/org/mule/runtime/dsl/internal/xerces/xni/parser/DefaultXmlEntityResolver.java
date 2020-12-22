@@ -10,6 +10,7 @@ import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.getMuleSche
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.resolveSystemId;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import com.sun.org.apache.xerces.internal.util.XMLResourceIdentifierImpl;
 import com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
 import com.sun.org.apache.xerces.internal.xni.XNIException;
 import com.sun.org.apache.xerces.internal.xni.parser.XMLEntityResolver;
@@ -58,7 +59,11 @@ public class DefaultXmlEntityResolver implements XMLEntityResolver {
           URLConnection connection = resource.openConnection();
           connection.setUseCaches(false);
           InputStream is = connection.getInputStream();
-          XMLInputSource source = new XMLInputSource(publicId, systemId, null);
+          XMLResourceIdentifier resourceIdentifier = new XMLResourceIdentifierImpl();
+          resourceIdentifier.setPublicId(publicId);
+          resourceIdentifier.setLiteralSystemId(systemId);
+          resourceIdentifier.setBaseSystemId(null);
+          XMLInputSource source = new XMLInputSource(resourceIdentifier);
           source.setByteStream(is);
           if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Found XML schema [" + systemId + "] in classpath: " + resourceLocation);

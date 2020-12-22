@@ -11,6 +11,8 @@ import static java.util.stream.Collectors.toList;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.getMuleSchemasMappings;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import com.sun.org.apache.xerces.internal.util.XMLResourceIdentifierImpl;
+import com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
 import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
 import org.slf4j.Logger;
 
@@ -52,7 +54,11 @@ public class DefaultXmlSchemaProvider implements XmlSchemaProvider {
               URLConnection connection = resource.openConnection();
               connection.setUseCaches(false);
               InputStream is = connection.getInputStream();
-              xis = new XMLInputSource(null, systemId, null);
+              XMLResourceIdentifier resourceIdentifier = new XMLResourceIdentifierImpl();
+              resourceIdentifier.setPublicId(null);
+              resourceIdentifier.setLiteralSystemId(systemId);
+              resourceIdentifier.setBaseSystemId(null);
+              xis = new XMLInputSource(resourceIdentifier);
               xis.setByteStream(is);
             } catch (IOException e) {
               LOGGER.warn("Error loading XSD [" + systemId + "]: " + resourceLocation, e);

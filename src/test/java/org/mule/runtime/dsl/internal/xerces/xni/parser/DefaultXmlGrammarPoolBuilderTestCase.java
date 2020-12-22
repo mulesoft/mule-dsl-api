@@ -20,6 +20,8 @@ import static org.mockito.Mockito.when;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.DSL_PARSING;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.XmlGrammarPool.XML_GRAMMAR_POOL;
 
+import com.sun.org.apache.xerces.internal.util.XMLResourceIdentifierImpl;
+import com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
 import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
 import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription;
 import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
@@ -55,7 +57,11 @@ public class DefaultXmlGrammarPoolBuilderTestCase {
 
   private XMLInputSource createXmlInputSource(String systemId, String resourceLocation) {
     InputStream is = DefaultXmlGrammarPoolBuilderTestCase.class.getClassLoader().getResourceAsStream(resourceLocation);
-    XMLInputSource xis = new XMLInputSource(null, systemId, null);
+    XMLResourceIdentifier resourceIdentifier = new XMLResourceIdentifierImpl();
+    resourceIdentifier.setPublicId(null);
+    resourceIdentifier.setLiteralSystemId(systemId);
+    resourceIdentifier.setBaseSystemId(null);
+    XMLInputSource xis = new XMLInputSource(resourceIdentifier);
     xis.setByteStream(is);
     return xis;
   }
