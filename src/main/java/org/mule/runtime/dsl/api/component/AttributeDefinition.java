@@ -88,7 +88,7 @@ public class AttributeDefinition {
 
   public static class Builder {
 
-    private AttributeDefinition attributeDefinition = new AttributeDefinition();
+    private final AttributeDefinition attributeDefinition = new AttributeDefinition();
 
     private Builder() {}
 
@@ -130,7 +130,10 @@ public class AttributeDefinition {
     /**
      * @param defaultValue defines the default value to be used for the attribute if no other value is provided.
      * @return the builder
+     *
+     * @deprecated obtain the default values from the AST/extension model instead.
      */
+    @Deprecated
     public Builder withDefaultValue(Object defaultValue) {
       attributeDefinition.hasDefaultValue = true;
       attributeDefinition.defaultValue = defaultValue;
@@ -143,7 +146,7 @@ public class AttributeDefinition {
      * not require a component definition since it will be just for qualifying a child.
      *
      * i.e.:
-     * 
+     *
      * <pre>
      *     <parent-component>
      *         <first-wrapper>

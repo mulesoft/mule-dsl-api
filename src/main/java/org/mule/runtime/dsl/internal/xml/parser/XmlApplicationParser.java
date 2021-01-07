@@ -7,6 +7,7 @@
 
 package org.mule.runtime.dsl.internal.xml.parser;
 
+import static java.util.Optional.empty;
 import static org.mule.runtime.internal.dsl.DslConstants.CORE_NAMESPACE;
 import static org.mule.runtime.internal.dsl.DslConstants.CORE_PREFIX;
 import static org.mule.runtime.internal.dsl.DslConstants.DOMAIN_NAMESPACE;
@@ -102,7 +103,7 @@ public final class XmlApplicationParser {
 
   private Optional<ConfigLine> configLineFromElement(Node node) {
     if (!isValidType(node)) {
-      return Optional.empty();
+      return empty();
     }
 
     String identifier = parseIdentifier(node);
@@ -149,7 +150,7 @@ public final class XmlApplicationParser {
     return Optional.of(builder.build());
   }
 
-  private String parseNamespace(Node node) {
+  public String parseNamespace(Node node) {
     String namespace = CORE_PREFIX;
     if (node.getNodeType() != Node.CDATA_SECTION_NODE) {
       namespace = getNormalizedNamespace(node.getNamespaceURI(), node.getPrefix());
@@ -160,7 +161,7 @@ public final class XmlApplicationParser {
     return namespace;
   }
 
-  private String parseNamespaceUri(Node node) {
+  public String parseNamespaceUri(Node node) {
     String namespace = CORE_NAMESPACE;
     if (node.getNodeType() != Node.CDATA_SECTION_NODE) {
       namespace = node.getNamespaceURI();
@@ -168,7 +169,7 @@ public final class XmlApplicationParser {
     return namespace;
   }
 
-  private String parseIdentifier(Node node) {
+  public String parseIdentifier(Node node) {
     String identifier = node.getNodeName();
     String[] nameParts = identifier.split(COLON);
     if (nameParts.length > 1) {
@@ -181,7 +182,7 @@ public final class XmlApplicationParser {
     return node.getNodeType() != Node.TEXT_NODE && node.getNodeType() != Node.COMMENT_NODE;
   }
 
-  private boolean isTextContent(Node node) {
+  public boolean isTextContent(Node node) {
     return node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.CDATA_SECTION_NODE;
   }
 
