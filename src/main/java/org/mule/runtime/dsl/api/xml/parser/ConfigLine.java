@@ -23,9 +23,12 @@ import com.google.common.collect.ImmutableMap;
  * A configuration line represents the data within a line in a configuration file
  *
  * @since 4.0
+ *
+ * @deprecated From 4.4 onwards, use the {@code mule-artifact-ast} module.
  */
 @NoExtend
 @NoInstantiate
+@Deprecated
 public final class ConfigLine {
 
   /**

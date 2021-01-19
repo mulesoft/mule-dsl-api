@@ -14,10 +14,12 @@ import org.mule.api.annotation.NoInstantiate;
  * immutable.
  *
  * @since 4.0
+ * @deprecated From 4.4 onwards, use the {@code mule-artifact-ast-xml-parser} module.
  */
 @FunctionalInterface
 @NoImplement
 @NoInstantiate
+@Deprecated
 public interface ConfigLineProvider {
 
   /**

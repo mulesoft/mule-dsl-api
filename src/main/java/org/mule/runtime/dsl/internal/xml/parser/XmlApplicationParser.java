@@ -36,7 +36,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Simple parser that transforms an XML document to a set of {@link ConfigLine} objects.
+ * Simple parser that allows to obtain the required data from an XML document.
  * <p>
  * It uses the SPI interface {@link XmlNamespaceInfoProvider} to locate for all namespace info provided and normalize the
  * namespace from the XML document.
@@ -97,10 +97,18 @@ public final class XmlApplicationParser {
     }
   }
 
+  /**
+   * @deprecated From 4.4 onwards, use the {@code mule-artifact-ast-xml-parser} module.
+   */
+  @Deprecated
   public Optional<ConfigLine> parse(Element configElement) {
     return configLineFromElement(configElement);
   }
 
+  /**
+   * @deprecated From 4.4 onwards, use the {@code mule-artifact-ast-xml-parser} module.
+   */
+  @Deprecated
   private Optional<ConfigLine> configLineFromElement(Node node) {
     if (!isValidType(node)) {
       return empty();

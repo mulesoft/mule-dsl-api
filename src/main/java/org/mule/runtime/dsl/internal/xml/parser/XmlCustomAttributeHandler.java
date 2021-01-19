@@ -20,7 +20,9 @@ import org.w3c.dom.Node;
  * Handler for adding and removing custom XML attributes from and to {@code ConfigLine} and {@code ComponentModel}.
  *
  * @since 4.0
+ * @deprecated From 4.4 onwards, use the {@code mule-artifact-ast-xml-parser} module.
  */
+@Deprecated
 public class XmlCustomAttributeHandler {
 
   /**
