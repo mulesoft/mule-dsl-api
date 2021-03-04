@@ -11,8 +11,7 @@ import org.mule.runtime.dsl.internal.xerces.xni.parser.XmlSchemaProvider;
 import org.mule.runtime.dsl.internal.xerces.xni.parser.DefaultXmlSchemaProvider;
 
 /**
- * Default implementation of {@link XmlSchemaProviderFactory} which will return the {@link DefaultXmlSchemaProvider}
- * instance.
+ * Default implementation of {@link XmlSchemaProviderFactory} which will return the {@link DefaultXmlSchemaProvider} instance.
  *
  * @since 1.4.0
  */

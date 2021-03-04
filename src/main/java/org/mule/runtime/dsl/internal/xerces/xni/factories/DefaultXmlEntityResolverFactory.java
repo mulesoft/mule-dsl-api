@@ -11,8 +11,7 @@ import org.mule.runtime.dsl.api.xerces.xni.factories.XmlEntityResolverFactory;
 import org.mule.runtime.dsl.internal.xerces.xni.parser.DefaultXmlEntityResolver;
 
 /**
- * Default implementation of {@link XmlEntityResolverFactory} which will return the {@link DefaultXmlEntityResolver}
- * instance.
+ * Default implementation of {@link XmlEntityResolverFactory} which will return the {@link DefaultXmlEntityResolver} instance.
  *
  * @since 1.4.0
  */

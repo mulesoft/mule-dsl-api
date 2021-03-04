@@ -262,9 +262,9 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   }
 
   /**
-   * Utility method that adds a connection part to the location. Keep in mind that this method in no way validates that
-   * the actual location is a valid one. Clients should add the required logic before calling this method to make sure
-   * that the final location corresponds to a correct element.
+   * Utility method that adds a connection part to the location. Keep in mind that this method in no way validates that the actual
+   * location is a valid one. Clients should add the required logic before calling this method to make sure that the final
+   * location corresponds to a correct element.
    *
    * @return a new instance with the connection location part appended.
    */

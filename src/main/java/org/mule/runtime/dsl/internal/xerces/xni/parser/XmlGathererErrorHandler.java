@@ -23,9 +23,9 @@ public interface XmlGathererErrorHandler extends XMLErrorHandler {
 
   /**
    * @return a collection with all the {@link XMLParseException} exceptions gathered from
-   * {@link XMLErrorHandler#error(String, String, XMLErrorHandler)}.
-   * <p/>
-   * An empty list means there were no error while parsing the file. Non null.
+   *         {@link XMLErrorHandler#error(String, String, XMLErrorHandler)}.
+   *         <p/>
+   *         An empty list means there were no error while parsing the file. Non null.
    */
   List<XMLParseException> getErrors();
 }

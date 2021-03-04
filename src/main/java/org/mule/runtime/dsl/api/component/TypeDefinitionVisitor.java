@@ -9,8 +9,7 @@ package org.mule.runtime.dsl.api.component;
 import org.mule.api.annotation.NoImplement;
 
 /**
- * Visitor that will be invoked based on a
- * {@link ComponentBuildingDefinition#getTypeDefinition()} configuration.
+ * Visitor that will be invoked based on a {@link ComponentBuildingDefinition#getTypeDefinition()} configuration.
  *
  * @since 4.0
  */

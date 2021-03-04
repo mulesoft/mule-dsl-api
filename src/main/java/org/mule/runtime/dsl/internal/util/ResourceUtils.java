@@ -18,9 +18,9 @@ public class ResourceUtils {
   private ResourceUtils() {}
 
   /**
-   * Set the {@link URLConnection#setUseCaches "useCaches"} flag on the
-   * given connection, preferring {@code false} but leaving the
+   * Set the {@link URLConnection#setUseCaches "useCaches"} flag on the given connection, preferring {@code false} but leaving the
    * flag at {@code true} for JNLP based resources.
+   * 
    * @param con the URLConnection to set the flag on
    */
   public static void useCachesIfNecessary(URLConnection con) {

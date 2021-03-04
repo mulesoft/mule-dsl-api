@@ -16,8 +16,7 @@ import java.util.Optional;
  * <p/>
  * An attribute may be configured to be set by using a constructor or a setter.
  * <p/>
- * The {@link AttributeDefinition.Builder} allows to create an {@code AttributeDefinition}
- * from many different sources.
+ * The {@link AttributeDefinition.Builder} allows to create an {@code AttributeDefinition} from many different sources.
  *
  * @since 4.0
  */

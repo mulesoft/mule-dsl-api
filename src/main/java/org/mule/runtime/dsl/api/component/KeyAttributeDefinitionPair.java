@@ -11,10 +11,8 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * Holder for a pair of a map key and its value attribute definition.
  *
- * When
- * {@link AttributeDefinition.Builder#fromMultipleDefinitions(KeyAttributeDefinitionPair...)}
- * is used, this class allows to define the {@link AttributeDefinition} and the key to be used for the generated map holding the
- * attribute value.
+ * When {@link AttributeDefinition.Builder#fromMultipleDefinitions(KeyAttributeDefinitionPair...)} is used, this class allows to
+ * define the {@link AttributeDefinition} and the key to be used for the generated map holding the attribute value.
  *
  * The {@code #Builder} must be used to create instances for {@code KeyAttributeDefinitionPair}.
  *

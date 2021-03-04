@@ -14,8 +14,7 @@ import java.util.Optional;
 /**
  * An {code AttributeDefinitionVisitor} allows to access an {@link AttributeDefinition} configuration.
  * <p>
- * Depending on the {@link AttributeDefinition} configuration a method and only one method
- * of this contract will be invoked.
+ * Depending on the {@link AttributeDefinition} configuration a method and only one method of this contract will be invoked.
  *
  * @since 4.0
  */
@@ -37,8 +36,8 @@ public interface AttributeDefinitionVisitor {
   void onReferenceSimpleParameter(String reference);
 
   /**
-   * Called when the attribute must reference another object defined in the configuration,
-   * but the value injected in the attribute holder is the reference as String.
+   * Called when the attribute must reference another object defined in the configuration, but the value injected in the attribute
+   * holder is the reference as String.
    *
    * @param softReference the identifier of an object declared in the configuration.
    */

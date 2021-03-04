@@ -28,7 +28,8 @@ public interface XmlSchemaProviderFactory {
   }
 
   /**
-   * @return Creates an {@link XmlSchemaProvider} to be used to create {@link com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool}.
+   * @return Creates an {@link XmlSchemaProvider} to be used to create
+   *         {@link com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool}.
    */
   public XmlSchemaProvider create();
 }

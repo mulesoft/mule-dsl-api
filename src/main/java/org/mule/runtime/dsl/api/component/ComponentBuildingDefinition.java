@@ -288,8 +288,8 @@ public class ComponentBuildingDefinition<T> {
     }
 
     /**
-     * Set the component name that will appear in the registry. This is intended for top level singletons without
-     * a name attribute, as there will be an error if more than one element of this type is used.
+     * Set the component name that will appear in the registry. This is intended for top level singletons without a name
+     * attribute, as there will be an error if more than one element of this type is used.
      *
      * @param name the component name
      * @return a copy of ${@code this} builder
