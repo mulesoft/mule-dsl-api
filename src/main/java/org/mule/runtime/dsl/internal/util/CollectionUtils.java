@@ -25,7 +25,7 @@ public class CollectionUtils {
    * Uses {@code Properties.propertyNames()} to even catch default properties linked into the original Properties instance.
    * 
    * @param props the Properties instance to merge (may be {@code null})
-   * @param map the target Map to merge the properties into
+   * @param map   the target Map to merge the properties into
    */
   public static <K, V> void mergePropertiesIntoMap(Properties props, Map<K, V> map) {
     if (props != null) {

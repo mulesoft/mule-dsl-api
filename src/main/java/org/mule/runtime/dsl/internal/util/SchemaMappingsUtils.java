@@ -72,7 +72,7 @@ public final class SchemaMappingsUtils {
    * Load schemas mappings for a given {@code schemaMappingsLocation} location
    *
    * @param schemaMappingsLocation schema mappings location to load
-   * @param classLoader {@link Supplier} the ClassLoader to use for loading schemas
+   * @param classLoader            {@link Supplier} the ClassLoader to use for loading schemas
    * @return a {@link Map} schemas mappings
    */
   public static Map<String, String> getSchemaMappings(String schemaMappingsLocation, Supplier<ClassLoader> classLoader) {
@@ -100,7 +100,7 @@ public final class SchemaMappingsUtils {
    * Merges properties if more than one resource of the same name found in the class path.
    * 
    * @param resourceName the name of the class path resource
-   * @param classLoader {@link Supplier} the ClassLoader to use for loading (or {@code null} to use the default class loader)
+   * @param classLoader  {@link Supplier} the ClassLoader to use for loading (or {@code null} to use the default class loader)
    * @return the populated Properties instance
    * @throws IOException if loading failed
    */

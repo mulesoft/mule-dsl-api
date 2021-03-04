@@ -10,7 +10,7 @@ package org.mule.runtime.dsl.api.component;
  * Converter from one type to another. Meant to be used for converting plain values from the mule configuration to specific types
  * required by a runtime object.
  *
- * @param <InputType> type of the value to be converted.
+ * @param <InputType>  type of the value to be converted.
  * @param <OutputType> type of the converted value.
  */
 public interface TypeConverter<InputType, OutputType> {

@@ -21,7 +21,7 @@ public interface XmlGrammarPoolBuilder {
    * Instantiates a new raw builder, whose components will be declared in the provided {@code extensionModels}.
    *
    * @param schemaProvider provides {@link XMLInputSource} schemas to be loaded.
-   * @param errorHandler a {@link XmlGathererErrorHandler} which gathers as many errors as possible.
+   * @param errorHandler   a {@link XmlGathererErrorHandler} which gathers as many errors as possible.
    * @param entityResolver a {@link XMLEntityResolver} that resolve entities over mule schemas.
    * @return the newly created builder
    */

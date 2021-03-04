@@ -23,8 +23,8 @@ import org.mule.runtime.api.component.Component;
  * interfaces.
  *
  * @param <T> the type of the object to be created. The type parameter will be used to find out if the object implements
- *        interfaces related to mule like lifecycle interfaces. If the type could not be known in advance and can only be know at
- *        runtime then implement {@link ObjectTypeProvider} to inform the actual type.
+ *            interfaces related to mule like lifecycle interfaces. If the type could not be known in advance and can only be know
+ *            at runtime then implement {@link ObjectTypeProvider} to inform the actual type.
  *
  * @since 4.0
  */

@@ -107,7 +107,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   }
 
   /**
-   * @param name the name of the global element in which the specific component is located.
+   * @param name  the name of the global element in which the specific component is located.
    * @param parts the set of parts to locate the component.
    */
   public DefaultComponentLocation(Optional<String> name, List<DefaultLocationPart> parts) {
@@ -208,7 +208,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   /**
    * Creates a new instance of ComponentLocation adding the specified part.
    *
-   * @param partPath the path of this part
+   * @param partPath       the path of this part
    * @param partIdentifier the component identifier of the part if it's not a synthetic part
    * @return a new instance with the given location part appended.
    *
@@ -225,7 +225,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   /**
    * Creates a new instance of ComponentLocation adding the specified part.
    *
-   * @param partPath the path of this part
+   * @param partPath       the path of this part
    * @param partIdentifier the component identifier of the part if it's not a synthetic part
    * @return a new instance with the given location part appended.
    *
@@ -294,10 +294,10 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
     private transient int startColumn = -1;
 
     /**
-     * @param partPath the path of this part
+     * @param partPath       the path of this part
      * @param partIdentifier the component identifier of the part if it's not a synthetic part
-     * @param fileName the file name in which the component was defined
-     * @param lineInFile the line number in which the component was defined
+     * @param fileName       the file name in which the component was defined
+     * @param lineInFile     the line number in which the component was defined
      *
      * @since 1.3
      */
@@ -311,10 +311,10 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
     }
 
     /**
-     * @param partPath the path of this part
+     * @param partPath       the path of this part
      * @param partIdentifier the component identifier of the part if it's not a synthetic part
-     * @param fileName the file name in which the component was defined
-     * @param lineInFile the line number in which the component was defined
+     * @param fileName       the file name in which the component was defined
+     * @param lineInFile     the line number in which the component was defined
      *
      * @deprecated since 1.3 use {@link #DefaultComponentLocation(String, Optional, Optional, Optional, Optional)} instead.
      */

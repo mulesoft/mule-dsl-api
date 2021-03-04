@@ -42,7 +42,7 @@ public class InternalComponentConfiguration extends ComponentConfiguration {
     /**
      * Adds a configuration parameter to the component
      *
-     * @param name configuration attribute name
+     * @param name  configuration attribute name
      * @param value configuration attribute value
      * @return the builder
      */
@@ -65,7 +65,7 @@ public class InternalComponentConfiguration extends ComponentConfiguration {
     /**
      * Adds a property to the {@link ComponentConfiguration}. This property is meant to hold only metadata of the configuration.
      *
-     * @param name custom attribute name.
+     * @param name  custom attribute name.
      * @param value custom attribute value.
      * @return the builder.
      */

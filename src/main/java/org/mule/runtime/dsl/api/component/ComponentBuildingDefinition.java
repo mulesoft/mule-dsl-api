@@ -192,7 +192,7 @@ public class ComponentBuildingDefinition<T> {
     /**
      * Adds a new parameter to be added to the object by using a setter method.
      *
-     * @param fieldName the name of the field in which the value must be injected
+     * @param fieldName           the name of the field in which the value must be injected
      * @param attributeDefinition the setter parameter definition
      * @return a copy of {@code this} builder
      */

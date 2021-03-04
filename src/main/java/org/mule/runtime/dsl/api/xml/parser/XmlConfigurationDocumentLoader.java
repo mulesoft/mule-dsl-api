@@ -78,7 +78,7 @@ public final class XmlConfigurationDocumentLoader {
    * {@link XmlGathererErrorHandler#getErrors()} is an empty list.
    *
    * @param errorHandlerFactory to create {@link XmlGathererErrorHandler} in the
-   *        {@link #loadDocument(Supplier, EntityResolver, String, InputStream)}
+   *                            {@link #loadDocument(Supplier, EntityResolver, String, InputStream)}
    * @return a new instance of {@link XmlConfigurationDocumentLoader}
    */
   public static XmlConfigurationDocumentLoader schemaValidatingDocumentLoader(XmlGathererErrorHandlerFactory errorHandlerFactory) {
@@ -107,7 +107,7 @@ public final class XmlConfigurationDocumentLoader {
    * @param inputStream the input stream with the XML configuration content.
    * @return a new {@link Document} object with the provided content.
    * @throws MuleRuntimeException if an error occurs in {@link MuleDocumentLoader} factory, or if the current {@code filename}
-   *         contains 1 or more errors.
+   *                              contains 1 or more errors.
    * @see {@link DefaultXmlLoggerErrorHandler#getErrors()}
    */
   public Document loadDocument(Supplier<SAXParserFactory> saxParserFactorySupplier, String filename, InputStream inputStream,
@@ -120,11 +120,11 @@ public final class XmlConfigurationDocumentLoader {
    * Creates a {@link Document} from an {@link InputStream} with the required configuration of a mule configuration file parsing.
    *
    * @param entityResolver resolver for XML schemas.
-   * @param filename name of the file to display a better error messages (if there are any). Non null.
-   * @param inputStream the input stream with the XML configuration content.
+   * @param filename       name of the file to display a better error messages (if there are any). Non null.
+   * @param inputStream    the input stream with the XML configuration content.
    * @return a new {@link Document} object with the provided content.
    * @throws MuleRuntimeException if an error occurs in {@link MuleDocumentLoader} factory, or if the current {@code filename}
-   *         contains 1 or more errors.
+   *                              contains 1 or more errors.
    * @see {@link DefaultXmlLoggerErrorHandler#getErrors()}
    */
   public Document loadDocument(Supplier<SAXParserFactory> saxParserFactorySupplier, EntityResolver entityResolver,
@@ -136,12 +136,12 @@ public final class XmlConfigurationDocumentLoader {
    * Creates a {@link Document} from an {@link InputStream} with the required configuration of a mule configuration file parsing.
    *
    * @param entityResolver resolver for XML schemas.
-   * @param filename name of the file to display a better error messages (if there are any). Non null.
-   * @param inputStream the input stream with the XML configuration content.
+   * @param filename       name of the file to display a better error messages (if there are any). Non null.
+   * @param inputStream    the input stream with the XML configuration content.
    * @param xmlGrammarPool a {@link XMLGrammarPool} pool to be used while file parsing.
    * @return a new {@link Document} object with the provided content.
    * @throws MuleRuntimeException if an error occurs in {@link MuleDocumentLoader} factory, or if the current {@code filename}
-   *         contains 1 or more errors.
+   *                              contains 1 or more errors.
    * @see {@link DefaultXmlLoggerErrorHandler#getErrors()}
    */
   public Document loadDocument(Supplier<SAXParserFactory> saxParserFactorySupplier, EntityResolver entityResolver,

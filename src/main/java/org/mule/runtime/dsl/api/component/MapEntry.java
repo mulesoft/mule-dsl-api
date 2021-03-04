@@ -15,7 +15,7 @@ import org.mule.runtime.api.component.AbstractComponent;
  *
  * @since 4.0
  *
- * @param <KeyType> the key type
+ * @param <KeyType>   the key type
  * @param <ValueType> the value type
  */
 public final class MapEntry<KeyType, ValueType> extends AbstractComponent {

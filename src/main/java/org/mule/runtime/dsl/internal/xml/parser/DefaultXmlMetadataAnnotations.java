@@ -41,7 +41,7 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
    * Builds the opening tag of the xml element.
    *
    * @param qName the qualified name of the element
-   * @param atts the attributes of the element, with the qualified name as key
+   * @param atts  the attributes of the element, with the qualified name as key
    */
   @Override
   public void appendElementStart(String qName, Map<String, String> atts) {

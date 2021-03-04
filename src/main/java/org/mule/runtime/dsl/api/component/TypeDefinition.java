@@ -80,7 +80,7 @@ public class TypeDefinition<T> {
    *
    * @since 4.0
    *
-   * @param <KeyType> the key type
+   * @param <KeyType>   the key type
    * @param <ValueType> the value type.=
    */
   public static class MapEntryType<KeyType, ValueType> {
