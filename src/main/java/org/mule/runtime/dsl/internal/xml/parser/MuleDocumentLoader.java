@@ -13,7 +13,6 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
 import static org.mule.runtime.internal.util.xmlsecurity.DefaultXMLSecureFactories.DOCUMENT_BUILDER_FACTORY;
 
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 import org.mule.runtime.dsl.internal.SourcePosition;
 
 import java.io.ByteArrayInputStream;
@@ -43,6 +42,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
+
 /**
  * Alternative to Spring's default document loader that uses <b>SAX</b> to add metadata to the <b>DOM</b> elements that are the
  * result of the default parser.
@@ -50,6 +51,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since 3.8.0
  */
 final public class MuleDocumentLoader {
+
+  private static final String SCHEMA_AUGMENT_PSVI_FEATURE = "http://apache.org/xml/features/validation/schema/augment-psvi";
 
   private static final UserDataHandler COPY_METADATA_ANNOTATIONS_DATA_HANDLER = new UserDataHandler() {
 
@@ -103,6 +106,7 @@ final public class MuleDocumentLoader {
     SAXParserFactory saxParserFactory = saxParserFactorySupplier.get();
     SAXParser saxParser = saxParserFactory.newSAXParser();
     XMLReader documentReader = saxParser.getXMLReader();
+    documentReader.setFeature(SCHEMA_AUGMENT_PSVI_FEATURE, false);
     documentReader.setContentHandler(new XmlMetadataAnnotator(doc, metadataFactory));
     return documentReader;
   }
@@ -113,6 +117,7 @@ final public class MuleDocumentLoader {
     DocumentBuilderFactory factory;
     // Sure we are using standard Java implementations
     factory = DocumentBuilderFactory.newInstance(DOCUMENT_BUILDER_FACTORY, MuleDocumentLoader.class.getClassLoader());
+    factory.setFeature(SCHEMA_AUGMENT_PSVI_FEATURE, false);
     if (grammarPool != null) {
       factory.setAttribute(XMLGRAMMAR_POOL, grammarPool);
     }
