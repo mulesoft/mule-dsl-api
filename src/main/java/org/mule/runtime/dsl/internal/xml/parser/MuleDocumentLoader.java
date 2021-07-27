@@ -195,7 +195,7 @@ final public class MuleDocumentLoader {
 
       XmlMetadataAnnotations metadataBuilder = metadataFactory.create(locator);
       metadataBuilder.setLineNumber(locator.getLineNumber());
-      metadataBuilder.setColumnNumber(trackingPoint.getColumn() - 1);
+      metadataBuilder.setColumnNumber(trackingPoint.getColumn());
       LinkedHashMap<String, String> attsMap = new LinkedHashMap<>();
       for (int i = 0; i < atts.getLength(); ++i) {
         attsMap.put(atts.getQName(i), atts.getValue(i));
@@ -207,7 +207,7 @@ final public class MuleDocumentLoader {
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
       // update the starting point
-      this.updateTrackingPoint();
+      this.updateTrackingPoint(start > 0);
 
       final String body = new String(ch, start, length).trim();
 
@@ -225,7 +225,7 @@ final public class MuleDocumentLoader {
 
     @Override
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-      this.updateTrackingPoint();// update the starting point
+      this.updateTrackingPoint(false);// update the starting point
     }
 
     @Override
@@ -249,11 +249,11 @@ final public class MuleDocumentLoader {
       walker = walker.walkOut();
 
       // update the starting point for the next tag
-      this.updateTrackingPoint();
+      this.updateTrackingPoint(false);
     }
 
-    private void updateTrackingPoint() {
-      SourcePosition item = new SourcePosition(locator.getLineNumber(), locator.getColumnNumber());
+    private void updateTrackingPoint(boolean columnOff) {
+      SourcePosition item = new SourcePosition(locator.getLineNumber(), locator.getColumnNumber() - (columnOff ? 1 : 0));
       if (this.trackingPoint.compareTo(item) < 0) {
         this.trackingPoint = item;
       }
