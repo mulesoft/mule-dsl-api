@@ -441,6 +441,9 @@ public class ComponentBuildingDefinition<T> {
         public void onConfigurationAttribute(String attributeName, Class<?> enforcedClass) {}
 
         @Override
+        public void onConfigurationAttribute(String groupName, String attributeName, Class<?> enforcedClass) {}
+
+        @Override
         public void onMapType(TypeDefinition.MapEntryType mapEntryType) {
           typeReference.set(Map.class);
         }
