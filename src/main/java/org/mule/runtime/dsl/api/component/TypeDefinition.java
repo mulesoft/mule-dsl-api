@@ -42,7 +42,7 @@ public class TypeDefinition<T> {
    * @param configAttributeName name of the configuration attribute that defines the domain object type.
    * @return {@code TypeDefinition} created from that type.
    * 
-   * @deprecated type definitions shouldn't be created form attributes passed in the artifact config.
+   * @deprecated type definitions shouldn't be created from attributes passed in the artifact config.
    */
   @Deprecated
   public static <T> TypeDefinition<T> fromConfigurationAttribute(String configAttributeName) {
