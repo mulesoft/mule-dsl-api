@@ -15,6 +15,7 @@ package org.mule.runtime.dsl.api.component;
 public class TypeDefinition<T> {
 
   private Class<T> type;
+  private String groupName;
   private String attributeName;
   private MapEntryType mapType;
   private Class<?> inforcedClass;
@@ -40,9 +41,25 @@ public class TypeDefinition<T> {
   /**
    * @param configAttributeName name of the configuration attribute that defines the domain object type.
    * @return {@code TypeDefinition} created from that type.
+   * 
+   * @deprecated type definitions shouldn't be created from attributes passed in the artifact config.
    */
+  @Deprecated
   public static <T> TypeDefinition<T> fromConfigurationAttribute(String configAttributeName) {
     TypeDefinition<T> typeDefinition = new TypeDefinition<>();
+    typeDefinition.attributeName = configAttributeName;
+    return typeDefinition;
+  }
+
+  /**
+   * @param configAttributeName name of the configuration attribute that defines the domain object type.
+   * @return {@code TypeDefinition} created from that type.
+   * @deprecated type definitions shouldn't be created from attributes passed in the artifact config.
+   */
+  @Deprecated
+  public static <T> TypeDefinition<T> fromConfigurationAttribute(String configGroupName, String configAttributeName) {
+    TypeDefinition<T> typeDefinition = new TypeDefinition<>();
+    typeDefinition.groupName = configGroupName;
     typeDefinition.attributeName = configAttributeName;
     return typeDefinition;
   }
@@ -63,9 +80,17 @@ public class TypeDefinition<T> {
     } else if (mapType != null) {
       typeDefinitionVisitor.onMapType(mapType);
     } else if (inforcedClass != null) {
-      typeDefinitionVisitor.onConfigurationAttribute(attributeName, inforcedClass);
+      if (groupName != null) {
+        typeDefinitionVisitor.onConfigurationAttribute(groupName, attributeName, inforcedClass);
+      } else {
+        typeDefinitionVisitor.onConfigurationAttribute(attributeName, inforcedClass);
+      }
     } else {
-      typeDefinitionVisitor.onConfigurationAttribute(attributeName, Object.class);
+      if (groupName != null) {
+        typeDefinitionVisitor.onConfigurationAttribute(groupName, attributeName, Object.class);
+      } else {
+        typeDefinitionVisitor.onConfigurationAttribute(attributeName, Object.class);
+      }
     }
   }
 
@@ -85,8 +110,8 @@ public class TypeDefinition<T> {
    */
   public static class MapEntryType<KeyType, ValueType> {
 
-    private Class<KeyType> keyType;
-    private Class<ValueType> valueType;
+    private final Class<KeyType> keyType;
+    private final Class<ValueType> valueType;
 
     public MapEntryType(Class<KeyType> keyType, Class<ValueType> valueType) {
       this.keyType = keyType;
