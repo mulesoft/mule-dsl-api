@@ -6,17 +6,17 @@
  */
 package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
-import static com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription.XML_SCHEMA;
 import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
+import static org.mule.apache.xerces.xni.grammars.XMLGrammarDescription.XML_SCHEMA;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import com.sun.org.apache.xerces.internal.parsers.XMLGrammarPreparser;
-import com.sun.org.apache.xerces.internal.util.XMLGrammarPoolImpl;
-import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
-import com.sun.org.apache.xerces.internal.xni.parser.XMLEntityResolver;
-import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
+import org.mule.apache.xerces.parsers.XMLGrammarPreparser;
+import org.mule.apache.xerces.util.XMLGrammarPoolImpl;
+import org.mule.apache.xerces.xni.grammars.Grammar;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
+import org.mule.apache.xerces.xni.parser.XMLEntityResolver;
+import org.mule.apache.xerces.xni.parser.XMLInputSource;
 import org.slf4j.Logger;
 
 /**

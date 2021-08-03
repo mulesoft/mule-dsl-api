@@ -6,9 +6,9 @@
  */
 package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
-import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription;
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
+import org.mule.apache.xerces.xni.grammars.Grammar;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarDescription;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
 
 /**
  * A read-only {@link XMLGrammarPool} preloaded with mule schemas

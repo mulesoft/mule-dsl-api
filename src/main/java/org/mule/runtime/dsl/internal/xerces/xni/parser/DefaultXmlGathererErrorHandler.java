@@ -9,8 +9,8 @@ package org.mule.runtime.dsl.internal.xerces.xni.parser;
 import static java.lang.String.format;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import com.sun.org.apache.xerces.internal.xni.XNIException;
-import com.sun.org.apache.xerces.internal.xni.parser.XMLParseException;
+import org.mule.apache.xerces.xni.XNIException;
+import org.mule.apache.xerces.xni.parser.XMLParseException;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
