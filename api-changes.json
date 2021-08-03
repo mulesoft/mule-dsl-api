@@ -13,7 +13,7 @@
           "methodName": "loadDocument",
           "parameterIndex": "4",
           "elementKind": "parameter",
-          "justification": "Use of internal JDK classes"
+          "justification": "Avoid use of internal JDK classes"
         }
       ]
     }
