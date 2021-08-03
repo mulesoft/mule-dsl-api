@@ -12,8 +12,8 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.mule.runtime.api.util.MuleSystemProperties.MULE_DISABLE_DEPLOYMENT_SCHEMA_CACHE;
 
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
-import com.sun.org.apache.xerces.internal.xni.parser.XMLEntityResolver;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
+import org.mule.apache.xerces.xni.parser.XMLEntityResolver;
 import org.mule.runtime.dsl.api.xerces.xni.factories.XmlEntityResolverFactory;
 import org.mule.runtime.dsl.api.xerces.xni.factories.XmlGathererErrorHandlerFactory;
 import org.mule.runtime.dsl.api.xerces.xni.factories.XmlSchemaProviderFactory;

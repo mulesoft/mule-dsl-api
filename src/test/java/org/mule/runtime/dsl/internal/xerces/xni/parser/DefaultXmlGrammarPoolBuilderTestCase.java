@@ -6,8 +6,6 @@
  */
 package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
-import static com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription.XML_DTD;
-import static com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription.XML_SCHEMA;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.hamcrest.CoreMatchers.is;
@@ -17,20 +15,22 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mule.apache.xerces.xni.grammars.XMLGrammarDescription.XML_DTD;
+import static org.mule.apache.xerces.xni.grammars.XMLGrammarDescription.XML_SCHEMA;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.DSL_PARSING;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.XmlGrammarPool.XML_GRAMMAR_POOL;
 
-import com.sun.org.apache.xerces.internal.util.XMLResourceIdentifierImpl;
-import com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
-import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription;
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
-import com.sun.org.apache.xerces.internal.xni.parser.XMLEntityResolver;
-import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
+import org.mule.apache.xerces.util.XMLResourceIdentifierImpl;
+import org.mule.apache.xerces.xni.XMLResourceIdentifier;
+import org.mule.apache.xerces.xni.grammars.Grammar;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarDescription;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
+import org.mule.apache.xerces.xni.parser.XMLEntityResolver;
+import org.mule.apache.xerces.xni.parser.XMLInputSource;
 import org.mule.runtime.dsl.api.xerces.xni.factories.XmlEntityResolverFactory;
 import org.mule.runtime.dsl.api.xerces.xni.factories.XmlGathererErrorHandlerFactory;
 

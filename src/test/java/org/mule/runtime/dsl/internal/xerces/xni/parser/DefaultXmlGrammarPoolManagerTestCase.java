@@ -14,10 +14,10 @@ import static org.mule.runtime.dsl.AllureConstants.DslParsing.DSL_PARSING;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.XmlGrammarPool.XML_GRAMMAR_POOL;
 import static org.mule.runtime.dsl.internal.xerces.xni.parser.DefaultXmlGrammarPoolManager.getGrammarPool;
 
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.Test;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
 
 import java.util.Optional;
 
