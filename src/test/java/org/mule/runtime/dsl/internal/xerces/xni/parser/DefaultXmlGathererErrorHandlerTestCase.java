@@ -13,7 +13,8 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.DSL_PARSING;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.XmlGrammarPool.XML_GRAMMAR_POOL;
 
-import com.sun.org.apache.xerces.internal.xni.parser.XMLParseException;
+import org.mule.apache.xerces.xni.parser.XMLParseException;
+
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.Before;

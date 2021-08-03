@@ -8,7 +8,7 @@ package org.mule.runtime.dsl.api.xerces.xni.factories;
 
 import static org.mule.runtime.dsl.internal.xerces.xni.factories.DefaultXmlEntityResolverFactory.getInstance;
 
-import com.sun.org.apache.xerces.internal.xni.parser.XMLEntityResolver;
+import org.mule.apache.xerces.xni.parser.XMLEntityResolver;
 import org.mule.api.annotation.NoImplement;
 
 /**

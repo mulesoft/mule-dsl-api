@@ -6,13 +6,14 @@
  */
 package org.mule.runtime.dsl.internal.xml.parser;
 
-import static com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.XMLGRAMMAR_POOL;
 import static java.lang.System.lineSeparator;
 import static java.lang.Thread.currentThread;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.mule.apache.xerces.impl.xs.SchemaValidatorHelper.XMLGRAMMAR_POOL;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
 import static org.mule.runtime.internal.util.xmlsecurity.DefaultXMLSecureFactories.DOCUMENT_BUILDER_FACTORY;
 
+import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
 import org.mule.runtime.dsl.internal.SourcePosition;
 
 import java.io.ByteArrayInputStream;
@@ -41,8 +42,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 
 /**
  * Alternative to Spring's default document loader that uses <b>SAX</b> to add metadata to the <b>DOM</b> elements that are the

@@ -11,11 +11,11 @@ import static java.util.stream.Collectors.toList;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.getMuleSchemasMappings;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import com.sun.org.apache.xerces.internal.util.XMLResourceIdentifierImpl;
-import com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
-import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
-import org.slf4j.Logger;
+import org.mule.apache.xerces.xni.parser.XMLInputSource;
+import org.mule.apache.xerces.util.XMLResourceIdentifierImpl;
+import org.mule.apache.xerces.xni.XMLResourceIdentifier;
 
+import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;

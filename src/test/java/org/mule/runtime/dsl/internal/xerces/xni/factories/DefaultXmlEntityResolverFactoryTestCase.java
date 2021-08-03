@@ -14,10 +14,10 @@ import static org.mule.runtime.dsl.AllureConstants.DslParsing.DSL_PARSING;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.XmlGrammarPool.XML_GRAMMAR_POOL;
 import static org.mule.runtime.dsl.api.xerces.xni.factories.XmlEntityResolverFactory.getDefault;
 
-import com.sun.org.apache.xerces.internal.xni.parser.XMLEntityResolver;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.Test;
+import org.mule.apache.xerces.xni.parser.XMLEntityResolver;
 import org.mule.runtime.dsl.api.xerces.xni.factories.XmlEntityResolverFactory;
 import org.mule.runtime.dsl.internal.xerces.xni.parser.DefaultXmlEntityResolver;
 

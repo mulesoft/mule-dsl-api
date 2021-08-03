@@ -6,7 +6,7 @@
  */
 package org.mule.runtime.dsl.internal.xerces.xni.factories;
 
-import com.sun.org.apache.xerces.internal.xni.parser.XMLEntityResolver;
+import org.mule.apache.xerces.xni.parser.XMLEntityResolver;
 import org.mule.runtime.dsl.api.xerces.xni.factories.XmlEntityResolverFactory;
 import org.mule.runtime.dsl.internal.xerces.xni.parser.DefaultXmlEntityResolver;
 
