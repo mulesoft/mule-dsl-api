@@ -6,8 +6,6 @@
  */
 package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
-import static com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription.XML_DTD;
-import static com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription.XML_SCHEMA;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -18,12 +16,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mule.apache.xerces.xni.grammars.XMLGrammarDescription.XML_DTD;
+import static org.mule.apache.xerces.xni.grammars.XMLGrammarDescription.XML_SCHEMA;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.DSL_PARSING;
 import static org.mule.runtime.dsl.AllureConstants.DslParsing.XmlGrammarPool.XML_GRAMMAR_POOL;
 
-import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDescription;
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
+import org.mule.apache.xerces.xni.grammars.Grammar;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarDescription;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
+
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.Before;

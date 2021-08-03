@@ -10,7 +10,7 @@ import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
 import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
 
-import com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.dsl.internal.xml.parser.DefaultXmlGathererErrorHandlerFactory;
 import org.mule.runtime.dsl.internal.xml.parser.DefaultXmlLoggerErrorHandler;

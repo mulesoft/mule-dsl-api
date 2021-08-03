@@ -143,6 +143,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.mule.apache</groupId>
+            <artifactId>xerces2-xsd11</artifactId>
+            <version>2.11.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mule.runtime</groupId>
             <artifactId>mule-api</artifactId>
             <version>${muleApiVersion}</version>
