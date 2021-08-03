@@ -115,6 +115,7 @@
         <guavaVersion>25.1-jre</guavaVersion>
         <aspectjVersion>1.9.2</aspectjVersion>
         <javax.jaxb-api.version>2.3.0</javax.jaxb-api.version>
+        <xerces2Version>2.11.3</xerces2Version>
 
         <muleModuleMavenPluginVersion>1.4.0-SNAPSHOT</muleModuleMavenPluginVersion>
 
@@ -145,7 +146,7 @@
         <dependency>
             <groupId>org.mule.apache</groupId>
             <artifactId>xerces2-xsd11</artifactId>
-            <version>2.11.3</version>
+            <version>${xerces2Version}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.runtime</groupId>
