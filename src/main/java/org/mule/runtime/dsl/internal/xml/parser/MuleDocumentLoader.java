@@ -51,6 +51,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 final public class MuleDocumentLoader {
 
+  private static final String MULE_DOCUMENT_BUILDER_FACTORY = "org.mule.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
+
   private static final String SCHEMA_AUGMENT_PSVI_FEATURE = "http://apache.org/xml/features/validation/schema/augment-psvi";
 
   private static final UserDataHandler COPY_METADATA_ANNOTATIONS_DATA_HANDLER = new UserDataHandler() {
@@ -115,7 +117,7 @@ final public class MuleDocumentLoader {
       throws ParserConfigurationException {
     DocumentBuilderFactory factory;
     // Sure we are using standard Java implementations
-    factory = DocumentBuilderFactory.newInstance(DOCUMENT_BUILDER_FACTORY, MuleDocumentLoader.class.getClassLoader());
+    factory = DocumentBuilderFactory.newInstance(MULE_DOCUMENT_BUILDER_FACTORY, MuleDocumentLoader.class.getClassLoader());
     factory.setFeature(SCHEMA_AUGMENT_PSVI_FEATURE, false);
     if (grammarPool != null) {
       factory.setAttribute(XMLGRAMMAR_POOL, grammarPool);
