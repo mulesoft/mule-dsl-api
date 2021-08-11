@@ -134,6 +134,9 @@
 
         <mockitoVersion>2.23.4</mockitoVersion>
 
+        <xerces2Version>2.11.3</xerces2Version>
+        <xmlApisVersion>1.4.01</xmlApisVersion>
+
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
         <maven.enforcer.plugin.version>1.4.1</maven.enforcer.plugin.version>
         <build.helper.maven.plugin.version>3.0.0</build.helper.maven.plugin.version>
@@ -142,12 +145,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.mule.apache</groupId>
-            <artifactId>xerces2-xsd11</artifactId>
-            <version>2.11.3</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.mule.runtime</groupId>
             <artifactId>mule-api</artifactId>
@@ -200,6 +197,16 @@
             <artifactId>allure-junit4</artifactId>
             <version>${allureJunitVersion}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.apache</groupId>
+            <artifactId>xerces2-xsd11</artifactId>
+            <version>${xerces2Version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>${xmlApisVersion}</version>
         </dependency>
     </dependencies>
 
