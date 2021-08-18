@@ -3,6 +3,166 @@
     "revapi": {
       "ignore": [
         {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.Augmentations",
+          "package": "org.mule.apache.xerces.xni",
+          "classSimpleName": "Augmentations",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.NamespaceContext",
+          "package": "org.mule.apache.xerces.xni",
+          "classSimpleName": "NamespaceContext",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "class org.mule.apache.xerces.xni.QName",
+          "package": "org.mule.apache.xerces.xni",
+          "classSimpleName": "QName",
+          "elementKind": "class",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.XMLAttributes",
+          "package": "org.mule.apache.xerces.xni",
+          "classSimpleName": "XMLAttributes",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.XMLDocumentHandler",
+          "package": "org.mule.apache.xerces.xni",
+          "classSimpleName": "XMLDocumentHandler",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.XMLLocator",
+          "package": "org.mule.apache.xerces.xni",
+          "classSimpleName": "XMLLocator",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.XMLResourceIdentifier",
+          "package": "org.mule.apache.xerces.xni",
+          "classSimpleName": "XMLResourceIdentifier",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "class org.mule.apache.xerces.xni.XMLString",
+          "package": "org.mule.apache.xerces.xni",
+          "classSimpleName": "XMLString",
+          "elementKind": "class",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "class org.mule.apache.xerces.xni.XNIException",
+          "package": "org.mule.apache.xerces.xni",
+          "classSimpleName": "XNIException",
+          "elementKind": "class",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.grammars.Grammar",
+          "package": "org.mule.apache.xerces.xni.grammars",
+          "classSimpleName": "Grammar",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.grammars.XMLDTDDescription",
+          "package": "org.mule.apache.xerces.xni.grammars",
+          "classSimpleName": "XMLDTDDescription",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.grammars.XMLGrammarDescription",
+          "package": "org.mule.apache.xerces.xni.grammars",
+          "classSimpleName": "XMLGrammarDescription",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.grammars.XMLGrammarPool",
+          "package": "org.mule.apache.xerces.xni.grammars",
+          "classSimpleName": "XMLGrammarPool",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.parser.XMLComponentManager",
+          "package": "org.mule.apache.xerces.xni.parser",
+          "classSimpleName": "XMLComponentManager",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "class org.mule.apache.xerces.xni.parser.XMLConfigurationException",
+          "package": "org.mule.apache.xerces.xni.parser",
+          "classSimpleName": "XMLConfigurationException",
+          "elementKind": "class",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.parser.XMLDocumentSource",
+          "package": "org.mule.apache.xerces.xni.parser",
+          "classSimpleName": "XMLDocumentSource",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.parser.XMLEntityResolver",
+          "package": "org.mule.apache.xerces.xni.parser",
+          "classSimpleName": "XMLEntityResolver",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "interface org.mule.apache.xerces.xni.parser.XMLErrorHandler",
+          "package": "org.mule.apache.xerces.xni.parser",
+          "classSimpleName": "XMLErrorHandler",
+          "elementKind": "interface",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "class org.mule.apache.xerces.xni.parser.XMLInputSource",
+          "package": "org.mule.apache.xerces.xni.parser",
+          "classSimpleName": "XMLInputSource",
+          "elementKind": "class",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
+          "code": "java.class.added",
+          "new": "class org.mule.apache.xerces.xni.parser.XMLParseException",
+          "package": "org.mule.apache.xerces.xni.parser",
+          "classSimpleName": "XMLParseException",
+          "elementKind": "class",
+          "justification": "Avoid use of internal JDK classes"
+        },
+        {
           "code": "java.method.parameterTypeChanged",
           "old": "parameter org.w3c.dom.Document org.mule.runtime.dsl.api.xml.parser.XmlConfigurationDocumentLoader::loadDocument(java.util.function.Supplier<javax.xml.parsers.SAXParserFactory>, org.xml.sax.EntityResolver, java.lang.String, java.io.InputStream, ===com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool===)",
           "new": "parameter org.w3c.dom.Document org.mule.runtime.dsl.api.xml.parser.XmlConfigurationDocumentLoader::loadDocument(java.util.function.Supplier<javax.xml.parsers.SAXParserFactory>, org.xml.sax.EntityResolver, java.lang.String, java.io.InputStream, ===org.mule.apache.xerces.xni.grammars.XMLGrammarPool===)",
@@ -13,7 +173,7 @@
           "methodName": "loadDocument",
           "parameterIndex": "4",
           "elementKind": "parameter",
-          "justification": "Use of internal JDK classes"
+          "justification": "Avoid use of internal JDK classes"
         }
       ]
     }
