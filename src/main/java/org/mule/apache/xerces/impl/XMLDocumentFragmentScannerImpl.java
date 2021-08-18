@@ -29,9 +29,9 @@ import org.mule.apache.xerces.xni.parser.XMLDocumentScanner;
 import org.mule.apache.xerces.xni.parser.XMLInputSource;
 
 /**
- * Shadowed class so that an empty CDATA section is retrievable (XERCESJ-1033).
- * This is the default behavior in OpenJDK. The shadowed class was introduced in MULE-19710.
- * The modified logic is in {@link XMLDocumentFragmentScannerImpl#scanCDATASection(boolean)}.
+ * Shadowed class so that an empty CDATA section is retrievable (XERCESJ-1033). This is the default behavior in OpenJDK. The
+ * shadowed class was introduced in MULE-19710. The modified logic is in
+ * {@link XMLDocumentFragmentScannerImpl#scanCDATASection(boolean)}.
  *
  * @see <a href="https://issues.apache.org/jira/browse/XERCESJ-1033">http://google.com</a>
  */
@@ -480,8 +480,8 @@ public class XMLDocumentFragmentScannerImpl extends XMLScanner implements XMLDoc
         this.fStringBuffer.clear();
         int brackets;
         if (!this.fEntityScanner.scanData("]]", this.fStringBuffer)) {
-          // This condition is modified in the shadowed class.
-          // Empty CDATA sections are also processed.
+          // MULE-19710 This condition is modified in the shadowed class.
+          // XERCESJ-1033 Empty CDATA sections are also processed
           if (this.fDocumentHandler != null) {
             this.fDocumentHandler.characters(this.fStringBuffer, (Augmentations) null);
           }
