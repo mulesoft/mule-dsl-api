@@ -1,23 +1,4 @@
 {
-  "1.5.0": {
-    "revapi": {
-      "ignore": [
-        {
-          "code": "java.method.parameterTypeChanged",
-          "old": "parameter org.w3c.dom.Document org.mule.runtime.dsl.api.xml.parser.XmlConfigurationDocumentLoader::loadDocument(java.util.function.Supplier<javax.xml.parsers.SAXParserFactory>, org.xml.sax.EntityResolver, java.lang.String, java.io.InputStream, ===com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool===)",
-          "new": "parameter org.w3c.dom.Document org.mule.runtime.dsl.api.xml.parser.XmlConfigurationDocumentLoader::loadDocument(java.util.function.Supplier<javax.xml.parsers.SAXParserFactory>, org.xml.sax.EntityResolver, java.lang.String, java.io.InputStream, ===org.mule.apache.xerces.xni.grammars.XMLGrammarPool===)",
-          "oldType": "com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool",
-          "newType": "org.mule.apache.xerces.xni.grammars.XMLGrammarPool",
-          "package": "org.mule.runtime.dsl.api.xml.parser",
-          "classSimpleName": "XmlConfigurationDocumentLoader",
-          "methodName": "loadDocument",
-          "parameterIndex": "4",
-          "elementKind": "parameter",
-          "justification": "Use of internal JDK classes"
-        }
-      ]
-    }
-  },
   "1.4.0": {
     "revapi": {
       "ignore": [
