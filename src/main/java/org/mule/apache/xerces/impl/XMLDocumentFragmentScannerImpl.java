@@ -481,7 +481,7 @@ public class XMLDocumentFragmentScannerImpl extends XMLScanner implements XMLDoc
         int brackets;
         if (!this.fEntityScanner.scanData("]]", this.fStringBuffer)) {
           // MULE-19710 This condition is modified in the shadowed class.
-          // XERCESJ-1033 Empty CDATA sections are also processed
+          // XERCESJ-1033 Empty CDATA sections are also processed.
           if (this.fDocumentHandler != null) {
             this.fDocumentHandler.characters(this.fStringBuffer, (Augmentations) null);
           }
