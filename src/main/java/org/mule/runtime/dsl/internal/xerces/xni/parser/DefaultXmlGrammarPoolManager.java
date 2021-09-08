@@ -8,6 +8,7 @@ package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.System.getProperty;
+import static java.lang.Thread.currentThread;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.mule.runtime.api.util.MuleSystemProperties.MULE_DISABLE_DEPLOYMENT_SCHEMA_CACHE;
@@ -41,13 +42,25 @@ public class DefaultXmlGrammarPoolManager {
   }
 
   private static Optional<XMLGrammarPool> initialize() {
-    if (IS_CACHE_DISABLED) {
-      return empty();
-    } else {
-      XmlSchemaProvider schemaProvider = XmlSchemaProviderFactory.getDefault().create();
-      XmlGathererErrorHandler errorHandler = XmlGathererErrorHandlerFactory.getDefault().create();
-      XMLEntityResolver entityResolver = XmlEntityResolverFactory.getDefault().create();
-      return of(XmlGrammarPoolBuilder.builder(schemaProvider, errorHandler, entityResolver).build());
+    final Thread thread = currentThread();
+    final ClassLoader currentClassLoader = thread.getContextClassLoader();
+    try {
+      thread.setContextClassLoader(DefaultXmlGrammarPoolManager.class.getClassLoader());
+      if (IS_CACHE_DISABLED) {
+        return empty();
+      } else {
+        return doInitialize();
+      }
+    } finally {
+      thread.setContextClassLoader(currentClassLoader);
     }
   }
+
+  private static Optional<XMLGrammarPool> doInitialize() {
+    XmlSchemaProvider schemaProvider = XmlSchemaProviderFactory.getDefault().create();
+    XmlGathererErrorHandler errorHandler = XmlGathererErrorHandlerFactory.getDefault().create();
+    XMLEntityResolver entityResolver = XmlEntityResolverFactory.getDefault().create();
+    return of(XmlGrammarPoolBuilder.builder(schemaProvider, errorHandler, entityResolver).build());
+  }
+
 }
