@@ -41,18 +41,19 @@ public class DefaultXmlGrammarPoolManager {
     return INSTANCE.get();
   }
 
+
   private static Optional<XMLGrammarPool> initialize() {
-    final Thread thread = currentThread();
-    final ClassLoader currentClassLoader = thread.getContextClassLoader();
-    try {
-      thread.setContextClassLoader(DefaultXmlGrammarPoolManager.class.getClassLoader());
-      if (IS_CACHE_DISABLED) {
-        return empty();
-      } else {
+    if (IS_CACHE_DISABLED) {
+      return empty();
+    } else {
+      final Thread thread = currentThread();
+      final ClassLoader currentClassLoader = thread.getContextClassLoader();
+      try {
+        thread.setContextClassLoader(DefaultXmlGrammarPoolManager.class.getClassLoader());
         return doInitialize();
+      } finally {
+        thread.setContextClassLoader(currentClassLoader);
       }
-    } finally {
-      thread.setContextClassLoader(currentClassLoader);
     }
   }
 
