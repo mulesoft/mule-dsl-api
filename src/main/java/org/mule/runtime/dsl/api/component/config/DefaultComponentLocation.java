@@ -7,6 +7,7 @@
 package org.mule.runtime.dsl.api.component.config;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -65,6 +68,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
   private final String name;
   private final LinkedList<DefaultLocationPart> parts;
+  private transient final List<URI> importChain;
   private volatile String location;
 
   private transient String rootContainerName;
@@ -111,8 +115,17 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    * @param parts the set of parts to locate the component.
    */
   public DefaultComponentLocation(Optional<String> name, List<DefaultLocationPart> parts) {
+    this(name, parts, emptyList());
+  }
+
+  /**
+   * @param name  the name of the global element in which the specific component is located.
+   * @param parts the set of parts to locate the component.
+   */
+  public DefaultComponentLocation(Optional<String> name, List<DefaultLocationPart> parts, List<URI> importChain) {
     this.name = name.orElse(null);
     this.parts = new LinkedList<>(parts);
+    this.importChain = new ArrayList<>(importChain);
     componentIdentifier = calculateComponentIdentifier(parts);
     rootContainerName = calculateRootContainerName();
   }
@@ -146,6 +159,11 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   @Override
   public Optional<String> getFileName() {
     return parts.getLast().getFileName();
+  }
+
+  @Override
+  public List<URI> getImportChain() {
+    return importChain;
   }
 
   /**
@@ -210,6 +228,9 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
    *
    * @param partPath       the path of this part
    * @param partIdentifier the component identifier of the part if it's not a synthetic part
+   * @param fileName       the file name in which the component was defined
+   * @param lineInFile     the line number in which the component was defined
+   * @param startColumn    the column number in which the component was defined
    * @return a new instance with the given location part appended.
    *
    * @since 1.3
@@ -298,6 +319,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
      * @param partIdentifier the component identifier of the part if it's not a synthetic part
      * @param fileName       the file name in which the component was defined
      * @param lineInFile     the line number in which the component was defined
+     * @param startColumn    the column number in which the component was defined
      *
      * @since 1.3
      */
