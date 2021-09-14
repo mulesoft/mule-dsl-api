@@ -119,8 +119,10 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
   }
 
   /**
-   * @param name  the name of the global element in which the specific component is located.
-   * @param parts the set of parts to locate the component.
+   * @param name        the name of the global element in which the specific component is located.
+   * @param parts       the set of parts to locate the component.
+   * @param importChain a {@link List} containing an element for the location of every {@code import} tag leading to the file
+   *                    containing the owning component.
    */
   public DefaultComponentLocation(Optional<String> name, List<DefaultLocationPart> parts, List<URI> importChain) {
     this.name = name.orElse(null);
