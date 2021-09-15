@@ -16,6 +16,49 @@ import java.util.Map;
 @NoImplement
 public interface XmlMetadataAnnotations {
 
+  interface TagBoundaries {
+
+    /**
+     * @return the line where the declaration of the tag starts in its source xml file.
+     */
+    int getStartLineNumber();
+
+    /**
+     * @param lineNumber the line where the declaration of the tag starts in its source xml file.
+     */
+    void setStartLineNumber(int lineNumber);
+
+    /**
+     * @return the column where the declaration of the tag starts in the source xml file.
+     */
+    int getStartColumnNumber();
+
+    /**
+     * @param columnNumber the column where the declaration of the tag starts in the source xml file.
+     */
+    void setStartColumnNumber(int columnNumber);
+
+    /**
+     * @return the line where the declaration of the tag ends in its source xml file.
+     */
+    int getEndLineNumber();
+
+    /**
+     * @param lineNumber the line where the declaration of the tag ends in its source xml file.
+     */
+    void setEndLineNumber(int lineNumber);
+
+    /**
+     * @return the column where the declaration of the tag ends in the source xml file.
+     */
+    int getEndColumnNumber();
+
+    /**
+     * @param columnNumber the column where the declaration of the tag ends in the source xml file.
+     */
+    void setEndColumnNumber(int columnNumber);
+  }
+
   String METADATA_ANNOTATIONS_KEY = "metadataAnnotations";
 
   /**
@@ -49,22 +92,18 @@ public interface XmlMetadataAnnotations {
   String getElementString();
 
   /**
-   * @return the line where the declaration of the element starts in its source xml file.
+   * @return Whether the element was written as in {@code <element />}. In such case, the opening and closing tag boundaries will
+   *         be the same.
    */
-  int getLineNumber();
+  boolean isSelfClosing();
 
   /**
-   * @param lineNumber the line where the declaration of the element starts in its source xml file.
+   * @return the boundaries of the opening tag on the source xml file.
    */
-  void setLineNumber(int lineNumber);
+  TagBoundaries getOpeningTagBoundaries();
 
   /**
-   * @return the column where the declaration of the element starts in the source xml file.
+   * @return the boundaries of the closing tag on the source xml file.
    */
-  int getColumnNumber();
-
-  /**
-   * @param columnNumber the column where the declaration of the element starts in the source xml file.
-   */
-  void setColumnNumber(int columnNumber);
+  TagBoundaries getClosingTagBoundaries();
 }

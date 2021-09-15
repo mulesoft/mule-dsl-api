@@ -25,7 +25,6 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
    * compact whitespaces and line breaks
    */
   private static final Pattern COMPACT_PATTERN = compile(">\\s+<+");
-  public static final String METADATA_ANNOTATIONS_KEY = "metadataAnnotations";
 
   private static final Pattern URL_PATTERN = compile("url=\"[a-z]*://([^@]*)@");
   private static final Pattern ADDRESS_PATTERN = compile("address=\"[a-z]*://([^@]*)@");
@@ -34,8 +33,9 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
   private static final String PASSWORD_ATTRIBUTE_MASK = "password=\"%s\"";
 
   private final StringBuilder xmlContent = new StringBuilder();
-  private int lineNumber;
-  private int columnNumber;
+
+  private final TagBoundaries openingTagBoundaries = new DefaultTagBoundaries();
+  private final TagBoundaries closingTagBoundaries = new DefaultTagBoundaries();
 
   /**
    * Builds the opening tag of the xml element.
@@ -84,35 +84,29 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
   }
 
   /**
-   * @param lineNumber the line where the declaration of the element starts in its source xml file.
+   * @return Whether the element was written as in {@code <element />} in the source code. In such case, the opening and closing
+   *         tag boundaries will be the same, as both tags are merged into one.
    */
   @Override
-  public void setLineNumber(int lineNumber) {
-    this.lineNumber = lineNumber;
+  public boolean isSelfClosing() {
+    return openingTagBoundaries.getStartLineNumber() == closingTagBoundaries.getStartLineNumber() &&
+        openingTagBoundaries.getStartColumnNumber() == closingTagBoundaries.getStartColumnNumber();
   }
 
   /**
-   * @return the line where the declaration of the element starts in its source xml file.
+   * @return the boundaries of the opening tag on the source xml file.
    */
   @Override
-  public int getLineNumber() {
-    return lineNumber;
+  public TagBoundaries getOpeningTagBoundaries() {
+    return openingTagBoundaries;
   }
 
   /**
-   * @param columnNumber the column where the declaration of the element starts in the source xml file.
+   * @return the boundaries of the closing tag on the source xml file.
    */
   @Override
-  public void setColumnNumber(int columnNumber) {
-    this.columnNumber = columnNumber;
-  }
-
-  /**
-   * @return the column where the declaration of the element starts in the source xml file.
-   */
-  @Override
-  public int getColumnNumber() {
-    return columnNumber;
+  public TagBoundaries getClosingTagBoundaries() {
+    return closingTagBoundaries;
   }
 
   private static String maskPasswords(String xml, String passwordMask) {
@@ -142,5 +136,53 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
 
   private static String maskPasswordAttribute(String password) {
     return format(PASSWORD_ATTRIBUTE_MASK, password);
+  }
+
+  private static class DefaultTagBoundaries implements TagBoundaries {
+
+    private int startLineNumber;
+    private int startColumnNumber;
+    private int endLineNumber;
+    private int endColumnNumber;
+
+    @Override
+    public int getStartLineNumber() {
+      return startLineNumber;
+    }
+
+    @Override
+    public void setStartLineNumber(int lineNumber) {
+      this.startLineNumber = lineNumber;
+    }
+
+    @Override
+    public int getStartColumnNumber() {
+      return startColumnNumber;
+    }
+
+    @Override
+    public void setStartColumnNumber(int columnNumber) {
+      this.startColumnNumber = columnNumber;
+    }
+
+    @Override
+    public int getEndLineNumber() {
+      return endLineNumber;
+    }
+
+    @Override
+    public void setEndLineNumber(int lineNumber) {
+      this.endLineNumber = lineNumber;
+    }
+
+    @Override
+    public int getEndColumnNumber() {
+      return endColumnNumber;
+    }
+
+    @Override
+    public void setEndColumnNumber(int columnNumber) {
+      this.endColumnNumber = columnNumber;
+    }
   }
 }

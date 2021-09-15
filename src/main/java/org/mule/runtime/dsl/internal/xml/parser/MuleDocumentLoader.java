@@ -171,6 +171,9 @@ final public class MuleDocumentLoader {
    */
   public final static class XmlMetadataAnnotator extends DefaultHandler {
 
+    private static final int OPENING_TRACKING_POINT_OFFSET = "<".length();
+    private static final int CLOSING_TRACKING_POINT_OFFSET = "</".length();
+
     private Locator locator;
     private DomWalkerElement walker;
     private final XmlMetadataAnnotationsFactory metadataFactory;
@@ -195,8 +198,10 @@ final public class MuleDocumentLoader {
       walker = walker.walkIn();
 
       XmlMetadataAnnotations metadataBuilder = metadataFactory.create(locator);
-      metadataBuilder.setLineNumber(locator.getLineNumber());
-      metadataBuilder.setColumnNumber(trackingPoint.getColumn());
+      metadataBuilder.getOpeningTagBoundaries().setStartLineNumber(trackingPoint.getLine());
+      metadataBuilder.getOpeningTagBoundaries().setStartColumnNumber(trackingPoint.getColumn() - OPENING_TRACKING_POINT_OFFSET);
+      metadataBuilder.getOpeningTagBoundaries().setEndLineNumber(locator.getLineNumber());
+      metadataBuilder.getOpeningTagBoundaries().setEndColumnNumber(locator.getColumnNumber());
       LinkedHashMap<String, String> attsMap = new LinkedHashMap<>();
       for (int i = 0; i < atts.getLength(); ++i) {
         attsMap.put(atts.getQName(i), atts.getValue(i));
@@ -208,7 +213,7 @@ final public class MuleDocumentLoader {
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
       // update the starting point
-      this.updateTrackingPoint(start > 0);
+      this.updateTrackingPoint();
 
       final String body = new String(ch, start, length).trim();
 
@@ -226,7 +231,7 @@ final public class MuleDocumentLoader {
 
     @Override
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-      this.updateTrackingPoint(false);// update the starting point
+      this.updateTrackingPoint();// update the starting point
     }
 
     @Override
@@ -237,6 +242,11 @@ final public class MuleDocumentLoader {
       }
       writingBody = false;
       XmlMetadataAnnotations metadataAnnotations = annotationsStack.pop();
+      int trackingPointOffset = getTrackingPointOffsetForEndElement(metadataAnnotations);
+      metadataAnnotations.getClosingTagBoundaries().setStartLineNumber(trackingPoint.getLine());
+      metadataAnnotations.getClosingTagBoundaries().setStartColumnNumber(trackingPoint.getColumn() - trackingPointOffset);
+      metadataAnnotations.getClosingTagBoundaries().setEndLineNumber(locator.getLineNumber());
+      metadataAnnotations.getClosingTagBoundaries().setEndColumnNumber(locator.getColumnNumber());
       metadataAnnotations.appendElementEnd(qName);
 
       if (!annotationsStack.isEmpty()) {
@@ -250,14 +260,27 @@ final public class MuleDocumentLoader {
       walker = walker.walkOut();
 
       // update the starting point for the next tag
-      this.updateTrackingPoint(false);
+      this.updateTrackingPoint();
     }
 
-    private void updateTrackingPoint(boolean columnOff) {
-      SourcePosition item = new SourcePosition(locator.getLineNumber(), locator.getColumnNumber() - (columnOff ? 1 : 0));
+    private void updateTrackingPoint() {
+      SourcePosition item = new SourcePosition(locator.getLineNumber(), locator.getColumnNumber());
       if (this.trackingPoint.compareTo(item) < 0) {
         this.trackingPoint = item;
       }
+    }
+
+    private int getTrackingPointOffsetForEndElement(XmlMetadataAnnotations metadataAnnotations) {
+      // checks if the current tracking point is still at the same place of the opening tag starting point
+      // if so, it means the element was written as a self-closing tag (e.g.: <element />), which means we should use
+      // the same offset as for an opening.
+      XmlMetadataAnnotations.TagBoundaries openingTagBoundaries = metadataAnnotations.getOpeningTagBoundaries();
+      if (openingTagBoundaries.getStartLineNumber() == trackingPoint.getLine() &&
+          openingTagBoundaries.getStartColumnNumber() == trackingPoint.getColumn() - OPENING_TRACKING_POINT_OFFSET) {
+        return OPENING_TRACKING_POINT_OFFSET;
+      }
+
+      return CLOSING_TRACKING_POINT_OFFSET;
     }
   }
 
