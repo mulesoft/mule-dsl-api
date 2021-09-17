@@ -44,15 +44,6 @@ public class XmlApplicationParser {
   public static final String LINE_NUMBER = "LINE_NUMBER";
   public static final String CONFIG_FILE_NAME = "CONFIG_FILE_NAME";
   public static final String IS_CDATA = "IS_CDATA";
-  public static final String OPENING_TAG_START_LINE = "OPENING_TAG_START_LINE";
-  public static final String OPENING_TAG_START_COLUMN = "OPENING_TAG_START_COLUMN";
-  public static final String OPENING_TAG_END_LINE = "OPENING_TAG_END_LINE";
-  public static final String OPENING_TAG_END_COLUMN = "OPENING_TAG_END_COLUMN";
-  public static final String CLOSING_TAG_START_LINE = "CLOSING_TAG_START_LINE";
-  public static final String CLOSING_TAG_START_COLUMN = "CLOSING_TAG_START_COLUMN";
-  public static final String CLOSING_TAG_END_LINE = "CLOSING_TAG_END_LINE";
-  public static final String CLOSING_TAG_END_COLUMN = "CLOSING_TAG_END_COLUMN";
-  public static final String IS_SELF_CLOSING = "IS_SELF_CLOSING";
 
   private static final String COLON = ":";
   private static final Map<String, String> predefinedNamespace = new HashMap<>();
