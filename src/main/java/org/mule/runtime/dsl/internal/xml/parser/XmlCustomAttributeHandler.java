@@ -8,7 +8,7 @@ package org.mule.runtime.dsl.internal.xml.parser;
 
 
 import static org.mule.runtime.api.component.Component.Annotations.NAME_ANNOTATION_KEY;
-import static org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser.DECLARED_PREFIX;
+import static org.mule.runtime.dsl.api.xml.parser.XmlApplicationParser.DECLARED_PREFIX;
 
 import org.mule.runtime.dsl.api.xml.parser.ConfigLine;
 
