@@ -181,6 +181,9 @@ final public class MuleDocumentLoader {
     private SourcePosition trackingPoint = new SourcePosition();
     private boolean writingBody = false;
 
+    // we use this flag to know if our trackingPoint is currently pointing past the start of markup characters (< or </)
+    private boolean startOfMarkupConsumed = false;
+
     private XmlMetadataAnnotator(Document doc, XmlMetadataAnnotationsFactory metadataFactory) {
       this.walker = new DomWalkerElement(doc.getDocumentElement());
       this.metadataFactory = metadataFactory;
@@ -198,8 +201,9 @@ final public class MuleDocumentLoader {
       walker = walker.walkIn();
 
       XmlMetadataAnnotations metadataBuilder = metadataFactory.create(locator);
+      int trackingPointOffset = getTrackingPointOffsetForStartElement();
       metadataBuilder.getOpeningTagBoundaries().setStartLineNumber(trackingPoint.getLine());
-      metadataBuilder.getOpeningTagBoundaries().setStartColumnNumber(trackingPoint.getColumn() - OPENING_TRACKING_POINT_OFFSET);
+      metadataBuilder.getOpeningTagBoundaries().setStartColumnNumber(trackingPoint.getColumn() - trackingPointOffset);
       metadataBuilder.getOpeningTagBoundaries().setEndLineNumber(locator.getLineNumber());
       metadataBuilder.getOpeningTagBoundaries().setEndColumnNumber(locator.getColumnNumber());
       LinkedHashMap<String, String> attsMap = new LinkedHashMap<>();
@@ -212,6 +216,12 @@ final public class MuleDocumentLoader {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
+      // This logic depends on implementation details of the SAX parser.
+      // We know the parser will stop processing characters at line breaks and at start of markup characters according
+      // to XMLChar#isContent. However, the start of markup characters might not have always been consumed.
+      // If we got a fresh temporary buffer here (start == 0) it means they were not consumed.
+      startOfMarkupConsumed = start != 0;
+
       // update the starting point
       this.updateTrackingPoint();
 
@@ -270,7 +280,17 @@ final public class MuleDocumentLoader {
       }
     }
 
+    private int getTrackingPointOffsetForStartElement() {
+      // if the start of markup characters have not been consumed, we don't need to apply any offset
+      return startOfMarkupConsumed ? OPENING_TRACKING_POINT_OFFSET : 0;
+    }
+
     private int getTrackingPointOffsetForEndElement(XmlMetadataAnnotations metadataAnnotations) {
+      // if the start of markup characters have not been consumed, we don't need to apply any offset
+      if (!startOfMarkupConsumed) {
+        return 0;
+      }
+
       // checks if the current tracking point is still at the same place of the opening tag starting point
       // if so, it means the element was written as a self-closing tag (e.g.: <element />), which means we should use
       // the same offset as for an opening.
