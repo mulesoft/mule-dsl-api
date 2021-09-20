@@ -64,6 +64,15 @@ public final class ConfigResource {
     this.resourceName = resourceName;
   }
 
+  /**
+   * @since 1.5.0
+   */
+  public ConfigResource(String resourceName, InputStream inputStream, URL url) {
+    this.inputStream = inputStream;
+    this.resourceName = resourceName;
+    this.url = url;
+  }
+
   public InputStream getInputStream() throws IOException {
     if (inputStream == null && url != null) {
       inputStream = url.openStream();
