@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <!-- this application contains superfluous white-spacing after this tag to trigger an edge case on the parser, don't remove -->    
+
+    <flow name="test">
+        <logger category="SOMETHING" level="WARN" message="logging info"/>
+    </flow>
+
+</mule>
