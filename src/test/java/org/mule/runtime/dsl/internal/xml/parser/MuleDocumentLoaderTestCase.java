@@ -123,7 +123,8 @@ public class MuleDocumentLoaderTestCase {
   @Test
   public void xmlMetadataIsProperlyPopulatedWhenWhitespaceBetweenLineFeed() throws Exception {
 
-    InputStream inputStream = currentThread().getContextClassLoader().getResourceAsStream("simple_application_with_whitespace_between_linefeed.xml");
+    InputStream inputStream =
+        currentThread().getContextClassLoader().getResourceAsStream("simple_application_with_whitespace_between_linefeed.xml");
     MuleDocumentLoader loader = new MuleDocumentLoader();
 
     InputSource is = new InputSource(inputStream);
@@ -134,7 +135,7 @@ public class MuleDocumentLoaderTestCase {
     assertThat(errorHandler.getErrors().size(), is(0));
 
     XmlMetadataAnnotations rootAnnotations =
-            (XmlMetadataAnnotations) document.getDocumentElement().getUserData(METADATA_ANNOTATIONS_KEY);
+        (XmlMetadataAnnotations) document.getDocumentElement().getUserData(METADATA_ANNOTATIONS_KEY);
     assertThat(rootAnnotations, is(not(nullValue())));
     assertThat(rootAnnotations.isSelfClosing(), is(false));
     // FIXME: these are currently returning the beginning of the document instead of the beginning of the first tag
@@ -149,7 +150,7 @@ public class MuleDocumentLoaderTestCase {
     assertThat(rootAnnotations.getClosingTagBoundaries().getEndColumnNumber(), is(8));
 
     XmlMetadataAnnotations flowAnnotations =
-            (XmlMetadataAnnotations) document.getElementsByTagName("flow").item(0).getUserData(METADATA_ANNOTATIONS_KEY);
+        (XmlMetadataAnnotations) document.getElementsByTagName("flow").item(0).getUserData(METADATA_ANNOTATIONS_KEY);
     assertThat(flowAnnotations, is(not(nullValue())));
     assertThat(flowAnnotations.isSelfClosing(), is(false));
     assertThat(flowAnnotations.getOpeningTagBoundaries().getStartLineNumber(), is(9));
@@ -163,7 +164,7 @@ public class MuleDocumentLoaderTestCase {
     assertThat(flowAnnotations.getClosingTagBoundaries().getEndColumnNumber(), is(12));
 
     XmlMetadataAnnotations loggerAnnotations =
-            (XmlMetadataAnnotations) document.getElementsByTagName("logger").item(0).getUserData(METADATA_ANNOTATIONS_KEY);
+        (XmlMetadataAnnotations) document.getElementsByTagName("logger").item(0).getUserData(METADATA_ANNOTATIONS_KEY);
     assertThat(loggerAnnotations, is(not(nullValue())));
     assertThat(loggerAnnotations.isSelfClosing(), is(true));
     assertThat(loggerAnnotations.getOpeningTagBoundaries().getStartLineNumber(), is(10));
