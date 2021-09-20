@@ -11,10 +11,10 @@ import static java.lang.Thread.currentThread;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.mule.apache.xerces.impl.xs.SchemaValidatorHelper.XMLGRAMMAR_POOL;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
-import static org.mule.runtime.internal.util.xmlsecurity.DefaultXMLSecureFactories.DOCUMENT_BUILDER_FACTORY;
 
 import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
 import org.mule.runtime.dsl.internal.SourcePosition;
+import org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.TagBoundaries;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -206,7 +207,7 @@ final public class MuleDocumentLoader {
       metadataBuilder.getOpeningTagBoundaries().setStartColumnNumber(trackingPoint.getColumn() - trackingPointOffset);
       metadataBuilder.getOpeningTagBoundaries().setEndLineNumber(locator.getLineNumber());
       metadataBuilder.getOpeningTagBoundaries().setEndColumnNumber(locator.getColumnNumber());
-      LinkedHashMap<String, String> attsMap = new LinkedHashMap<>();
+      Map<String, String> attsMap = new LinkedHashMap<>();
       for (int i = 0; i < atts.getLength(); ++i) {
         attsMap.put(atts.getQName(i), atts.getValue(i));
       }
@@ -294,7 +295,7 @@ final public class MuleDocumentLoader {
       // checks if the current tracking point is still at the same place of the opening tag starting point
       // if so, it means the element was written as a self-closing tag (e.g.: <element />), which means we should use
       // the same offset as for an opening.
-      XmlMetadataAnnotations.TagBoundaries openingTagBoundaries = metadataAnnotations.getOpeningTagBoundaries();
+      TagBoundaries openingTagBoundaries = metadataAnnotations.getOpeningTagBoundaries();
       if (openingTagBoundaries.getStartLineNumber() == trackingPoint.getLine() &&
           openingTagBoundaries.getStartColumnNumber() == trackingPoint.getColumn() - OPENING_TRACKING_POINT_OFFSET) {
         return OPENING_TRACKING_POINT_OFFSET;
