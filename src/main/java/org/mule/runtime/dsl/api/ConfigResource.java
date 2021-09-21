@@ -7,10 +7,10 @@
 package org.mule.runtime.dsl.api;
 
 import static java.util.Arrays.asList;
+import static org.mule.runtime.api.util.IOUtils.getResourceAsUrl;
 
 import org.mule.api.annotation.NoExtend;
 import org.mule.api.annotation.NoInstantiate;
-import org.mule.runtime.api.util.IOUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,11 +37,7 @@ public final class ConfigResource {
   private InputStream inputStream;
 
   public ConfigResource(String resourceName) throws IOException {
-    this.resourceName = resourceName;
-    url = IOUtils.getResourceAsUrl(resourceName, getClass(), true, true);
-    if (url == null) {
-      throw new FileNotFoundException(resourceName);
-    }
+    this(resourceName, getResourceAsUrl(resourceName, ConfigResource.class, true, true));
   }
 
   public ConfigResource(URL url) {
@@ -57,6 +53,17 @@ public final class ConfigResource {
     } else {
       this.resourceName = url.toExternalForm();
     }
+  }
+
+  /**
+   * @since 1.5
+   */
+  public ConfigResource(String resourceName, URL url) throws IOException {
+    this.resourceName = resourceName;
+    if (url == null) {
+      throw new FileNotFoundException(resourceName);
+    }
+    this.url = url;
   }
 
   public ConfigResource(String resourceName, InputStream inputStream) {
