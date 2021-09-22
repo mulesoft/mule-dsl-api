@@ -65,8 +65,9 @@ public final class XmlApplicationParser {
         .setNamespaceUri(namespaceUri);
 
     XmlMetadataAnnotations userData = (XmlMetadataAnnotations) node.getUserData(XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY);
-    builder.setLineNumber(userData.getOpeningTagBoundaries().getStartLineNumber())
-        .setStartColumn(userData.getOpeningTagBoundaries().getStartColumnNumber())
+    // for compatibility reasons we set the position of the end of the opening tag instead of the start
+    builder.setLineNumber(userData.getOpeningTagBoundaries().getEndLineNumber())
+        .setStartColumn(userData.getOpeningTagBoundaries().getEndColumnNumber())
         .setSourceCode(userData.getElementString());
 
     XmlCustomAttributeHandler.to(builder).addCustomAttributes(node);
