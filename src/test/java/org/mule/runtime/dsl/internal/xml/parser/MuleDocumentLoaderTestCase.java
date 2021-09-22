@@ -80,7 +80,7 @@ public class MuleDocumentLoaderTestCase {
         (XmlMetadataAnnotations) document.getDocumentElement().getUserData(METADATA_ANNOTATIONS_KEY);
     assertThat(rootAnnotations, is(not(nullValue())));
     assertThat(rootAnnotations.isSelfClosing(), is(false));
-    // FIXME: these are currently returning the beginning of the document instead of the beginning of the first tag
+    // FIXME MULE-19799: these are currently returning the beginning of the document instead of the beginning of the first tag
     // assertThat(rootAnnotations.getOpeningTagBoundaries().getStartLineNumber(), is(2));
     // assertThat(rootAnnotations.getOpeningTagBoundaries().getStartColumnNumber(), is(1));
     assertThat(rootAnnotations.getOpeningTagBoundaries().getEndLineNumber(), is(5));
@@ -138,7 +138,7 @@ public class MuleDocumentLoaderTestCase {
         (XmlMetadataAnnotations) document.getDocumentElement().getUserData(METADATA_ANNOTATIONS_KEY);
     assertThat(rootAnnotations, is(not(nullValue())));
     assertThat(rootAnnotations.isSelfClosing(), is(false));
-    // FIXME: these are currently returning the beginning of the document instead of the beginning of the first tag
+    // FIXME MULE-19799: these are currently returning the beginning of the document instead of the beginning of the first tag
     // assertThat(rootAnnotations.getOpeningTagBoundaries().getStartLineNumber(), is(2));
     // assertThat(rootAnnotations.getOpeningTagBoundaries().getStartColumnNumber(), is(1));
     assertThat(rootAnnotations.getOpeningTagBoundaries().getEndLineNumber(), is(5));
