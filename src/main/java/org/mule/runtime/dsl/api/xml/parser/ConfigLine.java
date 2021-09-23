@@ -110,10 +110,18 @@ public final class ConfigLine {
     return textContent;
   }
 
+  /**
+   * @return the first line number in which the config line was defined in the configuration file. For compatibility reasons, this
+   *         line will be the last line of the opening tag (only makes a difference for multi-line opening tags).
+   */
   public int getLineNumber() {
     return lineNumber;
   }
 
+  /**
+   * @return the start column in which the config line was defined in the configuration file. For consistency with
+   *         {@link #getLineNumber()}, this column number will be the last column of the opening tag.
+   */
   public int getStartColumn() {
     return startColumn;
   }
