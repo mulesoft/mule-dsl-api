@@ -12,6 +12,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.mock;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
@@ -60,7 +61,7 @@ public class MuleDocumentLoaderTestCase {
     verifyZeroInteractions(failing);
 
     assertThat(document, is(notNullValue()));
-    assertThat(errorHandler.getErrors().size(), is(0));
+    assertThat(errorHandler.getErrors(), is(empty()));
   }
 
   @Test
@@ -74,7 +75,7 @@ public class MuleDocumentLoaderTestCase {
     Document document = loader.loadDocument(SAXParserFactory::newInstance, is, null, errorHandler, 0, false, null);
 
     assertThat(document, is(notNullValue()));
-    assertThat(errorHandler.getErrors().size(), is(0));
+    assertThat(errorHandler.getErrors(), is(empty()));
 
     XmlMetadataAnnotations rootAnnotations =
         (XmlMetadataAnnotations) document.getDocumentElement().getUserData(METADATA_ANNOTATIONS_KEY);
@@ -132,7 +133,7 @@ public class MuleDocumentLoaderTestCase {
     Document document = loader.loadDocument(SAXParserFactory::newInstance, is, null, errorHandler, 0, false, null);
 
     assertThat(document, is(notNullValue()));
-    assertThat(errorHandler.getErrors().size(), is(0));
+    assertThat(errorHandler.getErrors(), is(empty()));
 
     XmlMetadataAnnotations rootAnnotations =
         (XmlMetadataAnnotations) document.getDocumentElement().getUserData(METADATA_ANNOTATIONS_KEY);
