@@ -6,9 +6,11 @@
  */
 package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
+import static org.mule.apache.xerces.xni.grammars.XMLGrammarDescription.XML_SCHEMA;
+
 import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
-import static org.mule.apache.xerces.xni.grammars.XMLGrammarDescription.XML_SCHEMA;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.mule.apache.xerces.parsers.XMLGrammarPreparser;
@@ -66,12 +68,15 @@ public class DefaultXmlGrammarPoolBuilder implements XmlGrammarPoolBuilder {
 
       // parse grammars
       for (XMLInputSource is : schemaProvider.getSchemas()) {
+        if (LOGGER.isDebugEnabled()) {
+          LOGGER.debug("Preparsing grammar publicId: {}; systemId: {}...", is.getPublicId(), is.getSystemId());
+        }
         preparser.preparseGrammar(XML_SCHEMA, is);
       }
 
       if (errorHandler.getErrors().isEmpty()) {
         Grammar[] grammars = pool.retrieveInitialGrammarSet(XML_SCHEMA);
-        LOGGER.debug(format("Loaded %s grammars", grammars.length));
+        LOGGER.debug("Loaded {} grammars", grammars.length);
       } else {
         final String subMessage =
             format(errorHandler.getErrors().size() == 1 ? "was '%s' error" : "were '%s' errors", errorHandler.getErrors().size());
