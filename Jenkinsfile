@@ -1,4 +1,4 @@
-def UPSTREAM_PROJECTS_LIST = [ "Mule-runtime/mule-api/1.3.0-JANUARY-2022" ]
+def UPSTREAM_PROJECTS_LIST = [ "Mule-runtime/mule-api/1.3.0-20211216" ]
 
 Map pipelineParams = [ "upstreamProjects" : UPSTREAM_PROJECTS_LIST.join(','),
                       // Comment public setting to get oldMuleArtifact 4.3.0 from private repo till we move them to the public Repo
