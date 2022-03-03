@@ -68,7 +68,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
 
   private final String name;
   private final LinkedList<DefaultLocationPart> parts;
-  private transient final List<URI> importChain;
+  private final transient List<URI> importChain;
   private volatile String location;
 
   private transient String rootContainerName;
@@ -452,17 +452,17 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
     private void writeObject(ObjectOutputStream oos) throws IOException {
       oos.defaultWriteObject();
 
-      oos.writeObject(lineInFile != -1 ? null : Integer.valueOf(lineInFile));
-      oos.writeObject(startColumn != -1 ? null : Integer.valueOf(startColumn));
+      oos.writeObject(lineInFile == -1 ? null : Integer.valueOf(lineInFile));
+      oos.writeObject(startColumn == -1 ? null : Integer.valueOf(startColumn));
     }
 
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
       ois.defaultReadObject();
 
       final Integer readLine = (Integer) ois.readObject();
-      lineInFile = readLine != null ? readLine : -1;
+      lineInFile = readLine != null ? readLine.intValue() : -1;
       final Integer readColumn = (Integer) ois.readObject();
-      startColumn = readColumn != null ? readColumn : -1;
+      startColumn = readColumn != null ? readColumn.intValue() : -1;
     }
   }
 
