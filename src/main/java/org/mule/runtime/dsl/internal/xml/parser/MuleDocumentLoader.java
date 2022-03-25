@@ -94,26 +94,32 @@ final public class MuleDocumentLoader {
 
   protected DocumentBuilderFactory createDocumentBuilderFactory(int validationMode, boolean namespaceAware)
       throws ParserConfigurationException {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setNamespaceAware(namespaceAware);
-    if (validationMode != 0) {
-      factory.setValidating(true);
-      if (validationMode == 3) {
-        factory.setNamespaceAware(true);
 
-        try {
-          factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
-        } catch (IllegalArgumentException var6) {
-          ParserConfigurationException pcex =
-              new ParserConfigurationException("Unable to validate using XSD: Your JAXP provider [" + factory
-                  + "] does not support XML Schema. Are you running on Java 1.4 with Apache Crimson? Upgrade to Apache Xerces (or Java 1.5) for full XSD support.");
-          pcex.initCause(var6);
-          throw pcex;
-        }
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    // Disable external entities
+    factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+    factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+    factory.setNamespaceAware(namespaceAware);
+    factory.setValidating(isValidationEnabled(validationMode));
+    if (validationMode == 3) {
+      factory.setNamespaceAware(true);
+
+      try {
+        factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
+      } catch (IllegalArgumentException var6) {
+        ParserConfigurationException pcex =
+            new ParserConfigurationException("Unable to validate using XSD: Your JAXP provider [" + factory
+                + "] does not support XML Schema. Are you running on Java 1.4 with Apache Crimson? Upgrade to Apache Xerces (or Java 1.5) for full XSD support.");
+        pcex.initCause(var6);
+        throw pcex;
       }
     }
 
     return factory;
+  }
+
+  private boolean isValidationEnabled(int validationMode) {
+    return validationMode != 0;
   }
 
   private final class DefaultXmlMetadataFactory implements XmlMetadataAnnotationsFactory {
