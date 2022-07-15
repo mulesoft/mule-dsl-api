@@ -8,6 +8,8 @@ package org.mule.runtime.dsl.api.component;
 
 import static com.google.common.collect.ImmutableSet.of;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
@@ -25,8 +27,8 @@ public class DslSimpleType {
 
   private final static Set<Class<?>> simpleTypes =
       of(Byte.class, byte.class, Short.class, short.class, Integer.class, int.class, Long.class, long.class, Character.class,
-         char.class, Float.class, float.class, Double.class, double.class, String.class, Date.class, LocalDate.class,
-         LocalDateTime.class, Calendar.class);
+         char.class, Float.class, float.class, Double.class, BigDecimal.class, BigInteger.class, double.class, String.class,
+         Date.class, LocalDate.class, LocalDateTime.class, Calendar.class);
 
   /**
    * @param type the value type.
