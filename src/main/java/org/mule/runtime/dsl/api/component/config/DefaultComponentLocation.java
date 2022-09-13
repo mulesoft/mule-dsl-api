@@ -65,6 +65,7 @@ import com.google.common.collect.ImmutableList;
 public class DefaultComponentLocation implements ComponentLocation, Serializable {
 
   private static final long serialVersionUID = 4958158607813720623L;
+  public static final String LOCATION_PART_SEPARATOR = "/";
 
   private final String name;
   private final LinkedList<DefaultLocationPart> parts;
@@ -204,7 +205,7 @@ public class DefaultComponentLocation implements ComponentLocation, Serializable
         if (location == null) {
           StringBuilder locationBuilder = new StringBuilder();
           for (DefaultLocationPart part : parts) {
-            locationBuilder.append("/").append(part.getPartPath());
+            locationBuilder.append(LOCATION_PART_SEPARATOR).append(part.getPartPath());
           }
           location = locationBuilder.replace(0, 1, "").toString();
         }
