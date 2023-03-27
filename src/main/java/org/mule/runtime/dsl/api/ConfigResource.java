@@ -6,8 +6,11 @@
  */
 package org.mule.runtime.dsl.api;
 
-import static java.util.Arrays.asList;
 import static org.mule.runtime.api.util.IOUtils.getResourceAsUrl;
+
+import static java.lang.System.getProperty;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 
 import org.mule.api.annotation.NoExtend;
 import org.mule.api.annotation.NoInstantiate;
@@ -17,6 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.stream.Stream;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A ConfigResource holds the url description (or location) and the url stream. It is useful to associate the two for error
@@ -29,7 +35,15 @@ public final class ConfigResource {
   private static final List<String> CLASS_PATH_ENTRIES;
 
   static {
-    CLASS_PATH_ENTRIES = asList(System.getProperty("java.class.path").split(":"));
+    String classPath = getProperty("java.class.path");
+    String modulePath = getProperty("jdk.module.path");
+
+    CLASS_PATH_ENTRIES = (modulePath != null
+        ? concat(Stream.of(classPath.split(":")),
+                 Stream.of(modulePath.split(":")))
+        : Stream.of(classPath.split(":")))
+            .filter(StringUtils::isNotBlank)
+            .collect(toList());
   }
 
   protected String resourceName;
