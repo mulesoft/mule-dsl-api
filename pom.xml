@@ -250,7 +250,7 @@
                     </configuration>
                     <executions>
                         <execution>
-                            <phase>compile</phase>
+                            <phase>process-sources</phase>
                             <goals>
                                 <goal>${formatterGoal}</goal>
                             </goals>
@@ -297,7 +297,7 @@
                     </configuration>
                     <executions>
                         <execution>
-                            <phase>compile</phase>
+                            <phase>process-sources</phase>
                             <goals>
                                 <goal>check</goal>
                             </goals>
@@ -338,7 +338,7 @@
                     <executions>
                         <execution>
                             <id>analyze</id>
-                            <phase>compile</phase>
+                            <phase>verify</phase>
                             <goals>
                                 <goal>analyze</goal>
                             </goals>
