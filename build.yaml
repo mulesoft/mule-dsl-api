@@ -9,7 +9,7 @@ mavenAdditionalArgs: -P!testJdkWithoutXmlModule
 additionalTestConfigs:
   jdk8:
     testJdkTool: OPEN-JDK8
-    mavenAdditionalArgs:
+    mavenAdditionalArgs: ''
   jdk11:
     testJdkTool: OPEN-JDK11
     mavenAdditionalArgs: -P!testJdkWithoutXmlModule
