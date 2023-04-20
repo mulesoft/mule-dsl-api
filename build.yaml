@@ -5,3 +5,11 @@ upstreamProjects:
 #mavenSettingsXmlId: mule-runtime-maven-settings-MuleSettings
 projectType: runtime
 jdkTool: OPEN-JDK17
+mavenAdditionalArgs: -P!testJdkWithoutXmlModule
+additionalTestConfigs:
+  jdk8:
+    testJdkTool: OPEN-JDK8
+    mavenAdditionalArgs:
+  jdk11:
+    testJdkTool: OPEN-JDK11
+    mavenAdditionalArgs: -P!testJdkWithoutXmlModule
