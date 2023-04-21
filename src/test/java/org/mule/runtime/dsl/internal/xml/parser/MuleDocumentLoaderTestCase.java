@@ -13,8 +13,9 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
+
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
 
 import io.qameta.allure.Issue;
@@ -58,7 +59,7 @@ public class MuleDocumentLoaderTestCase {
     XmlGathererErrorHandler errorHandler = new DefaultXmlGathererErrorHandlerFactory().create();
     Document document = loader.loadDocument(SAXParserFactory::newInstance, is, null, errorHandler, 0, false, null);
 
-    verifyZeroInteractions(failing);
+    verifyNoInteractions(failing);
 
     assertThat(document, is(notNullValue()));
     assertThat(errorHandler.getErrors(), is(empty()));
