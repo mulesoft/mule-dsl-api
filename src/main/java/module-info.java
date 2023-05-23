@@ -26,6 +26,10 @@ module org.mule.runtime.dsl.api {
   exports org.mule.runtime.dsl.api.xml;
   exports org.mule.runtime.dsl.api.xml.parser;
 
+  uses org.mule.runtime.dsl.api.component.ComponentBuildingDefinitionProvider;
+
+  exports org.mule.runtime.dsl.internal.component.config to
+      org.mule.runtime.spring.config;
   exports org.mule.runtime.dsl.internal.util to
       org.mule.runtime.artifact.ast.xmlParser,
       org.mule.runtime.artifact.ast.xmlParser.test;
