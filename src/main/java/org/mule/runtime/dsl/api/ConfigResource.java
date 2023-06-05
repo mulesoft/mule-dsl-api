@@ -11,6 +11,7 @@ import static org.mule.runtime.api.util.IOUtils.getResourceAsUrl;
 import static java.lang.System.getProperty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import org.mule.api.annotation.NoExtend;
 import org.mule.api.annotation.NoInstantiate;
@@ -38,10 +39,12 @@ public final class ConfigResource {
     String classPath = getProperty("java.class.path");
     String modulePath = getProperty("jdk.module.path");
 
+    String classPathSeparator = IS_OS_WINDOWS ? ";" : ":";
+
     CLASS_PATH_ENTRIES = (modulePath != null
-        ? concat(Stream.of(classPath.split(":")),
-                 Stream.of(modulePath.split(":")))
-        : Stream.of(classPath.split(":")))
+        ? concat(Stream.of(classPath.split(classPathSeparator)),
+                 Stream.of(modulePath.split(classPathSeparator)))
+        : Stream.of(classPath.split(classPathSeparator)))
             .filter(StringUtils::isNotBlank)
             .collect(toList());
   }
