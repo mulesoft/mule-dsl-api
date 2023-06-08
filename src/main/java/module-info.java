@@ -9,7 +9,7 @@
  * Module with the API to define how to build runtime objects from configuration files.
  * 
  * @moduleGraph
- * @since 1.6
+ * @since 1.5
  */
 module org.mule.runtime.dsl.api {
 
