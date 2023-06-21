@@ -39,12 +39,13 @@ public final class ConfigResource {
     String modulePath = getProperty("jdk.module.path");
     String pathSeparator = getProperty("path.separator");
 
-    CLASS_PATH_ENTRIES = (modulePath != null
+    List<String> allClassPathEntries = (modulePath != null
         ? concat(Stream.of(classPath.split(pathSeparator)),
                  Stream.of(modulePath.split(pathSeparator)))
         : Stream.of(classPath.split(pathSeparator)))
             .filter(StringUtils::isNotBlank)
             .collect(toList());
+    CLASS_PATH_ENTRIES = allClassPathEntries.stream().map(line -> line.replace("\\", "/")).collect(toList());
   }
 
   protected String resourceName;
@@ -61,9 +62,10 @@ public final class ConfigResource {
     if (url.getProtocol().equals("jar")) {
       this.resourceName = url.toExternalForm().split("!/")[1];
     } else if (url.getProtocol().equals("file")) {
+      String updatedUrl = url.getPath().startsWith("/")?url.getPath().substring(1):url.getPath();
       this.resourceName = CLASS_PATH_ENTRIES.stream()
-          .filter(cp -> url.getPath().startsWith(cp)).findAny()
-          .map(cp -> url.getPath().substring(cp.length() + 1))
+          .filter(cp -> updatedUrl.startsWith(cp)).findAny()
+          .map(cp -> updatedUrl.substring(cp.length() + 1))
           .orElse(url.toExternalForm());
     } else {
       this.resourceName = url.toExternalForm();
