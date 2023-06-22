@@ -63,7 +63,6 @@ public final class ConfigResource {
     if (url.getProtocol().equals("jar")) {
       this.resourceName = url.toExternalForm().split("!/")[1];
     } else if (url.getProtocol().equals("file")) {
-      System.out.println("URL" + url.getPath());
       String updatedUrl = isWindows && url.getPath().startsWith("/") ? url.getPath().substring(1) : url.getPath();
       this.resourceName = CLASS_PATH_ENTRIES.stream()
           .filter(cp -> updatedUrl.startsWith(cp)).findAny()
