@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 public final class ConfigResource {
 
   private static final List<String> CLASS_PATH_ENTRIES;
+  private static final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
 
   static {
     String classPath = getProperty("java.class.path");
@@ -62,7 +63,8 @@ public final class ConfigResource {
     if (url.getProtocol().equals("jar")) {
       this.resourceName = url.toExternalForm().split("!/")[1];
     } else if (url.getProtocol().equals("file")) {
-      String updatedUrl = url.getPath().startsWith("/") ? url.getPath().substring(1) : url.getPath();
+      System.out.println("URL" + url.getPath());
+      String updatedUrl = isWindows && url.getPath().startsWith("/") ? url.getPath().substring(1) : url.getPath();
       this.resourceName = CLASS_PATH_ENTRIES.stream()
           .filter(cp -> updatedUrl.startsWith(cp)).findAny()
           .map(cp -> updatedUrl.substring(cp.length() + 1))
