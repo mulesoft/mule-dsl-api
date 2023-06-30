@@ -25,14 +25,26 @@ public final class ComponentBuildingDefinitionProviderUtils {
   }
 
   /**
-   * Looks up implementations of {@link ComponentBuildingDefinitionProvider} with the provided classloader.
+   * Looks up implementations of {@link ComponentBuildingDefinitionProvider} from the Mule container.
    * 
-   * @param classLoader the classlaoder to use for loading the services through SPI.
    * @return the discovered {@link ComponentBuildingDefinitionProvider}.
    */
-  public static final Stream<ComponentBuildingDefinitionProvider> lookupComponentBuildingDefinitionProviders(ClassLoader classLoader) {
+  public static final Stream<ComponentBuildingDefinitionProvider> lookupComponentBuildingDefinitionProviders() {
+    return stream(((Iterable<ComponentBuildingDefinitionProvider>) () -> load(ComponentBuildingDefinitionProvider.class)
+        .iterator())
+            .spliterator(),
+                  false);
+  }
+
+  /**
+   * Looks up implementations of {@link ComponentBuildingDefinitionProvider} with the provided classloader.
+   * 
+   * @param classLoader the classloader of a deployable artifact to use for loading the services through SPI.
+   * @return the discovered {@link ComponentBuildingDefinitionProvider}.
+   */
+  public static final Stream<ComponentBuildingDefinitionProvider> lookupComponentBuildingDefinitionProviders(ClassLoader deployableArtifactClassLoader) {
     return stream(((Iterable<ComponentBuildingDefinitionProvider>) () -> load(ComponentBuildingDefinitionProvider.class,
-                                                                              classLoader)
+                                                                              deployableArtifactClassLoader)
                                                                                   .iterator())
                                                                                       .spliterator(),
                   false);
