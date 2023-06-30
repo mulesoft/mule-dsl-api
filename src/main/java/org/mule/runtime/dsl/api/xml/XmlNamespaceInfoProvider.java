@@ -30,9 +30,10 @@ public interface XmlNamespaceInfoProvider {
    * @return the {@link XmlNamespaceInfoProvider}s for namespaces declared within the Mule container.
    */
   public static Stream<XmlNamespaceInfoProvider> loadXmlNamespaceInfoProviders() {
-    return stream(((Iterable<XmlNamespaceInfoProvider>) () -> load(XmlNamespaceInfoProvider.class)
-        .iterator())
-            .spliterator(),
+    return stream(((Iterable<XmlNamespaceInfoProvider>) () -> load(XmlNamespaceInfoProvider.class,
+                                                                   XmlNamespaceInfoProvider.class.getClassLoader())
+                                                                       .iterator())
+                                                                           .spliterator(),
                   false);
   }
 

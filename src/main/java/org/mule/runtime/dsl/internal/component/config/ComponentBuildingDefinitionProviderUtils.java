@@ -30,9 +30,11 @@ public final class ComponentBuildingDefinitionProviderUtils {
    * @return the discovered {@link ComponentBuildingDefinitionProvider}.
    */
   public static final Stream<ComponentBuildingDefinitionProvider> lookupComponentBuildingDefinitionProviders() {
-    return stream(((Iterable<ComponentBuildingDefinitionProvider>) () -> load(ComponentBuildingDefinitionProvider.class)
-        .iterator())
-            .spliterator(),
+    return stream(((Iterable<ComponentBuildingDefinitionProvider>) () -> load(ComponentBuildingDefinitionProvider.class,
+                                                                              ComponentBuildingDefinitionProvider.class
+                                                                                  .getClassLoader())
+                                                                                      .iterator())
+                                                                                          .spliterator(),
                   false);
   }
 
