@@ -38,8 +38,9 @@ module org.mule.runtime.dsl.api {
   exports org.mule.runtime.dsl.internal.xml.parser to
       org.mule.runtime.artifact.ast.xmlParser;
 
-  // Location objects referenced in events
+  // Location objects referenced in events and ast
   opens org.mule.runtime.dsl.api.component.config to
+      com.google.gson,
       kryo.shaded;
 
 }
