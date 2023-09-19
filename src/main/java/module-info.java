@@ -39,7 +39,8 @@ module org.mule.runtime.dsl.api {
   exports org.mule.runtime.dsl.internal.xerces.xni.parser to
       org.mule.runtime.artifact.ast.xmlParser;
   exports org.mule.runtime.dsl.internal.xml.parser to
-      org.mule.runtime.artifact.ast.xmlParser;
+      org.mule.runtime.artifact.ast.xmlParser,
+      org.mule.runtime.spring.config;
 
   // Location objects referenced in events and ast
   opens org.mule.runtime.dsl.api.component.config to
