@@ -111,7 +111,7 @@
 
         <muleBomVersion>4.7.0-SNAPSHOT</muleBomVersion>
 
-        <junitVersion>4.12</junitVersion>
+        <junitVersion>4.13.2</junitVersion>
         <hamcrestVersion>2.2</hamcrestVersion>
         <aspectjVersion>1.9.2</aspectjVersion>
         <javax.jaxb-api.version>2.3.0</javax.jaxb-api.version>
