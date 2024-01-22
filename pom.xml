@@ -134,7 +134,7 @@
         <allureReportVersion>2.8.1</allureReportVersion>
         <allureJunitVersion>2.8.1</allureJunitVersion>
         <allure.maven.plugin.version>2.9</allure.maven.plugin.version>
-        <jacoco.version>0.8.8</jacoco.version>
+        <jacoco.version>0.8.11</jacoco.version>
 
         <mockitoVersion>4.11.0</mockitoVersion>
 
