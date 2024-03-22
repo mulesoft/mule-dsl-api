@@ -6,12 +6,7 @@
  */
 package org.mule.runtime.dsl.api.xml.parser;
 
-import static org.mule.runtime.internal.dsl.DslConstants.CORE_NAMESPACE;
-import static org.mule.runtime.internal.dsl.DslConstants.CORE_PREFIX;
-import static org.mule.runtime.internal.dsl.DslConstants.DOMAIN_NAMESPACE;
-import static org.mule.runtime.internal.dsl.DslConstants.DOMAIN_PREFIX;
-import static org.mule.runtime.internal.dsl.DslConstants.EE_DOMAIN_NAMESPACE;
-import static org.mule.runtime.internal.dsl.DslConstants.EE_DOMAIN_PREFIX;
+import static java.lang.String.format;
 
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.dsl.api.xml.XmlNamespaceInfo;
@@ -37,6 +32,14 @@ import com.google.common.collect.ImmutableList;
  * @since 4.0
  */
 public class XmlApplicationParser {
+
+  private static final String DEFAULT_NAMESPACE_URI_MASK = "http://www.mulesoft.org/schema/mule/%s";
+  public static final String CORE_NAMESPACE = format(DEFAULT_NAMESPACE_URI_MASK, "core");
+  private static final String CORE_PREFIX = "mule";
+  private static final String DOMAIN_NAMESPACE = format(DEFAULT_NAMESPACE_URI_MASK, "domain");
+  private static final String DOMAIN_PREFIX = "domain";
+  private static final String EE_DOMAIN_NAMESPACE = format(DEFAULT_NAMESPACE_URI_MASK, "ee/domain");
+  private static final String EE_DOMAIN_PREFIX = "ee-domain";
 
   public static final String DECLARED_PREFIX = "DECLARED_PREFIX";
   public static final String XML_NODE = "XML_NODE";
