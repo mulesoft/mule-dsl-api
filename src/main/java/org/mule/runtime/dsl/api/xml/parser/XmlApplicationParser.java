@@ -34,7 +34,7 @@ import com.google.common.collect.ImmutableList;
 public class XmlApplicationParser {
 
   private static final String DEFAULT_NAMESPACE_URI_MASK = "http://www.mulesoft.org/schema/mule/%s";
-  public static final String CORE_NAMESPACE = format(DEFAULT_NAMESPACE_URI_MASK, "core");
+  static final String CORE_NAMESPACE = format(DEFAULT_NAMESPACE_URI_MASK, "core");
   private static final String CORE_PREFIX = "mule";
   private static final String DOMAIN_NAMESPACE = format(DEFAULT_NAMESPACE_URI_MASK, "domain");
   private static final String DOMAIN_PREFIX = "domain";
