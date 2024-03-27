@@ -12,8 +12,8 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
 import static org.mule.runtime.dsl.api.xml.XmlDslConstants.IMPORT_ELEMENT;
+import static org.mule.runtime.dsl.api.xml.parser.XmlApplicationParser.CORE_NAMESPACE;
 import static org.mule.runtime.dsl.internal.xerces.xni.parser.DefaultXmlGrammarPoolManager.getGrammarPool;
-import static org.mule.runtime.internal.dsl.DslConstants.CORE_NAMESPACE;
 
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.api.util.Pair;
