@@ -30,17 +30,13 @@ module org.mule.runtime.dsl.api {
   uses org.mule.runtime.dsl.api.component.ComponentBuildingDefinitionProvider;
   uses org.mule.runtime.dsl.api.xml.XmlNamespaceInfoProvider;
 
-  exports org.mule.runtime.dsl.internal.component.config to
-      org.mule.runtime.metadata.support,
-      org.mule.runtime.spring.config;
   exports org.mule.runtime.dsl.internal.util to
       org.mule.runtime.artifact.ast.xmlParser,
       org.mule.runtime.artifact.ast.xmlParser.test;
   exports org.mule.runtime.dsl.internal.xerces.xni.parser to
       org.mule.runtime.artifact.ast.xmlParser;
   exports org.mule.runtime.dsl.internal.xml.parser to
-      org.mule.runtime.artifact.ast.xmlParser,
-      org.mule.runtime.spring.config;
+      org.mule.runtime.artifact.ast.xmlParser;
 
   // Location objects referenced in events and ast
   opens org.mule.runtime.dsl.api.component.config to

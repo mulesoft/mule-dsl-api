@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.runtime.dsl.internal.component.config;
+package org.mule.runtime.dsl.api.component.config;
 
 import static java.util.ServiceLoader.load;
 import static java.util.stream.StreamSupport.stream;
