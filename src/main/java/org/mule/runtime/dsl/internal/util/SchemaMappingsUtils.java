@@ -13,6 +13,8 @@ import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_CURRENT_X
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.mule.runtime.api.util.LazyValue;
+import org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils;
+
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -37,9 +39,11 @@ public final class SchemaMappingsUtils {
 
   private static final Logger LOGGER = getLogger(SchemaMappingsUtils.class);
   private static final LazyValue<Map<String, String>> MULE_SCHEMAS_MAPPINGS =
-      new LazyValue<>(() -> getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION, SchemaMappingsUtils.class::getClassLoader));
+      new LazyValue<>(() -> getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION,
+                                              MuleImplementationLoaderUtils::getMuleImplementationsLoader));
   private static final LazyValue<Map<String, String>> SPRING_SCHEMAS_MAPPINGS =
-      new LazyValue<>(() -> getSchemaMappings(CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION, SchemaMappingsUtils.class::getClassLoader));
+      new LazyValue<>(() -> getSchemaMappings(CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION,
+                                              MuleImplementationLoaderUtils::getMuleImplementationsLoader));
 
   private SchemaMappingsUtils() {}
 

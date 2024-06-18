@@ -6,6 +6,8 @@
  */
 package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
+import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.getMuleImplementationsLoader;
+
 import static java.lang.Thread.currentThread;
 import static java.util.Optional.of;
 
@@ -40,7 +42,7 @@ public class DefaultXmlGrammarPoolManager {
     final Thread thread = currentThread();
     final ClassLoader currentClassLoader = thread.getContextClassLoader();
     try {
-      thread.setContextClassLoader(DefaultXmlGrammarPoolManager.class.getClassLoader());
+      thread.setContextClassLoader(getMuleImplementationsLoader());
       return doInitialize();
     } finally {
       thread.setContextClassLoader(currentClassLoader);

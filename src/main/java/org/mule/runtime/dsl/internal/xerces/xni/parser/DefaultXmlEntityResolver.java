@@ -6,6 +6,7 @@
  */
 package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
+import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.getMuleImplementationsLoader;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.getMuleSchemasMappings;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.resolveSystemId;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -51,7 +52,7 @@ public class DefaultXmlEntityResolver implements XMLEntityResolver {
   private XMLInputSource resolveEntity(Map<String, String> schemas, String publicId, String systemId) {
     String resourceLocation = schemas.get(systemId);
     if (resourceLocation != null) {
-      URL resource = DefaultXmlEntityResolver.class.getClassLoader().getResource(resourceLocation);
+      URL resource = getMuleImplementationsLoader().getResource(resourceLocation);
       if (resource == null) {
         LOGGER.debug("Couldn't find schema [" + systemId + "]: " + resourceLocation);
       } else {

@@ -6,6 +6,8 @@
  */
 package org.mule.runtime.dsl.api.xml;
 
+import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.getMuleImplementationsLoader;
+
 import static java.util.ServiceLoader.load;
 import static java.util.stream.StreamSupport.stream;
 
@@ -31,7 +33,7 @@ public interface XmlNamespaceInfoProvider {
    */
   public static Stream<XmlNamespaceInfoProvider> loadXmlNamespaceInfoProviders() {
     return stream(((Iterable<XmlNamespaceInfoProvider>) () -> load(XmlNamespaceInfoProvider.class,
-                                                                   XmlNamespaceInfoProvider.class.getClassLoader())
+                                                                   getMuleImplementationsLoader())
                                                                        .iterator())
                                                                            .spliterator(),
                   false);

@@ -6,6 +6,8 @@
  */
 package org.mule.runtime.dsl.api.component.config;
 
+import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.getMuleImplementationsLoader;
+
 import static java.util.ServiceLoader.load;
 import static java.util.stream.StreamSupport.stream;
 
@@ -31,10 +33,9 @@ public final class ComponentBuildingDefinitionProviderUtils {
    */
   public static final Stream<ComponentBuildingDefinitionProvider> lookupComponentBuildingDefinitionProviders() {
     return stream(((Iterable<ComponentBuildingDefinitionProvider>) () -> load(ComponentBuildingDefinitionProvider.class,
-                                                                              ComponentBuildingDefinitionProvider.class
-                                                                                  .getClassLoader())
-                                                                                      .iterator())
-                                                                                          .spliterator(),
+                                                                              getMuleImplementationsLoader())
+                                                                                  .iterator())
+                                                                                      .spliterator(),
                   false);
   }
 

@@ -10,6 +10,7 @@ import static java.lang.System.lineSeparator;
 import static java.lang.Thread.currentThread;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.mule.apache.xerces.impl.xs.SchemaValidatorHelper.XMLGRAMMAR_POOL;
+import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.getMuleImplementationsLoader;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
 
 import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
@@ -82,7 +83,7 @@ final public class MuleDocumentLoader {
     final Thread thread = currentThread();
     final ClassLoader currentClassLoader = thread.getContextClassLoader();
     try {
-      thread.setContextClassLoader(MuleDocumentLoader.class.getClassLoader());
+      thread.setContextClassLoader(getMuleImplementationsLoader());
 
       ByteArrayOutputStream output = new ByteArrayOutputStream();
       try (InputStream inputStream = inputSource.getByteStream()) {
@@ -118,7 +119,7 @@ final public class MuleDocumentLoader {
       throws ParserConfigurationException {
     DocumentBuilderFactory factory;
     // Sure we are using standard Java implementations
-    factory = DocumentBuilderFactory.newInstance(MULE_DOCUMENT_BUILDER_FACTORY, MuleDocumentLoader.class.getClassLoader());
+    factory = DocumentBuilderFactory.newInstance(MULE_DOCUMENT_BUILDER_FACTORY, getMuleImplementationsLoader());
     // Disable external entities
     factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
     factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
