@@ -7,6 +7,7 @@
 package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
 import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.getMuleImplementationsLoader;
+import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.isResolveMuleImplementationLoadersDynamically;
 
 import static java.lang.Thread.currentThread;
 import static java.util.Optional.of;
@@ -18,6 +19,8 @@ import org.mule.runtime.dsl.api.xerces.xni.factories.XmlEntityResolverFactory;
 import org.mule.runtime.dsl.api.xerces.xni.factories.XmlGathererErrorHandlerFactory;
 import org.mule.runtime.dsl.api.xerces.xni.factories.XmlSchemaProviderFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -28,13 +31,18 @@ import java.util.Optional;
 public class DefaultXmlGrammarPoolManager {
 
   private static final LazyValue<Optional<XMLGrammarPool>> INSTANCE = new LazyValue<>(DefaultXmlGrammarPoolManager::initialize);
+  private static final Map<ClassLoader, Optional<XMLGrammarPool>> instances = new HashMap<>();
 
   private DefaultXmlGrammarPoolManager() {
     // Nothing to do
   }
 
   public static Optional<XMLGrammarPool> getGrammarPool() {
-    return INSTANCE.get();
+    if (isResolveMuleImplementationLoadersDynamically()) {
+      return instances.computeIfAbsent(getMuleImplementationsLoader(), key -> initialize());
+    } else {
+      return INSTANCE.get();
+    }
   }
 
 

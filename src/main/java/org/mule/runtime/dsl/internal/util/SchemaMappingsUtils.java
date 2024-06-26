@@ -6,6 +6,7 @@
  */
 package org.mule.runtime.dsl.internal.util;
 
+import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.isResolveMuleImplementationLoadersDynamically;
 import static org.mule.runtime.dsl.internal.util.CollectionUtils.mergePropertiesIntoMap;
 import static org.mule.runtime.dsl.internal.util.ResourceUtils.useCachesIfNecessary;
 import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_XSD;
@@ -62,14 +63,23 @@ public final class SchemaMappingsUtils {
    * @return schemas mappings located at {@code CUSTOM_SCHEMA_MAPPINGS_LOCATION} location
    */
   public static Map<String, String> getMuleSchemasMappings() {
-    return MULE_SCHEMAS_MAPPINGS.get();
+    if (isResolveMuleImplementationLoadersDynamically()) {
+      return getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION, MuleImplementationLoaderUtils::getMuleImplementationsLoader);
+    } else {
+      return MULE_SCHEMAS_MAPPINGS.get();
+    }
   }
 
   /**
    * @return schemas mappings located at {@code CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION} location
    */
   public static Map<String, String> getSpringSchemasMappings() {
-    return SPRING_SCHEMAS_MAPPINGS.get();
+    if (isResolveMuleImplementationLoadersDynamically()) {
+      return getSchemaMappings(CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION,
+                               MuleImplementationLoaderUtils::getMuleImplementationsLoader);
+    } else {
+      return SPRING_SCHEMAS_MAPPINGS.get();
+    }
   }
 
   /**
