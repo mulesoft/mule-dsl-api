@@ -116,10 +116,6 @@
 
         <muleBomVersion>4.9.0-SNAPSHOT</muleBomVersion>
 
-        <junitVersion>4.13.2</junitVersion>
-        <mockitoVersion>4.11.0</mockitoVersion>
-        <hamcrestVersion>2.2</hamcrestVersion>
-        <aspectjVersion>1.9.2</aspectjVersion>
         <javax.jaxb-api.version>2.3.0</javax.jaxb-api.version>
 
         <muleModuleMavenPluginVersion>1.9.0-SNAPSHOT</muleModuleMavenPluginVersion>
@@ -137,6 +133,13 @@
             <dependency>
                 <groupId>org.mule</groupId>
                 <artifactId>mule-runtime-bom</artifactId>
+                <version>${muleBomVersion}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule</groupId>
+                <artifactId>mule-tests-bom</artifactId>
                 <version>${muleBomVersion}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -162,20 +165,17 @@
 
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-            <version>${hamcrestVersion}</version>
+            <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junitVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockitoVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
