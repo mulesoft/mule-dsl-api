@@ -13,3 +13,7 @@ additionalTestConfigs:
   jdk11:
     testJdkTool: OPEN-JDK11
     mavenAdditionalArgs: -P!testJdkWithoutXmlModule
+  jdk21:
+    testJdkTool: TEMURIN-JDK21
+    mavenAdditionalArgs: -P!testJdkWithoutXmlModule
+    
