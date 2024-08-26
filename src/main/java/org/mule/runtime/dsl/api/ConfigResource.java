@@ -12,8 +12,6 @@ import static java.lang.System.getProperty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-
 import org.mule.api.annotation.NoExtend;
 import org.mule.api.annotation.NoInstantiate;
 
@@ -98,7 +96,7 @@ public final class ConfigResource {
       URLConnection urlConnection = url.openConnection();
       // It's necessary to disable connection caching when working with jar files
       // in order to avoid file leaks in Windows environments
-      if (IS_OS_WINDOWS && urlConnection instanceof JarURLConnection) {
+      if (urlConnection instanceof JarURLConnection) {
         urlConnection.setUseCaches(false);
       }
       inputStream = urlConnection.getInputStream();
