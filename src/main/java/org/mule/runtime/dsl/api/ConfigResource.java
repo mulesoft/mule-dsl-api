@@ -15,7 +15,9 @@ import org.mule.runtime.api.util.IOUtils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 /**
@@ -66,7 +68,13 @@ public final class ConfigResource {
 
   public InputStream getInputStream() throws IOException {
     if (inputStream == null && url != null) {
-      inputStream = url.openStream();
+      URLConnection urlConnection = url.openConnection();
+      // It's necessary to disable connection caching when working with jar files
+      // in order to avoid file leaks in Windows environments
+      if (urlConnection instanceof JarURLConnection) {
+        urlConnection.setUseCaches(false);
+      }
+      inputStream = urlConnection.getInputStream();
     }
     return inputStream;
   }
