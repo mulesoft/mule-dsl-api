@@ -18,4 +18,15 @@ public interface AllureConstants {
     }
 
   }
+
+  interface ConfigResources {
+
+    String CONFIG_RESOURCES = "Config Resources";
+
+    interface LastModified {
+
+      String LAST_MODIFIED = "Last modified";
+    }
+
+  }
 }

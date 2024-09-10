@@ -9,19 +9,24 @@ package org.mule.runtime.dsl.api;
 import static org.mule.runtime.api.util.IOUtils.getResourceAsUrl;
 
 import static java.lang.System.getProperty;
+import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 
 import org.mule.api.annotation.NoExtend;
 import org.mule.api.annotation.NoInstantiate;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +40,8 @@ import org.apache.commons.lang3.StringUtils;
 public final class ConfigResource {
 
   private static final List<String> CLASS_PATH_ENTRIES;
-  private static final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
+  private static final boolean isWindows = getProperty("os.name").toLowerCase().contains("windows");
+  private static Pattern JAR_FILE_FROM_RESOURCE_PATTERN = compile("^jar:file:(.*[.]jar)!/.*");
 
   static {
     String classPath = getProperty("java.class.path");
@@ -114,6 +120,33 @@ public final class ConfigResource {
 
   public boolean isStreamOpen() {
     return inputStream != null;
+  }
+
+  /**
+   * @return the {@link File#lastModified()} of the file from where this resource is loaded, or {@code 0L} if there is no file.
+   * 
+   * @since 1.8
+   */
+  public long getLastModified() {
+    if (getUrl() == null) {
+      return 0L;
+    }
+
+    if (getUrl().toString().startsWith("jar:file:")) {
+      Matcher matcher = JAR_FILE_FROM_RESOURCE_PATTERN.matcher(getUrl().toString());
+      if (matcher.matches()) {
+        String path = matcher.group(1);
+        return new File(path).lastModified();
+      } else {
+        return 0L;
+      }
+    }
+
+    try {
+      return new File(getUrl().toURI()).lastModified();
+    } catch (URISyntaxException e) {
+      return 0L;
+    }
   }
 
   @Override
