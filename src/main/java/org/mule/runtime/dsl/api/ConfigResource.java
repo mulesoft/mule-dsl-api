@@ -60,6 +60,7 @@ public final class ConfigResource {
   protected String resourceName;
   private URL url;
   private InputStream inputStream;
+  private long lastModifiedDate = 0L;
 
   public ConfigResource(String resourceName) throws IOException {
     this(resourceName, getResourceAsUrl(resourceName, ConfigResource.class, true, true));
@@ -93,8 +94,13 @@ public final class ConfigResource {
   }
 
   public ConfigResource(String resourceName, InputStream inputStream) {
-    this.inputStream = inputStream;
+    this(resourceName, inputStream, 0L);
+  }
+
+  public ConfigResource(String resourceName, InputStream inputStream, long lastModifiedDate) {
     this.resourceName = resourceName;
+    this.inputStream = inputStream;
+    this.lastModifiedDate = lastModifiedDate;
   }
 
   public InputStream getInputStream() throws IOException {
@@ -129,7 +135,7 @@ public final class ConfigResource {
    */
   public long getLastModified() {
     if (getUrl() == null) {
-      return 0L;
+      return lastModifiedDate;
     }
 
     if (getUrl().toString().startsWith("jar:file:")) {
