@@ -9,12 +9,14 @@ package org.mule.runtime.dsl.api.component;
 import static org.mule.runtime.dsl.AllureConstants.ConfigResources.CONFIG_RESOURCES;
 import static org.mule.runtime.dsl.AllureConstants.ConfigResources.LastModified.LAST_MODIFIED;
 
+import static org.apache.commons.io.IOUtils.copy;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 
 import org.mule.runtime.dsl.api.ConfigResource;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,6 +62,19 @@ public class ConfigResourceTestCase {
     ConfigResource configResource = new ConfigResource("simple_application", mock(InputStream.class));
 
     assertThat(configResource.getLastModified(), is(0L));
+  }
+
+  @Test
+  public void readTwice() throws IOException {
+    URL resource = this.getClass().getResource("/simple_application.xml");
+    ConfigResource configResource = new ConfigResource(resource);
+
+    final ByteArrayOutputStream firstRead = new ByteArrayOutputStream();
+    copy(configResource.getInputStream(), firstRead);
+    final ByteArrayOutputStream secondRead = new ByteArrayOutputStream();
+    copy(configResource.getInputStream(), secondRead);
+
+    assertThat(secondRead.toByteArray(), is(firstRead.toByteArray()));
   }
 }
 

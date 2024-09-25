@@ -104,16 +104,20 @@ public final class ConfigResource {
   }
 
   public InputStream getInputStream() throws IOException {
-    if (inputStream == null && url != null) {
+    if (inputStream != null) {
+      return inputStream;
+    }
+
+    if (url != null) {
       URLConnection urlConnection = url.openConnection();
       // It's necessary to disable connection caching when working with jar files
       // in order to avoid file leaks in Windows environments
       if (urlConnection instanceof JarURLConnection) {
         urlConnection.setUseCaches(false);
       }
-      inputStream = urlConnection.getInputStream();
+      return urlConnection.getInputStream();
     }
-    return inputStream;
+    return null;
   }
 
   public URL getUrl() {
