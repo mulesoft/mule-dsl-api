@@ -60,6 +60,7 @@ public final class ConfigResource {
   protected String resourceName;
   private URL url;
   private InputStream inputStream;
+  private long lastModifiedDate = 0L;
 
   public ConfigResource(String resourceName) throws IOException {
     this(resourceName, getResourceAsUrl(resourceName, ConfigResource.class, true, true));
@@ -93,21 +94,30 @@ public final class ConfigResource {
   }
 
   public ConfigResource(String resourceName, InputStream inputStream) {
-    this.inputStream = inputStream;
+    this(resourceName, inputStream, 0L);
+  }
+
+  public ConfigResource(String resourceName, InputStream inputStream, long lastModifiedDate) {
     this.resourceName = resourceName;
+    this.inputStream = inputStream;
+    this.lastModifiedDate = lastModifiedDate;
   }
 
   public InputStream getInputStream() throws IOException {
-    if (inputStream == null && url != null) {
+    if (inputStream != null) {
+      return inputStream;
+    }
+
+    if (url != null) {
       URLConnection urlConnection = url.openConnection();
       // It's necessary to disable connection caching when working with jar files
       // in order to avoid file leaks in Windows environments
       if (urlConnection instanceof JarURLConnection) {
         urlConnection.setUseCaches(false);
       }
-      inputStream = urlConnection.getInputStream();
+      return urlConnection.getInputStream();
     }
-    return inputStream;
+    return null;
   }
 
   public URL getUrl() {
@@ -129,7 +139,7 @@ public final class ConfigResource {
    */
   public long getLastModified() {
     if (getUrl() == null) {
-      return 0L;
+      return lastModifiedDate;
     }
 
     if (getUrl().toString().startsWith("jar:file:")) {
