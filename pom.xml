@@ -260,20 +260,6 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                 </plugin>
                 <plugin>
-                    <groupId>org.mule.tools.maven</groupId>
-                    <artifactId>mule-module-maven-plugin</artifactId>
-                    <version>${muleModuleMavenPluginVersion}</version>
-                    <executions>
-                        <execution>
-                            <id>analyze</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>analyze</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                 </plugin>
