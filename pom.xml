@@ -152,7 +152,7 @@
         </dependency>
         <dependency>
             <groupId>org.mule.apache</groupId>
-            <artifactId>xerces2-xsd11</artifactId>
+            <artifactId>xercesImpl</artifactId>
         </dependency>
 
         <dependency>

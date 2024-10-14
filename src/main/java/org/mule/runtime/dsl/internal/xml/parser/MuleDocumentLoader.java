@@ -6,14 +6,14 @@
  */
 package org.mule.runtime.dsl.internal.xml.parser;
 
-import static java.lang.System.lineSeparator;
-import static java.lang.Thread.currentThread;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.mule.apache.xerces.impl.xs.SchemaValidatorHelper.XMLGRAMMAR_POOL;
 import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.getMuleImplementationsLoader;
 import static org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.METADATA_ANNOTATIONS_KEY;
 
-import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
+import static java.lang.System.lineSeparator;
+import static java.lang.Thread.currentThread;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 import org.mule.runtime.dsl.internal.SourcePosition;
 import org.mule.runtime.dsl.internal.xml.parser.XmlMetadataAnnotations.TagBoundaries;
 
@@ -33,6 +33,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.mule.apache.xerces.xni.grammars.XMLGrammarPool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.UserDataHandler;
@@ -126,7 +127,7 @@ final public class MuleDocumentLoader {
 
     factory.setFeature(SCHEMA_AUGMENT_PSVI_FEATURE, false);
     if (grammarPool != null) {
-      factory.setAttribute(XMLGRAMMAR_POOL, grammarPool);
+      factory.setAttribute("http://apache.org/xml/properties/internal/grammar-pool", grammarPool);
     }
     factory.setNamespaceAware(namespaceAware);
     factory.setValidating(isValidationEnabled(validationMode));
@@ -215,7 +216,7 @@ final public class MuleDocumentLoader {
       metadataBuilder.getOpeningTagBoundaries().setStartColumnNumber(trackingPoint.getColumn() - trackingPointOffset);
       metadataBuilder.getOpeningTagBoundaries().setEndLineNumber(locator.getLineNumber());
       metadataBuilder.getOpeningTagBoundaries().setEndColumnNumber(locator.getColumnNumber());
-      Map<String, String> attsMap = new LinkedHashMap<>();
+      final Map<String, String> attsMap = new LinkedHashMap<>();
       for (int i = 0; i < atts.getLength(); ++i) {
         attsMap.put(atts.getQName(i), atts.getValue(i));
       }
