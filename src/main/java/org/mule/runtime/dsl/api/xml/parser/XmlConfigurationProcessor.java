@@ -22,6 +22,8 @@ import org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -129,12 +131,14 @@ public class XmlConfigurationProcessor {
         .map(importedFileName -> {
           Supplier<InputStream> inputStreamSupplier = () -> {
             try {
-              return parsingConfiguration
+              URL importedFile = parsingConfiguration
                   .getResourceLocator()
                   .find(importedFileName, new XmlConfigurationProcessor())
                   .orElseThrow(() -> new MuleRuntimeException(createStaticMessage(format("Could not find imported resource '%s'",
-                                                                                         importedFileName))))
-                  .openStream();
+                                                                                         importedFileName))));
+              // Avoid file descriptor leaks.
+              URLConnection urlConnection = importedFile.openConnection();
+              return urlConnection.getInputStream();
             } catch (IOException e) {
               throw new MuleRuntimeException(e);
             }
