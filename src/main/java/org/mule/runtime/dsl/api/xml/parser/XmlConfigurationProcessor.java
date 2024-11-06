@@ -6,14 +6,16 @@
  */
 package org.mule.runtime.dsl.api.xml.parser;
 
+import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
+import static org.mule.runtime.api.util.IOUtils.getInputStreamWithCacheControl;
+import static org.mule.runtime.dsl.api.xml.XmlDslConstants.IMPORT_ELEMENT;
+import static org.mule.runtime.dsl.api.xml.parser.XmlApplicationParser.CORE_NAMESPACE;
+import static org.mule.runtime.dsl.internal.xerces.xni.parser.DefaultXmlGrammarPoolManager.getGrammarPool;
+
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
-import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
-import static org.mule.runtime.dsl.api.xml.XmlDslConstants.IMPORT_ELEMENT;
-import static org.mule.runtime.dsl.api.xml.parser.XmlApplicationParser.CORE_NAMESPACE;
-import static org.mule.runtime.dsl.internal.xerces.xni.parser.DefaultXmlGrammarPoolManager.getGrammarPool;
 
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.api.util.Pair;
@@ -23,7 +25,6 @@ import org.mule.runtime.dsl.internal.xml.parser.XmlApplicationParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -136,10 +137,7 @@ public class XmlConfigurationProcessor {
                   .find(importedFileName, new XmlConfigurationProcessor())
                   .orElseThrow(() -> new MuleRuntimeException(createStaticMessage(format("Could not find imported resource '%s'",
                                                                                          importedFileName))));
-              // Avoid file descriptor leaks.
-              URLConnection urlConnection = importedFile.openConnection();
-              urlConnection.setUseCaches(false);
-              return urlConnection.getInputStream();
+              return getInputStreamWithCacheControl(importedFile);
             } catch (IOException e) {
               throw new MuleRuntimeException(e);
             }
