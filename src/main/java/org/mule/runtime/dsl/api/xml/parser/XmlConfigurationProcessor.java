@@ -138,6 +138,7 @@ public class XmlConfigurationProcessor {
                                                                                          importedFileName))));
               // Avoid file descriptor leaks.
               URLConnection urlConnection = importedFile.openConnection();
+              urlConnection.setUseCaches(false);
               return urlConnection.getInputStream();
             } catch (IOException e) {
               throw new MuleRuntimeException(e);
