@@ -6,6 +6,7 @@
  */
 package org.mule.runtime.dsl.api;
 
+import static org.mule.runtime.api.util.IOUtils.getInputStreamWithCacheControl;
 import static org.mule.runtime.api.util.IOUtils.getResourceAsUrl;
 
 import static java.lang.System.getProperty;
@@ -20,10 +21,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -109,13 +108,7 @@ public final class ConfigResource {
     }
 
     if (url != null) {
-      URLConnection urlConnection = url.openConnection();
-      // It's necessary to disable connection caching when working with jar files
-      // in order to avoid file leaks in Windows environments
-      if (urlConnection instanceof JarURLConnection) {
-        urlConnection.setUseCaches(false);
-      }
-      return urlConnection.getInputStream();
+      return getInputStreamWithCacheControl(url);
     }
     return null;
   }

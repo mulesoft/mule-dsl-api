@@ -6,12 +6,14 @@
  */
 package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
-
+import static org.mule.runtime.api.util.IOUtils.getInputStreamWithCacheControl;
 import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.getMuleImplementationsLoader;
 import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.getMuleSchemasMappings;
+
 import static org.slf4j.LoggerFactory.getLogger;
+
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
 import org.mule.apache.xerces.xni.parser.XMLInputSource;
 import org.mule.apache.xerces.util.XMLResourceIdentifierImpl;
@@ -21,7 +23,6 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,12 +51,10 @@ public class DefaultXmlSchemaProvider implements XmlSchemaProvider {
           XMLInputSource xis = null;
           URL resource = getMuleImplementationsLoader().getResource(resourceLocation);
           if (resource == null) {
-            LOGGER.debug("Couldn't find schema [" + systemId + "]: " + resourceLocation);
+            LOGGER.debug("Couldn't find schema [{}]: {}", systemId, resourceLocation);
           } else {
             try {
-              URLConnection connection = resource.openConnection();
-              connection.setUseCaches(false);
-              InputStream is = connection.getInputStream();
+              InputStream is = getInputStreamWithCacheControl(resource);
               XMLResourceIdentifier resourceIdentifier = new XMLResourceIdentifierImpl();
               resourceIdentifier.setPublicId(null);
               resourceIdentifier.setLiteralSystemId(systemId);
@@ -63,7 +62,7 @@ public class DefaultXmlSchemaProvider implements XmlSchemaProvider {
               xis = new XMLInputSource(resourceIdentifier);
               xis.setByteStream(is);
             } catch (IOException e) {
-              LOGGER.warn("Error loading XSD [" + systemId + "]: " + resourceLocation, e);
+              LOGGER.warn("Error loading XSD [{}]: {}", systemId, resourceLocation, e);
             }
           }
           return ofNullable(xis);
