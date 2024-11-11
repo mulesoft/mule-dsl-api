@@ -90,16 +90,16 @@ public final class ConfigResource {
     this.resourceName = resourceName;
   }
 
-    public InputStream getInputStream() throws IOException {
-        if (inputStream != null) {
-            return inputStream;
-        }
-
-        if (url != null) {
-            return getInputStreamWithCacheControl(url);
-        }
-        return null;
+  public InputStream getInputStream() throws IOException {
+    if (inputStream != null) {
+      return inputStream;
     }
+
+    if (url != null) {
+      return getInputStreamWithCacheControl(url);
+    }
+    return null;
+  }
 
   public URL getUrl() {
     return url;
