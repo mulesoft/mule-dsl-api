@@ -59,7 +59,7 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
    */
   @Override
   public void appendElementBody(String elementBody) {
-    xmlContent.append(elementBody);
+    xmlContent.append(COMPACT_PATTERN.matcher(elementBody.trim()).replaceAll(">" + lineSeparator() + "<"));
   }
 
   /**
@@ -80,7 +80,7 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
    */
   @Override
   public String getElementString() {
-    return COMPACT_PATTERN.matcher(xmlContent.toString().trim()).replaceAll(">" + lineSeparator() + "<");
+    return xmlContent.toString().trim();
   }
 
   /**
