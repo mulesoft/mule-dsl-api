@@ -21,11 +21,6 @@ import java.util.regex.Pattern;
  */
 public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
 
-  /**
-   * compact whitespaces and line breaks
-   */
-  private static final Pattern COMPACT_PATTERN = compile(">\\s+<+");
-
   private static final Pattern URL_PATTERN = compile("url=\"[a-z]*://([^@]*)@");
   private static final Pattern ADDRESS_PATTERN = compile("address=\"[a-z]*://([^@]*)@");
   private static final Pattern PASSWORD_PATTERN = compile("password=\"([^\"|\n]*)\"");
@@ -59,7 +54,7 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
    */
   @Override
   public void appendElementBody(String elementBody) {
-    xmlContent.append(COMPACT_PATTERN.matcher(elementBody.trim()).replaceAll(">" + lineSeparator() + "<"));
+    xmlContent.append(elementBody.trim());
   }
 
   /**
@@ -69,7 +64,7 @@ public class DefaultXmlMetadataAnnotations implements XmlMetadataAnnotations {
    */
   @Override
   public void appendElementEnd(String qName) {
-    xmlContent.append("</" + qName + ">");
+    xmlContent.append("</" + qName + ">" + lineSeparator());
   }
 
   /**
