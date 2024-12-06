@@ -20,6 +20,7 @@ module org.mule.runtime.dsl.api {
   requires org.apache.commons.io;
   requires org.apache.commons.lang3;
   requires org.mule.apache.xerces;
+  requires com.github.benmanes.caffeine;
   
   exports org.mule.runtime.dsl.api;
   exports org.mule.runtime.dsl.api.component;

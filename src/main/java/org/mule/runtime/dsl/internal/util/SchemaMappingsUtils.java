@@ -6,17 +6,14 @@
  */
 package org.mule.runtime.dsl.internal.util;
 
-import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.isResolveMuleImplementationLoadersDynamically;
 import static org.mule.runtime.dsl.internal.util.CollectionUtils.mergePropertiesIntoMap;
 import static org.mule.runtime.dsl.internal.util.ResourceUtils.useCachesIfNecessary;
-import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_XSD;
 import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_CURRENT_XSD;
+import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_XSD;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.mule.runtime.api.util.LazyValue;
-import org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils;
-
-import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +24,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
+
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
+
+import org.slf4j.Logger;
 
 /**
  * A helper class for loading mule schema mappings.
@@ -39,14 +41,24 @@ public final class SchemaMappingsUtils {
   public static final String CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION = "META-INF/spring.schemas";
 
   private static final Logger LOGGER = getLogger(SchemaMappingsUtils.class);
-  private static final LazyValue<Map<String, String>> MULE_SCHEMAS_MAPPINGS =
-      new LazyValue<>(() -> getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION,
-                                              MuleImplementationLoaderUtils::getMuleImplementationsLoader));
-  private static final LazyValue<Map<String, String>> SPRING_SCHEMAS_MAPPINGS =
-      new LazyValue<>(() -> getSchemaMappings(CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION,
-                                              MuleImplementationLoaderUtils::getMuleImplementationsLoader));
 
-  private SchemaMappingsUtils() {}
+  private static final LoadingCache<ClassLoader, SchemaMappingsUtils> SCHEMA_MAPINGS_CACHE = Caffeine.newBuilder()
+      .weakKeys()
+      .build(SchemaMappingsUtils::new);
+
+  private final LazyValue<Map<String, String>> muleSchemasMappings;
+  private final LazyValue<Map<String, String>> springSchemasMappings;
+
+  public static SchemaMappingsUtils getFor(ClassLoader muleImplementationsLoader) {
+    return SCHEMA_MAPINGS_CACHE.get(muleImplementationsLoader);
+  }
+
+  private SchemaMappingsUtils(ClassLoader muleImplementationsLoader) {
+    muleSchemasMappings =
+        new LazyValue<>(() -> getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION, () -> muleImplementationsLoader));
+    springSchemasMappings =
+        new LazyValue<>(() -> getSchemaMappings(CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION, () -> muleImplementationsLoader));
+  }
 
   public static String resolveSystemId(String systemId) {
     if (systemId.equals(CORE_XSD)) {
@@ -62,24 +74,15 @@ public final class SchemaMappingsUtils {
   /**
    * @return schemas mappings located at {@code CUSTOM_SCHEMA_MAPPINGS_LOCATION} location
    */
-  public static Map<String, String> getMuleSchemasMappings() {
-    if (isResolveMuleImplementationLoadersDynamically()) {
-      return getSchemaMappings(CUSTOM_SCHEMA_MAPPINGS_LOCATION, MuleImplementationLoaderUtils::getMuleImplementationsLoader);
-    } else {
-      return MULE_SCHEMAS_MAPPINGS.get();
-    }
+  public Map<String, String> getMuleSchemasMappings() {
+    return muleSchemasMappings.get();
   }
 
   /**
    * @return schemas mappings located at {@code CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION} location
    */
-  public static Map<String, String> getSpringSchemasMappings() {
-    if (isResolveMuleImplementationLoadersDynamically()) {
-      return getSchemaMappings(CUSTOM_SPRING_SCHEMA_MAPPINGS_LOCATION,
-                               MuleImplementationLoaderUtils::getMuleImplementationsLoader);
-    } else {
-      return SPRING_SCHEMAS_MAPPINGS.get();
-    }
+  public Map<String, String> getSpringSchemasMappings() {
+    return springSchemasMappings.get();
   }
 
   /**
@@ -89,7 +92,7 @@ public final class SchemaMappingsUtils {
    * @param classLoader            {@link Supplier} the ClassLoader to use for loading schemas
    * @return a {@link Map} schemas mappings
    */
-  public static Map<String, String> getSchemaMappings(String schemaMappingsLocation, Supplier<ClassLoader> classLoader) {
+  public Map<String, String> getSchemaMappings(String schemaMappingsLocation, Supplier<ClassLoader> classLoader) {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("Loading schema mappings from [" + schemaMappingsLocation + "]");
     }
@@ -118,7 +121,7 @@ public final class SchemaMappingsUtils {
    * @return the populated Properties instance
    * @throws IOException if loading failed
    */
-  private static Properties loadAllProperties(String resourceName, Supplier<ClassLoader> classLoader) throws IOException {
+  private Properties loadAllProperties(String resourceName, Supplier<ClassLoader> classLoader) throws IOException {
     ClassLoader classLoaderToUse = classLoader.get();
     Enumeration<URL> urls =
         (classLoaderToUse != null ? classLoaderToUse.getResources(resourceName) : ClassLoader.getSystemResources(resourceName));
@@ -127,15 +130,12 @@ public final class SchemaMappingsUtils {
       URL url = urls.nextElement();
       URLConnection con = url.openConnection();
       useCachesIfNecessary(con);
-      InputStream is = con.getInputStream();
-      try {
+      try (InputStream is = con.getInputStream()) {
         if (resourceName != null && resourceName.endsWith(".xml")) {
           props.loadFromXML(is);
         } else {
           props.load(is);
         }
-      } finally {
-        is.close();
       }
     }
     return props;
