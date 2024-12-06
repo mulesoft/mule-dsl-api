@@ -11,6 +11,7 @@ import static org.mule.runtime.dsl.internal.util.ResourceUtils.useCachesIfNecess
 import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_CURRENT_XSD;
 import static org.mule.runtime.dsl.internal.util.SchemasConstants.CORE_XSD;
 
+import static com.github.benmanes.caffeine.cache.Caffeine.newBuilder;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.mule.runtime.api.util.LazyValue;
@@ -25,7 +26,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public final class SchemaMappingsUtils {
 
   private static final Logger LOGGER = getLogger(SchemaMappingsUtils.class);
 
-  private static final LoadingCache<ClassLoader, SchemaMappingsUtils> SCHEMA_MAPINGS_CACHE = Caffeine.newBuilder()
+  private static final LoadingCache<ClassLoader, SchemaMappingsUtils> SCHEMA_MAPINGS_CACHE = newBuilder()
       .weakKeys()
       .build(SchemaMappingsUtils::new);
 

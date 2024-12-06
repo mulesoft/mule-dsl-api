@@ -8,6 +8,7 @@ package org.mule.runtime.dsl.internal.xerces.xni.parser;
 
 import static org.mule.runtime.api.util.IOUtils.getInputStreamWithCacheControl;
 import static org.mule.runtime.api.util.classloader.MuleImplementationLoaderUtils.getMuleImplementationsLoader;
+import static org.mule.runtime.dsl.internal.util.SchemaMappingsUtils.getFor;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -17,7 +18,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 import org.mule.apache.xerces.util.XMLResourceIdentifierImpl;
 import org.mule.apache.xerces.xni.XMLResourceIdentifier;
 import org.mule.apache.xerces.xni.parser.XMLInputSource;
-import org.mule.runtime.dsl.internal.util.SchemaMappingsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +42,7 @@ public class DefaultXmlSchemaProvider implements XmlSchemaProvider {
 
   public DefaultXmlSchemaProvider() {
     this.muleImplementationsLoader = getMuleImplementationsLoader();
-    this.schemas = SchemaMappingsUtils.getFor(muleImplementationsLoader).getMuleSchemasMappings();
+    this.schemas = getFor(muleImplementationsLoader).getMuleSchemasMappings();
   }
 
   @Override
