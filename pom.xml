@@ -122,7 +122,7 @@
         <aspectjVersion>1.9.2</aspectjVersion>
         <javax.jaxb-api.version>2.3.0</javax.jaxb-api.version>
 
-        <muleModuleMavenPluginVersion>1.8.4-SNAPSHOT</muleModuleMavenPluginVersion>
+        <muleModuleMavenPluginVersion>1.8.5-SNAPSHOT</muleModuleMavenPluginVersion>
 
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
