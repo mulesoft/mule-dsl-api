@@ -6,7 +6,7 @@
 
     <groupId>org.mule.runtime</groupId>
     <artifactId>mule-module-dsl-api</artifactId>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.0-20250217</version>
     
     <name>Mule module DSL API</name>
     <description>Module with the API to define how to build runtime objects from configuration files</description>
