@@ -134,7 +134,7 @@
 
         <mockitoVersion>2.23.4</mockitoVersion>
 
-        <xerces2Version>2.11.3-MULE-002</xerces2Version>
+        <xerces2Version>2.12.2-MULE-001</xerces2Version>
         <xmlApisVersion>1.4.01</xmlApisVersion>
 
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
@@ -200,7 +200,7 @@
         </dependency>
         <dependency>
             <groupId>org.mule.apache</groupId>
-            <artifactId>xerces2-xsd11</artifactId>
+            <artifactId>xercesImpl</artifactId>
             <version>${xerces2Version}</version>
         </dependency>
         <dependency>
