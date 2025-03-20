@@ -121,7 +121,7 @@
 
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
-        <caffeine.java8.version>2.9.3</caffeine.java8.version>
+        <caffeine.java8.version>3.2.0</caffeine.java8.version>
 
         <oldMuleArtifactVersion>1.7.0-rc1</oldMuleArtifactVersion>
 
