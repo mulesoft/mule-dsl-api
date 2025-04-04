@@ -117,7 +117,7 @@
 
         <muleBomVersion>4.9.3-rc1</muleBomVersion>
 
-        <muleModuleMavenPluginVersion>1.9.3-rc1</muleModuleMavenPluginVersion>
+        <muleModuleMavenPluginVersion>1.9.3</muleModuleMavenPluginVersion>
 
         <formatterConfigPath>formatter.xml</formatterConfigPath>
 
