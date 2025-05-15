@@ -23,7 +23,7 @@ public class CollectionUtils {
    * Merge the given Properties instance into the given Map, copying all properties (key-value pairs) over.
    * <p>
    * Uses {@code Properties.propertyNames()} to even catch default properties linked into the original Properties instance.
-   * 
+   *
    * @param props the Properties instance to merge (may be {@code null})
    * @param map   the target Map to merge the properties into
    */

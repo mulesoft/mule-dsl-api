@@ -10,7 +10,7 @@ import org.xml.sax.Locator;
 
 /**
  * Factory object to get a fresh instance of a {@link XmlMetadataAnnotations}.
- * 
+ *
  * This interface is an extension point to other Mule projects. Please be careful if you are going to make changes here.
  */
 public interface XmlMetadataAnnotationsFactory {

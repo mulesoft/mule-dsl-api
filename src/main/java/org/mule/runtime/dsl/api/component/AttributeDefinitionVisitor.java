@@ -107,7 +107,7 @@ public interface AttributeDefinitionVisitor {
 
   /**
    * Called when the attribute is configured from an object with a certain type.
-   * 
+   *
    * @param type              type of the attribute value.
    * @param wrapperIdentifier the identifier of the component
    * @param childIdentifier

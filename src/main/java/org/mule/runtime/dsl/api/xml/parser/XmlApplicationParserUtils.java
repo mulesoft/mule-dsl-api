@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 
 /**
  * Provides a factory method for creating {@link XmlApplicationParser} instances.
- * 
+ *
  * @since 1.8
  */
 public class XmlApplicationParserUtils {

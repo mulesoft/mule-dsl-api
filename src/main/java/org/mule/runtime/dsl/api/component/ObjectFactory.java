@@ -31,7 +31,7 @@ public interface ObjectFactory<T> extends Component {
 
   /**
    * @return the created object
-   * 
+   *
    * @throws Exception any failure that may occur building the object
    */
   T getObject() throws Exception;

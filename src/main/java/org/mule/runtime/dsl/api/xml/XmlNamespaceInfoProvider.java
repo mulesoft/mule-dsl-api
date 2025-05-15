@@ -28,7 +28,7 @@ public interface XmlNamespaceInfoProvider {
 
   /**
    * Loads the {@link XmlNamespaceInfoProvider}s from the Mule container.
-   * 
+   *
    * @return the {@link XmlNamespaceInfoProvider}s for namespaces declared within the Mule container.
    */
   public static Stream<XmlNamespaceInfoProvider> loadXmlNamespaceInfoProviders() {
@@ -42,7 +42,7 @@ public interface XmlNamespaceInfoProvider {
   /**
    * This one exists to support the case of crafted extensions, whose {@link XmlNamespaceInfoProvider} does not precisely follow
    * the rules defined for Mule SDKs.
-   * 
+   *
    * @param deployableArtifactClassLoader the classloader of a deployable artifact from which mule-plugins
    *                                      {@link XmlNamespaceInfoProvider}s will be loaded.
    * @return the {@link XmlNamespaceInfoProvider}s for crafted extensions within the deployable artifact.
