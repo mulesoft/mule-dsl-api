@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 /**
  * Provides utilities for the Runtime to discover {@link ComponentBuildingDefinitionProvider} implementations.
- * 
+ *
  * @since 1.5.0
  */
 public final class ComponentBuildingDefinitionProviderUtils {
@@ -28,7 +28,7 @@ public final class ComponentBuildingDefinitionProviderUtils {
 
   /**
    * Looks up implementations of {@link ComponentBuildingDefinitionProvider} from the Mule container.
-   * 
+   *
    * @return the discovered {@link ComponentBuildingDefinitionProvider}.
    */
   public static final Stream<ComponentBuildingDefinitionProvider> lookupComponentBuildingDefinitionProviders() {
@@ -41,7 +41,7 @@ public final class ComponentBuildingDefinitionProviderUtils {
 
   /**
    * Looks up implementations of {@link ComponentBuildingDefinitionProvider} with the provided classloader.
-   * 
+   *
    * @param classLoader the classloader of a deployable artifact to use for loading the services through SPI.
    * @return the discovered {@link ComponentBuildingDefinitionProvider}.
    */

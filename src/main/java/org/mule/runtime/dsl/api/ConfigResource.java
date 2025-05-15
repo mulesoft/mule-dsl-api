@@ -127,7 +127,7 @@ public final class ConfigResource {
 
   /**
    * @return the {@link File#lastModified()} of the file from where this resource is loaded, or {@code 0L} if there is no file.
-   * 
+   *
    * @since 1.8
    */
   public long getLastModified() {

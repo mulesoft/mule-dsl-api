@@ -63,7 +63,7 @@ public interface XmlMetadataAnnotations {
 
   /**
    * Builds the opening tag of the xml element.
-   * 
+   *
    * @param qName the qualified name of the element
    * @param atts  the attributes of the element, with the qualified name as key
    */
@@ -71,14 +71,14 @@ public interface XmlMetadataAnnotations {
 
   /**
    * Adds the body of the xml tag.
-   * 
+   *
    * @param elementBody the body content to be added
    */
   void appendElementBody(String elementBody);
 
   /**
    * Builds the closing tag of the xml element.
-   * 
+   *
    * @param qName the qualified name of the element
    */
   void appendElementEnd(String qName);

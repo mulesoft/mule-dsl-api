@@ -115,7 +115,7 @@ public final class SchemaMappingsUtils {
    * Load all properties from the specified class path resource (in ISO-8859-1 encoding), using the given class loader.
    * <p>
    * Merges properties if more than one resource of the same name found in the class path.
-   * 
+   *
    * @param resourceName the name of the class path resource
    * @param classLoader  {@link Supplier} the ClassLoader to use for loading (or {@code null} to use the default class loader)
    * @return the populated Properties instance

@@ -8,7 +8,7 @@ package org.mule.runtime.dsl.api.component;
 
 /**
  * Defines the actual {@code Class} for the domain object to be created.
- * 
+ *
  * @param <T> the actual type of the runtime object to be created.
  */
 public class TypeDefinition<T> {
@@ -40,7 +40,7 @@ public class TypeDefinition<T> {
   /**
    * @param configAttributeName name of the configuration attribute that defines the domain object type.
    * @return {@code TypeDefinition} created from that type.
-   * 
+   *
    * @deprecated type definitions shouldn't be created from attributes passed in the artifact config.
    */
   @Deprecated

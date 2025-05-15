@@ -6,7 +6,7 @@
  */
 /**
  * Module with the API to define how to build runtime objects from configuration files.
- * 
+ *
  * @moduleGraph
  * @since 1.5
  */
@@ -15,13 +15,13 @@ module org.mule.runtime.dsl.api {
   requires org.mule.runtime.api;
 
   requires java.xml;
-  
+
   requires com.google.common;
   requires org.apache.commons.io;
   requires org.apache.commons.lang3;
   requires org.mule.apache.xerces;
   requires com.github.benmanes.caffeine;
-  
+
   exports org.mule.runtime.dsl.api;
   exports org.mule.runtime.dsl.api.component;
   exports org.mule.runtime.dsl.api.component.config;
