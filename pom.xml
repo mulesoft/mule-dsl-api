@@ -114,7 +114,7 @@
         <javaVersion>1.8</javaVersion>
         <javaReleaseVersion>8</javaReleaseVersion>
 
-        <muleBomVersion>4.8.6-SNAPSHOT</muleBomVersion>
+        <muleBomVersion>4.8.6-rc1</muleBomVersion>
 
         <junitVersion>4.13.2</junitVersion>
         <mockitoVersion>4.11.0</mockitoVersion>
