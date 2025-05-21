@@ -6,7 +6,7 @@
 
     <groupId>org.mule.runtime</groupId>
     <artifactId>mule-module-dsl-api</artifactId>
-    <version>1.6.18-SNAPSHOT</version>
+    <version>1.6.19-SNAPSHOT</version>
     
     <name>Mule module DSL API</name>
     <description>Module with the API to define how to build runtime objects from configuration files</description>
@@ -109,21 +109,21 @@
         <javaReleaseVersion>8</javaReleaseVersion>
         <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 
-        <muleBomVersion>4.6.18-SNAPSHOT</muleBomVersion>
+        <muleBomVersion>4.6.19-SNAPSHOT</muleBomVersion>
 
         <junitVersion>4.12</junitVersion>
         <hamcrestVersion>2.2</hamcrestVersion>
         <aspectjVersion>1.9.2</aspectjVersion>
         <javax.jaxb-api.version>2.3.0</javax.jaxb-api.version>
 
-        <muleModuleMavenPluginVersion>1.5.19-SNAPSHOT</muleModuleMavenPluginVersion>
+        <muleModuleMavenPluginVersion>1.5.20-SNAPSHOT</muleModuleMavenPluginVersion>
 
         <javaFormatter.plugin.version>2.14.0</javaFormatter.plugin.version>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <formatterGoal>validate</formatterGoal>
 
         <revapi.maven.plugin.version>0.15.0</revapi.maven.plugin.version>
-        <muleRevapiExtensionVersion>1.6.19-SNAPSHOT</muleRevapiExtensionVersion>
+        <muleRevapiExtensionVersion>1.6.20-SNAPSHOT</muleRevapiExtensionVersion>
         <oldMuleArtifactVersion>1.6.0</oldMuleArtifactVersion>
 
         <mulesoftLicenseVersion>1.4.0</mulesoftLicenseVersion>
