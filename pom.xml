@@ -115,7 +115,7 @@
         <javaVersion>1.8</javaVersion>
         <javaReleaseVersion>8</javaReleaseVersion>
 
-        <muleBomVersion>4.9.6-rc1</muleBomVersion>
+        <muleBomVersion>4.9.6-rc2</muleBomVersion>
 
         <muleModuleMavenPluginVersion>1.9.6-rc2</muleModuleMavenPluginVersion>
 
