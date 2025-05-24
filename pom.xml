@@ -13,7 +13,7 @@
 
     <groupId>org.mule.runtime</groupId>
     <artifactId>mule-module-dsl-api</artifactId>
-    <version>1.9.7-SNAPSHOT</version>
+    <version>1.9.7-rc1</version>
     
     <name>Mule module DSL API</name>
     <description>Module with the API to define how to build runtime objects from configuration files</description>
