@@ -28,7 +28,9 @@ public abstract class AbstractComponentFactory<T> extends AbstractComponent impl
   @Override
   public T getObject() throws Exception {
     T annotatedInstance = doGetObject();
-    ((Component) annotatedInstance).setAnnotations(getAnnotations());
+    if (annotatedInstance instanceof Component) {
+      ((Component) annotatedInstance).setAnnotations(getAnnotations());
+    }
     return annotatedInstance;
   }
 }
