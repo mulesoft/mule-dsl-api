@@ -74,7 +74,7 @@ public class XmlApplicationParser {
         return matchingXmlNamespaceInfo.get().getNamespace();
       }
     }
-    // TODO MULE-9638 for now since just return a fake value since guava cache does not support null values. When done right throw
+    // TODO MULE-9638 for now just return a fake value since guava cache does not support null values. When done right throw
     // a configuration exception with a meaningful message if there's no info provider defined
     return UNDEFINED_NAMESPACE;
   }
