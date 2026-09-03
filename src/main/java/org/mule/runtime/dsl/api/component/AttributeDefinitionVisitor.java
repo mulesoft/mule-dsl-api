@@ -61,18 +61,18 @@ public interface AttributeDefinitionVisitor {
    * Called when the attribute is configured from a simple configuration attribute.
    *
    * @param parameterName configuration parameter name.
-   * @param defaultValue  default value for the configuration parameter if it has not value.
+   * @param defaultValue  default value for the configuration parameter if it has no value.
    * @param typeConverter a value converter to convert from the value provided by the config to the value required of the
    *                      attribute.
    */
   void onConfigurationParameter(String parameterName, Object defaultValue, Optional<TypeConverter> typeConverter);
 
   /**
-   * Called when the attribute is configured from a simple configuration attribute and could reference to a another object defined
+   * Called when the attribute is configured from a simple configuration attribute and could reference to another object defined
    * in the configuration.
    *
    * @param parameterName configuration parameter name.
-   * @param defaultValue  default value for the configuration parameter if it has not value.
+   * @param defaultValue  default value for the configuration parameter if it has no value.
    * @param typeConverter a value converter to convert from the value provided by the config to the value required of the
    *                      attribute.
    */
@@ -120,8 +120,8 @@ public interface AttributeDefinitionVisitor {
   void onValueFromTextContent();
 
   /**
-   * Called when a multiple configuration parameters or children components objects need to be set in single object attribute or
-   * constructor parameter. The value to be set is a @{code Map} with the {@code KeyAttributeDefinitionPair#getKey()} as key and
+   * Called when multiple configuration parameters or child component objects need to be set in a single object attribute or
+   * constructor parameter. The value to be set is a {@code Map} with the {@code KeyAttributeDefinitionPair#getKey()} as key and
    * the value is the resolved parameter value or component object.
    *
    * @param definitions the set of {@code AttributeDefinition} to be used to create
